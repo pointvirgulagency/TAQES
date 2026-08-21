@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_shared_demande_fonciers",
+  "info": {
+    "displayName": "DemandeFoncier"
+  },
+  "options": {},
+  "attributes": {
+    "localisation": {
+      "type": "string"
+    },
+    "superficie": {
+      "type": "string"
+    },
+    "nature_proposition": {
+      "type": "enumeration",
+      "enum": [
+        "Vente",
+        "Partenariat",
+        "Apport foncier",
+        "Autre"
+      ]
+    },
+    "document_foncier": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_sections_nouvelle_identite",
+  "info": {
+    "displayName": "Nouvelle Identité"
+  },
+  "options": {},
+  "attributes": {
+    "Titre": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "libellebouton": {
+      "type": "string"
+    },
+    "lien_boutton": {
+      "type": "string"
+    },
+    "Chiffres": {
+      "type": "component",
+      "component": "sections.chiffres",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+:root {
+
+  /* TAQÈS Colors */
+
+  --green-dark: #094734;
+  --green-primary: #00674F;
+  --green-soft: #449383;
+  --beige-light: #EBE2DC;
+  --gold-accent: #C9A66B;
+
+
+  /* Dark Theme Sections */
+
+  --dark-bg: var(--green-dark);
+  --dark-text: var(--beige-light);
+  --dark-muted: rgba(235,226,220,0.75);
+
+
+  /* Light Theme Sections */
+
+  --light-bg: #ffffff;
+  --light-text: var(--green-dark);
+  --light-muted: rgba(9,71,52,0.75);
+
+
+  /* Layout */
+
+  --max-width: 1440px;
+  --page-padding: clamp(1rem,5vw,5rem);
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing:border-box;
+}
+
+
+html {
+  scroll-behavior:smooth;
+}
+
+
+body {
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* ======================
+   DARK SECTIONS
+====================== */
+
+.section-dark {
+
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+
+}
+
+
+.section-dark h1,
+.section-dark h2,
+.section-dark h3 {
+
+  color: var(--dark-text);
+
+}
+
+
+.section-dark p {
+
+  color: var(--dark-muted);
+
+}
+
+
+
+/* ======================
+   LIGHT SECTIONS
+====================== */
+
+.section-light {
+
+  background-color: var(--light-bg);
+  color: var(--light-text);
+
+}
+
+
+.section-light h1,
+.section-light h2,
+.section-light h3 {
+
+  color: var(--light-text);
+
+}
+
+
+.section-light p {
+
+  color: var(--light-muted);
+
+}
+
+
+
+/* ======================
+   BUTTONS
+====================== */
+
+.btn-primary {
+
+  background-color: var(--green-primary);
+  color: var(--beige-light);
+
+}
+
+
+.btn-primary:hover {
+
+  background-color: var(--green-soft);
+
+}
+
+
+
+.btn-outline-dark {
+
+  border:1px solid var(--green-primary);
+  color:var(--green-primary);
+  background:transparent;
+
+}
+
+
+
+.btn-outline-light {
+
+  border:1px solid var(--beige-light);
+  color:var(--beige-light);
+  background:transparent;
+  transition: background-color .2s ease;
+
+}
+
+
+.btn-outline-light:hover {
+
+  background-color: rgba(235,226,220,0.1);
+
+}
+
+
+
+.btn-gold {
+
+  background-color: var(--gold-accent);
+  color: var(--green-dark);
+  transition: background-color .2s ease;
+
+}
+
+
+.btn-gold:hover {
+
+  background-color: #d9bd8c;
+
+}
+
+
+
+/* ======================
+   CONTAINER
+====================== */
+
+.container {
+
+  width:100%;
+  max-width:var(--max-width);
+  margin:auto;
+  padding-inline:var(--page-padding);
+
+}
+
+
+/* RTL */
+
+html[dir="rtl"] {
+
+  direction:rtl;
+
+}
+
+
+
+@media(max-width:768px){
+
+  :root {
+
+    --page-padding:1rem;
+
+  }
+
+}

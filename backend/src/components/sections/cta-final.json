@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_cta_finals",
+  "info": {
+    "displayName": "CTAFinal"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "texte": {
+      "type": "blocks"
+    },
+    "libelleBoutonProjets": {
+      "type": "string"
+    },
+    "lienBoutonProjets": {
+      "type": "string"
+    },
+    "lienBoutonContact": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

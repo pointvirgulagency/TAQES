@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_sections_territoires_d_interventions",
+  "info": {
+    "displayName": "Territoires d’intervention"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "nom": {
+      "type": "string"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::project.project"
+    }
+  },
+  "config": {}
+}

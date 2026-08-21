@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_sections_membres",
+  "info": {
+    "displayName": "membres"
+  },
+  "options": {},
+  "attributes": {
+    "nom": {
+      "type": "string"
+    },
+    "prenom": {
+      "type": "string"
+    },
+    "fonction": {
+      "type": "string"
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "biographie": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}

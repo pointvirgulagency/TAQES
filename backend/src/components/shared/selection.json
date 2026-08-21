@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_selections",
+  "info": {
+    "displayName": "Selection"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

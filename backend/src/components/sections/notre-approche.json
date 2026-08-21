@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_sections_notre_approches",
+  "info": {
+    "displayName": "Notre Approche"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "Icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "lien": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

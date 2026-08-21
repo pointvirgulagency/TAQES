@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_sections_type_demandes",
+  "info": {
+    "displayName": "type-demande"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Projet",
+        "Foncier",
+        "Partenariat",
+        "Presse",
+        "Réclamation"
+      ]
+    }
+  },
+  "config": {}
+}

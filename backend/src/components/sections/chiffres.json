@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_sections_chiffres",
+  "info": {
+    "displayName": "Chiffres"
+  },
+  "options": {},
+  "attributes": {
+    "valeur": {
+      "type": "string"
+    },
+    "libelle": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

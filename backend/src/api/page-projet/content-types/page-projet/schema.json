@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "page_projets",
+  "info": {
+    "singularName": "page-projet",
+    "pluralName": "page-projets",
+    "displayName": "PageProjet"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "HeroProjet": {
+      "type": "component",
+      "component": "sections.projethero",
+      "repeatable": false
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_shared_demande_partenariats",
+  "info": {
+    "displayName": "DemandePartenariat"
+  },
+  "options": {},
+  "attributes": {
+    "organisation": {
+      "type": "string"
+    },
+    "fonction": {
+      "type": "string"
+    },
+    "type_demande": {
+      "type": "enumeration",
+      "enum": [
+        "Partenariat",
+        "Presse",
+        "Interview",
+        "Autre"
+      ]
+    },
+    "message_detail": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}

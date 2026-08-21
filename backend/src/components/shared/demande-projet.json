@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_shared_demande_projets",
+  "info": {
+    "displayName": "DemandeProjet"
+  },
+  "options": {},
+  "attributes": {
+    "project": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::project.project"
+    },
+    "zone": {
+      "type": "string"
+    },
+    "type_bien": {
+      "type": "enumeration",
+      "enum": [
+        "Appartement",
+        "Villa",
+        "Terrain",
+        "Bureau",
+        "Autre"
+      ]
+    },
+    "surface_recherchee": {
+      "type": "string"
+    },
+    "delai_souhaite": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
