@@ -19,8 +19,8 @@ interface ProjectVille {
 }
 
 interface ProjectImage {
-  url: string;
-  alternativeText?: string;
+    url: string;
+    alternativeText?: string | null;
 }
 
 interface Project {

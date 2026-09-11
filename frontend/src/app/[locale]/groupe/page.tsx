@@ -60,14 +60,19 @@ function normalizeRichText<T extends Record<string, any>>(
 ): T | null | undefined {
   if (!data) return data;
 
-  const normalized = { ...data };
+  const normalized = { ...data } as T & {
+    description?: unknown;
+  };
 
   if ("description" in normalized) {
-    normalized.description = extractText(normalized.description);
+    normalized.description = extractText(
+      normalized.description
+    );
   }
 
   return normalized;
 }
+
 
 export async function generateMetadata({
   params,
