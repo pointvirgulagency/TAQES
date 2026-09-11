@@ -1,11 +1,5 @@
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+import { redirect } from "next/navigation";
+
+export default function RootPage() {
+  redirect("/fr");
 }
