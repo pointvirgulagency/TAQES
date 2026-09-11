@@ -7,7 +7,33 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Chronologie({ data, strapiUrl }) {
+interface ChronologieProject {
+  id: number | string;
+  title?: string;
+}
+
+interface ChronologieImage {
+  url?: string;
+}
+
+interface ChronologieEtape {
+  id?: number | string;
+  annee?: string | number;
+  titre?: string;
+  description?: string;
+  image?: ChronologieImage | ChronologieImage[] | null;
+  projects?: ChronologieProject[];
+}
+
+interface ChronologieProps {
+  data: ChronologieEtape[];
+  strapiUrl: string;
+}
+
+export default function Chronologie({
+  data,
+  strapiUrl,
+}: ChronologieProps) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -24,8 +50,15 @@ export default function Chronologie({ data, strapiUrl }) {
         scrub: true,
         onUpdate: (self) => {
           if (steps <= 1) return setActiveIndex(0);
-          const index = Math.min(steps - 1, Math.floor(self.progress * steps));
-          setActiveIndex((current) => current === index ? current : index);
+
+          const index = Math.min(
+            steps - 1,
+            Math.floor(self.progress * steps)
+          );
+
+          setActiveIndex((current) =>
+            current === index ? current : index
+          );
         },
         onEnter: () => setActiveIndex(0),
         onLeaveBack: () => setActiveIndex(0),
@@ -36,7 +69,11 @@ export default function Chronologie({ data, strapiUrl }) {
 
       return () => trigger.kill();
     },
-    { scope: sectionRef, dependencies: [data], revertOnUpdate: true }
+    {
+      scope: sectionRef,
+      dependencies: [data],
+      revertOnUpdate: true,
+    }
   );
 
   if (!data?.length) return null;
@@ -71,7 +108,10 @@ export default function Chronologie({ data, strapiUrl }) {
           }}
         >
           {data.map((etape, idx) => {
-            const image = Array.isArray(etape.image) ? etape.image[0] : etape.image;
+            const image = Array.isArray(etape.image)
+              ? etape.image[0]
+              : etape.image;
+
             if (!image?.url) return null;
 
             const imageUrl = `${strapiUrl.replace(/\/$/, "")}${image.url}`;
@@ -117,57 +157,129 @@ export default function Chronologie({ data, strapiUrl }) {
                   position: "absolute",
                   inset: 0,
                   opacity: active ? 1 : 0,
-                  transform: active ? "translateX(0)" : "translateX(35px)",
+                  transform: active
+                    ? "translateX(0)"
+                    : "translateX(35px)",
                   pointerEvents: active ? "auto" : "none",
-                  transition: "opacity 0.7s ease, transform 0.8s ease",
+                  transition:
+                    "opacity 0.7s ease, transform 0.8s ease",
                 }}
               >
-               <div
-                 style={{
-                   width: "100%",
-                   height: "100%",
-                   boxSizing: "border-box",
-                   padding: "45px 60px 65px 55px",
-                   background: "rgba(245,242,234,0.88)",
-                   backdropFilter: "blur(18px)",
-                   WebkitBackdropFilter: "blur(18px)",
-                   borderTop: "1px solid rgba(168,117,67,0.25)",
-                   borderLeft: "1px solid rgba(168,117,67,0.25)",
-                   display: "flex",
-                   flexDirection: "column",
-                   justifyContent: "flex-start",
-                   boxShadow: "-25px -10px 70px rgba(18,61,51,0.12)",
-                 }}
-               >
-                  <div style={{ marginBottom: "14px", fontFamily: "Arial, Helvetica, sans-serif", fontSize: "9px", fontWeight: 600, letterSpacing: "0.19em", textTransform: "uppercase", color: "#53645D" }}>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    boxSizing: "border-box",
+                    padding: "45px 60px 65px 55px",
+                    background: "rgba(245,242,234,0.88)",
+                    backdropFilter: "blur(18px)",
+                    WebkitBackdropFilter: "blur(18px)",
+                    borderTop:
+                      "1px solid rgba(168,117,67,0.25)",
+                    borderLeft:
+                      "1px solid rgba(168,117,67,0.25)",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    boxShadow:
+                      "-25px -10px 70px rgba(18,61,51,0.12)",
+                  }}
+                >
+                  <div
+                    style={{
+                      marginBottom: "14px",
+                      fontFamily: "Arial, Helvetica, sans-serif",
+                      fontSize: "9px",
+                      fontWeight: 600,
+                      letterSpacing: "0.19em",
+                      textTransform: "uppercase",
+                      color: "#53645D",
+                    }}
+                  >
                     Chronologie
                   </div>
 
-                  <div style={{ marginBottom: "12px", fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: "15px", letterSpacing: "0.08em", color: "#A87543" }}>
+                  <div
+                    style={{
+                      marginBottom: "12px",
+                      fontFamily:
+                        "'Georgia', 'Times New Roman', serif",
+                      fontSize: "15px",
+                      letterSpacing: "0.08em",
+                      color: "#A87543",
+                    }}
+                  >
                     {etape.annee}
                   </div>
 
-                  <h3 style={{ margin: "0 0 24px", maxWidth: "600px", fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: "clamp(32px, 3.2vw, 35px)", lineHeight: 1.03, fontWeight: 500, letterSpacing: "-0.035em", color: "#163F35" }}>
+                  <h3
+                    style={{
+                      margin: "0 0 24px",
+                      maxWidth: "600px",
+                      fontFamily:
+                        "'Georgia', 'Times New Roman', serif",
+                      fontSize: "clamp(32px, 3.2vw, 35px)",
+                      lineHeight: 1.03,
+                      fontWeight: 500,
+                      letterSpacing: "-0.035em",
+                      color: "#163F35",
+                    }}
+                  >
                     {etape.titre || etape.annee}
                   </h3>
 
-                  <div style={{ width: "45px", height: "1px", marginBottom: "24px", background: "#A87543" }} />
+                  <div
+                    style={{
+                      width: "45px",
+                      height: "1px",
+                      marginBottom: "24px",
+                      background: "#A87543",
+                    }}
+                  />
 
                   {etape.description && (
-                    <p style={{ maxWidth: "550px", margin: 0, fontFamily: "Arial, Helvetica, sans-serif", fontSize: "14px", lineHeight: 1.75, color: "#53645D" }}>
+                    <p
+                      style={{
+                        maxWidth: "550px",
+                        margin: 0,
+                        fontFamily:
+                          "Arial, Helvetica, sans-serif",
+                        fontSize: "14px",
+                        lineHeight: 1.75,
+                        color: "#53645D",
+                      }}
+                    >
                       {etape.description}
                     </p>
                   )}
 
-                  {etape.projects?.length > 0 && (
-                    <div style={{ marginTop: "30px", paddingTop: "18px", borderTop: "1px solid rgba(168,117,67,0.28)" }}>
-                      {etape.projects.map((project) => (
-                        <p key={project.id} style={{ margin: "6px 0", fontFamily: "Arial, Helvetica, sans-serif", fontSize: "11px", lineHeight: 1.5, color: "#69736E" }}>
-                          {project.title}
-                        </p>
-                      ))}
-                    </div>
-                  )}
+                  {etape.projects &&
+                    etape.projects.length > 0 && (
+                      <div
+                        style={{
+                          marginTop: "30px",
+                          paddingTop: "18px",
+                          borderTop:
+                            "1px solid rgba(168,117,67,0.28)",
+                        }}
+                      >
+                        {etape.projects.map((project) => (
+                          <p
+                            key={project.id}
+                            style={{
+                              margin: "6px 0",
+                              fontFamily:
+                                "Arial, Helvetica, sans-serif",
+                              fontSize: "11px",
+                              lineHeight: 1.5,
+                              color: "#69736E",
+                            }}
+                          >
+                            {project.title}
+                          </p>
+                        ))}
+                      </div>
+                    )}
                 </div>
               </div>
             );
@@ -179,7 +291,8 @@ export default function Chronologie({ data, strapiUrl }) {
             position: "absolute",
             inset: 0,
             zIndex: 5,
-            background: "linear-gradient(to bottom, transparent 0%, transparent 75%, #123D33 95%, #123D33 100%)",
+            background:
+              "linear-gradient(to bottom, transparent 0%, transparent 75%, #123D33 95%, #123D33 100%)",
             pointerEvents: "none",
           }}
         />
@@ -196,14 +309,23 @@ export default function Chronologie({ data, strapiUrl }) {
             gap: "25px",
             minWidth: "115px",
             paddingLeft: "27px",
-            borderLeft: "1px solid rgba(232,227,216,0.65)",
+            borderLeft:
+              "1px solid rgba(232,227,216,0.65)",
           }}
         >
           {data.map((etape, idx) => {
             const active = activeIndex === idx;
 
             return (
-              <div key={etape.id ?? idx} style={{ position: "relative", display: "flex", alignItems: "center", minHeight: active ? "34px" : "24px" }}>
+              <div
+                key={etape.id ?? idx}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  minHeight: active ? "34px" : "24px",
+                }}
+              >
                 <span
                   style={{
                     position: "absolute",
@@ -211,21 +333,32 @@ export default function Chronologie({ data, strapiUrl }) {
                     width: active ? "9px" : "7px",
                     height: active ? "9px" : "7px",
                     borderRadius: "50%",
-                    background: active ? "#A87543" : "rgba(18,61,51,0.12)",
-                    border: active ? "1px solid #A87543" : "1px solid rgba(232,227,216,0.9)",
-                    boxShadow: active ? "0 0 0 3px rgba(168,117,67,0.18)" : "none",
+                    background: active
+                      ? "#A87543"
+                      : "rgba(18,61,51,0.12)",
+                    border: active
+                      ? "1px solid #A87543"
+                      : "1px solid rgba(232,227,216,0.9)",
+                    boxShadow: active
+                      ? "0 0 0 3px rgba(168,117,67,0.18)"
+                      : "none",
                     transition: "all 0.45s ease",
                   }}
                 />
+
                 <span
                   style={{
                     display: "block",
-                    fontFamily: "'Georgia', 'Times New Roman', serif",
+                    fontFamily:
+                      "'Georgia', 'Times New Roman', serif",
                     fontSize: active ? "25px" : "15px",
                     lineHeight: 1,
                     fontWeight: active ? 500 : 400,
-                    color: active ? "#A87543" : "rgba(232,227,216,0.78)",
-                    transition: "font-size 0.45s ease, color 0.45s ease, font-weight 0.45s ease",
+                    color: active
+                      ? "#A87543"
+                      : "rgba(232,227,216,0.78)",
+                    transition:
+                      "font-size 0.45s ease, color 0.45s ease, font-weight 0.45s ease",
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -245,17 +378,40 @@ export default function Chronologie({ data, strapiUrl }) {
             zIndex: 7,
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontFamily: "Arial, Helvetica, sans-serif", fontSize: "9px", letterSpacing: "0.12em", color: "#E8E3D8" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+              fontFamily:
+                "Arial, Helvetica, sans-serif",
+              fontSize: "9px",
+              letterSpacing: "0.12em",
+              color: "#E8E3D8",
+            }}
+          >
             <span>0%</span>
             <span>100%</span>
           </div>
-          <div style={{ position: "relative", width: "100%", height: "1px", background: "rgba(232,227,216,0.35)" }}>
+
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "1px",
+              background: "rgba(232,227,216,0.35)",
+            }}
+          >
             <div
               style={{
                 position: "absolute",
                 left: 0,
                 top: 0,
-                width: `${data.length <= 1 ? 100 : (activeIndex / (data.length - 1)) * 100}%`,
+                width: `${
+                  data.length <= 1
+                    ? 100
+                    : (activeIndex / (data.length - 1)) * 100
+                }%`,
                 height: "2px",
                 background: "#A87543",
                 transition: "width 0.4s ease",
@@ -267,3 +423,4 @@ export default function Chronologie({ data, strapiUrl }) {
     </section>
   );
 }
+

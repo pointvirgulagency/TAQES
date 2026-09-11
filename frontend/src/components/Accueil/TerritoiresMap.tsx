@@ -10,6 +10,14 @@ import {
   Polyline,
   useMap,
 } from "react-leaflet";
+import type { CSSProperties, ComponentType, ReactNode } from "react";
+import type {
+  EventedProps,
+  LatLngExpression,
+  MapOptions,
+  MarkerOptions,
+  TileLayerOptions,
+} from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -37,19 +45,47 @@ interface TerritoiresMapProps {
   onSelectTerritoire?: (territoire: Territoire | null) => void;
 }
 
+interface TypedMapContainerProps extends MapOptions {
+  children?: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+}
+
+interface TypedTileLayerProps extends TileLayerOptions {
+  url: string;
+  attribution?: string;
+}
+
+interface TypedMarkerProps extends MarkerOptions, EventedProps {
+  position: LatLngExpression;
+}
+
+const TypedMapContainer =
+  MapContainer as unknown as ComponentType<TypedMapContainerProps>;
+
+const TypedTileLayer =
+  TileLayer as unknown as ComponentType<TypedTileLayerProps>;
+
+const TypedMarker =
+  Marker as unknown as ComponentType<TypedMarkerProps>;
+
 const MAP_CENTER: [number, number] = [33.85, -6.9];
+
 const REGION_BOUNDS: L.LatLngBoundsExpression = [
   [33.2, -7.6],
   [34.5, -6.2],
 ];
+
 const FIXED_ZOOM = 9.5;
 
 function toCoord(value: unknown): number | null {
   if (typeof value === "number" && !Number.isNaN(value)) return value;
+
   if (typeof value === "string" && value.trim()) {
     const parsed = Number(value);
     return Number.isNaN(parsed) ? null : parsed;
   }
+
   return null;
 }
 
@@ -62,11 +98,13 @@ function haversineDistanceKm(
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
   const a =
     Math.sin(dLat / 2) ** 2 +
     Math.cos((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLon / 2) ** 2;
+
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
@@ -81,9 +119,11 @@ function escapeHtml(value: string) {
 function buildMarkerIcon(nom: string | undefined, selected: boolean) {
   const size = selected ? 16 : 11;
   const safeNom = nom ? escapeHtml(nom) : "";
+
   const dot = selected
     ? "background:#00674F;border:3px solid #F4F0E8;box-shadow:0 0 0 5px rgba(0,103,79,0.16),0 3px 10px rgba(0,70,55,0.32);"
     : "background:#F4F0E8;border:2px solid #00674F;box-shadow:0 2px 6px rgba(0,70,55,0.18);";
+
   const label = safeNom
     ? `<span style="background:${
         selected ? "#094734" : "#F8F5EF"
@@ -110,8 +150,13 @@ function MapController({
   useEffect(() => {
     const lat = toCoord(selectedTerritoire?.latitude);
     const lng = toCoord(selectedTerritoire?.longitude);
+
     if (lat === null || lng === null) return;
-    map.panTo([lat, lng], { animate: true, duration: 0.8 });
+
+    map.panTo([lat, lng], {
+      animate: true,
+      duration: 0.8,
+    });
   }, [selectedTerritoire, map]);
 
   return null;
@@ -134,8 +179,13 @@ export default function TerritoiresMap({
     .map((territoire) => {
       const latitude = toCoord(territoire.latitude);
       const longitude = toCoord(territoire.longitude);
+
       return latitude !== null && longitude !== null
-        ? { ...territoire, latitude, longitude }
+        ? {
+            ...territoire,
+            latitude,
+            longitude,
+          }
         : null;
     })
     .filter(
@@ -194,18 +244,23 @@ export default function TerritoiresMap({
           padding: 0 4px !important;
           border-radius: 4px 0 0 0;
         }
+
         .territoires-map .leaflet-control-attribution a {
           color: #5d746b !important;
         }
+
         .territoires-map .leaflet-tile {
           filter: saturate(0.72) contrast(0.94);
         }
+
         .territoires-map .interactive-marker-icon {
           transition: transform 0.2s ease;
         }
+
         .territoires-map .interactive-marker-icon:hover {
           transform: scale(1.06);
         }
+
         .territoires-map .leaflet-container {
           background: #e2dcd0;
           font-family: inherit;
@@ -222,7 +277,7 @@ export default function TerritoiresMap({
       )}
 
       {mapReady && (
-        <MapContainer
+        <TypedMapContainer
           center={MAP_CENTER}
           zoom={FIXED_ZOOM}
           minZoom={8}
@@ -237,12 +292,14 @@ export default function TerritoiresMap({
           style={{ height: "100%", width: "100%" }}
           className="absolute inset-0 z-0 h-full w-full"
         >
-          <TileLayer
+          <TypedTileLayer
             url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
             maxZoom={20}
             attribution={`&copy; <a href="https://stadiamaps.com/attribution/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>`}
           />
+
           <MapController selectedTerritoire={selectedTerritoire} />
+
           {routePositions.length > 1 && (
             <Polyline
               positions={routePositions}
@@ -255,8 +312,9 @@ export default function TerritoiresMap({
               }}
             />
           )}
+
           {validTerritoires.map((territoire) => (
-            <Marker
+            <TypedMarker
               key={
                 territoire.id ??
                 territoire.documentId ??
@@ -273,7 +331,7 @@ export default function TerritoiresMap({
               }}
             />
           ))}
-        </MapContainer>
+        </TypedMapContainer>
       )}
 
       <div className="pointer-events-none absolute bottom-3 left-4 z-[400] text-[8px] font-semibold uppercase tracking-[0.16em] text-[#5d746b]/70">
@@ -291,6 +349,7 @@ export default function TerritoiresMap({
             >
               <X className="h-3 w-3" />
             </button>
+
             <div className="flex gap-3 p-3">
               <div className="h-[72px] w-[92px] shrink-0 overflow-hidden rounded-lg bg-[#D8D1C5]">
                 {imageUrl && (
@@ -301,6 +360,7 @@ export default function TerritoiresMap({
                   />
                 )}
               </div>
+
               <div className="min-w-0 pt-0.5">
                 <div className="mb-1 flex items-center gap-2">
                   <span className="rounded-full bg-[#E5EEE9] px-2 py-0.5 text-[7px] font-semibold uppercase tracking-[0.08em] text-[#00674F]">
@@ -309,9 +369,11 @@ export default function TerritoiresMap({
                       : "TERRITOIRE"}
                   </span>
                 </div>
+
                 <h3 className="truncate text-[13px] font-semibold leading-tight text-[#094734]">
                   {selectedTerritoire.nom}
                 </h3>
+
                 <p className="mt-1 line-clamp-2 text-[9px] leading-[1.4] text-[#78847F]">
                   {selectedProjectCount !== null
                     ? `${selectedProjectCount} projet${
@@ -321,6 +383,7 @@ export default function TerritoiresMap({
                       }`
                     : "Découvrez ce territoire et les projets associés."}
                 </p>
+
                 <Link
                   href={
                     selectedTerritoire.slug
