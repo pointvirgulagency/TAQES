@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_sections_valeurs",
+  "info": {
+    "displayName": "Valeurs"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

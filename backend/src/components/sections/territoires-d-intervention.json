@@ -15,6 +15,25 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::project.project"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "latitude": {
+      "type": "string"
+    },
+    "longitude": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   },
   "config": {}

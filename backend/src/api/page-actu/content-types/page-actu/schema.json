@@ -1,0 +1,55 @@
+{
+  "kind": "singleType",
+  "collectionName": "page_actus",
+  "info": {
+    "singularName": "page-actu",
+    "pluralName": "page-actus",
+    "displayName": "PageActu"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "hero": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.hero",
+      "repeatable": false
+    },
+    "actualites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::actualite.actualite"
+    },
+    "ActuCategorie": {
+      "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "enum": [
+        "any"
+      ]
+    },
+    "SEO": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "shared.seo",
+      "repeatable": false
+    }
+  }
+}

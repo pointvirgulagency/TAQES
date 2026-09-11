@@ -4,6 +4,26 @@
     "displayName": "gouvernance"
   },
   "options": {},
-  "attributes": {},
+  "attributes": {
+    "Nom": {
+      "type": "string"
+    },
+    "Job": {
+      "type": "string"
+    },
+    "Poste": {
+      "type": "string"
+    },
+    "Picture": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
   "config": {}
 }

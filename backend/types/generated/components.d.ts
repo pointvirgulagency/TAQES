@@ -3,7 +3,7 @@ import type { Schema, Struct } from '@strapi/strapi';
 export interface SectionsActualites extends Struct.ComponentSchema {
   collectionName: 'components_sections_actualites';
   info: {
-    displayName: 'Actualites';
+    displayName: 'Actus';
   };
   attributes: {
     articlePrincipal: Schema.Attribute.Relation<
@@ -23,6 +23,7 @@ export interface SectionsChiffres extends Struct.ComponentSchema {
     displayName: 'Chiffres';
   };
   attributes: {
+    description: Schema.Attribute.Text;
     libelle: Schema.Attribute.String;
     valeur: Schema.Attribute.String;
   };
@@ -36,10 +37,7 @@ export interface SectionsChronologie extends Struct.ComponentSchema {
   attributes: {
     annee: Schema.Attribute.String;
     description: Schema.Attribute.Blocks;
-    image: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     titre: Schema.Attribute.String;
   };
@@ -79,7 +77,12 @@ export interface SectionsGouvernance extends Struct.ComponentSchema {
   info: {
     displayName: 'gouvernance';
   };
-  attributes: {};
+  attributes: {
+    Job: Schema.Attribute.String;
+    Nom: Schema.Attribute.String;
+    Picture: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Poste: Schema.Attribute.String;
+  };
 }
 
 export interface SectionsHero extends Struct.ComponentSchema {
@@ -144,6 +147,7 @@ export interface SectionsNotreApproche extends Struct.ComponentSchema {
     displayName: 'Notre Approche';
   };
   attributes: {
+    boutton: Schema.Attribute.String;
     description: Schema.Attribute.String;
     Icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     lien: Schema.Attribute.String;
@@ -195,6 +199,10 @@ export interface SectionsTerritoiresDIntervention
     displayName: 'Territoires d\u2019intervention';
   };
   attributes: {
+    description: Schema.Attribute.Blocks;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    latitude: Schema.Attribute.String;
+    longitude: Schema.Attribute.String;
     nom: Schema.Attribute.String;
     projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     titre: Schema.Attribute.String;
@@ -225,6 +233,16 @@ export interface SectionsTypeDemande extends Struct.ComponentSchema {
     type: Schema.Attribute.Enumeration<
       ['Projet', 'Foncier', 'Partenariat', 'Presse', 'R\u00E9clamation']
     >;
+  };
+}
+
+export interface SectionsValeurs extends Struct.ComponentSchema {
+  collectionName: 'components_sections_valeurs';
+  info: {
+    displayName: 'Valeurs';
+  };
+  attributes: {
+    titre: Schema.Attribute.String;
   };
 }
 
@@ -392,6 +410,33 @@ export interface SharedSlider extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedTypologie extends Struct.ComponentSchema {
+  collectionName: 'components_shared_typologies';
+  info: {
+    displayName: 'Typologie';
+  };
+  attributes: {
+    client: Schema.Attribute.Enumeration<
+      ['Particuliers', 'Professionnels & investisseurs']
+    >;
+    description: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    titre: Schema.Attribute.String;
+  };
+}
+
+export interface SharedVille extends Struct.ComponentSchema {
+  collectionName: 'components_shared_villes';
+  info: {
+    displayName: 'ville';
+  };
+  attributes: {
+    ville: Schema.Attribute.Enumeration<
+      ['Skhirat', 'A\u00EFn Attig', 'Sala El Jadida', 'Bouznika', 'Sid El Abed']
+    >;
+  };
+}
+
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
@@ -411,6 +456,7 @@ declare module '@strapi/strapi' {
       'sections.territoires-d-intervention': SectionsTerritoiresDIntervention;
       'sections.transition-taqes': SectionsTransitionTaqes;
       'sections.type-demande': SectionsTypeDemande;
+      'sections.valeurs': SectionsValeurs;
       'sections.vision': SectionsVision;
       'shared.demande-foncier': SharedDemandeFoncier;
       'shared.demande-partenariat': SharedDemandePartenariat;
@@ -423,6 +469,8 @@ declare module '@strapi/strapi' {
       'shared.selection': SharedSelection;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
+      'shared.typologie': SharedTypologie;
+      'shared.ville': SharedVille;
     }
   }
 }

@@ -69,16 +69,6 @@
         }
       }
     },
-    "Territoires": {
-      "type": "component",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "component": "sections.territoires-d-intervention",
-      "repeatable": true
-    },
     "NotreApproche": {
       "type": "component",
       "pluginOptions": {
@@ -88,6 +78,11 @@
       },
       "component": "sections.notre-approche",
       "repeatable": true
+    },
+    "territoires": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::territoire.territoire"
     },
     "Actualites": {
       "type": "component",
@@ -134,6 +129,16 @@
       },
       "component": "shared.seo",
       "repeatable": false
+    },
+    "typologie": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "shared.typologie",
+      "repeatable": true
     }
   }
 }

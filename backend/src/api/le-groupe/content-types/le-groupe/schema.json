@@ -83,7 +83,7 @@
         }
       },
       "component": "sections.chiffres",
-      "repeatable": false
+      "repeatable": true
     },
     "gouvernance": {
       "type": "component",
@@ -93,7 +93,7 @@
         }
       },
       "component": "sections.gouvernance",
-      "repeatable": false
+      "repeatable": true
     },
     "SEO": {
       "type": "component",
@@ -104,6 +104,16 @@
       },
       "component": "shared.seo",
       "repeatable": false
+    },
+    "valeurs": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.valeurs",
+      "repeatable": true
     }
   }
 }

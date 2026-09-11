@@ -23,6 +23,9 @@
     },
     "lien": {
       "type": "string"
+    },
+    "boutton": {
+      "type": "string"
     }
   },
   "config": {}

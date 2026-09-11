@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_shared_typologies",
+  "info": {
+    "displayName": "Typologie"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "client": {
+      "type": "enumeration",
+      "enum": [
+        "Particuliers",
+        "Professionnels & investisseurs"
+      ]
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

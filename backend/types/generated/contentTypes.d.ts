@@ -441,35 +441,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiAboutAbout extends Struct.SingleTypeSchema {
-  collectionName: 'abouts';
-  info: {
-    description: 'Write about yourself and the content you create';
-    displayName: 'About';
-    pluralName: 'abouts';
-    singularName: 'about';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    blocks: Schema.Attribute.DynamicZone<
-      ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::about.about'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiAcceuilAcceuil extends Struct.SingleTypeSchema {
   collectionName: 'acceuils';
   info: {
@@ -555,15 +526,10 @@ export interface ApiAcceuilAcceuil extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
-    Territoires: Schema.Attribute.Component<
-      'sections.territoires-d-intervention',
-      true
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
+    territoires: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::territoire.territoire'
+    >;
     titreActualites: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -577,6 +543,12 @@ export interface ApiAcceuilAcceuil extends Struct.SingleTypeSchema {
         };
       }>;
     titreTerritoires: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    typologie: Schema.Attribute.Component<'shared.typologie', true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -605,7 +577,13 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
   };
   attributes: {
     categorie: Schema.Attribute.Enumeration<
-      ['Projet', 'Entreprise', 'Territoire', '\u00C9v\u00E9nement']
+      [
+        'Projet',
+        'Guide',
+        'D\u00E9cryptage',
+        'Territoire',
+        '\u00C9v\u00E9nement',
+      ]
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -621,13 +599,37 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    cta_label: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    cta_url: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     Date: Schema.Attribute.DateTime &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+    extrait: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     featured: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    H1: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -647,6 +649,25 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::actualite.actualite'
     >;
+    meta_description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    mot_cles_principal: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    mots_cles: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'titre'>;
     titre: Schema.Attribute.String &
@@ -721,8 +742,18 @@ export interface ApiDemandeDemande extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: true;
   };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
   attributes: {
-    consentement: Schema.Attribute.Boolean;
+    consentement: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -733,28 +764,67 @@ export interface ApiDemandeDemande extends Struct.CollectionTypeSchema {
         'shared.demande-foncier',
         'shared.demande-reclamation-field',
       ]
-    >;
-    email: Schema.Attribute.Email;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     langue: Schema.Attribute.Enumeration<
       ['Fran\u00E7ais', '\u0627\u0644\u0639\u0631\u0628\u064A\u0629']
-    >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::demande.demande'
-    > &
-      Schema.Attribute.Private;
-    message: Schema.Attribute.Blocks;
-    nom_complet: Schema.Attribute.String;
+    >;
+    message: Schema.Attribute.Blocks &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    nom_complet: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     preference_contact: Schema.Attribute.Enumeration<
       ['Email', 'T\u00E9l\u00E9phone', 'WhatsApp']
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
-    telephone: Schema.Attribute.String;
+    telephone: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    ville: Schema.Attribute.String;
+    ville: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
   };
 }
 
@@ -774,7 +844,7 @@ export interface ApiLeGroupeLeGroupe extends Struct.SingleTypeSchema {
     };
   };
   attributes: {
-    chiffrescles: Schema.Attribute.Component<'sections.chiffres', false> &
+    chiffrescles: Schema.Attribute.Component<'sections.chiffres', true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -795,7 +865,7 @@ export interface ApiLeGroupeLeGroupe extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
-    gouvernance: Schema.Attribute.Component<'sections.gouvernance', false> &
+    gouvernance: Schema.Attribute.Component<'sections.gouvernance', true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -834,12 +904,71 @@ export interface ApiLeGroupeLeGroupe extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    valeurs: Schema.Attribute.Component<'sections.valeurs', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     vision: Schema.Attribute.Component<'sections.vision', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+  };
+}
+
+export interface ApiPageActuPageActu extends Struct.SingleTypeSchema {
+  collectionName: 'page_actus';
+  info: {
+    displayName: 'PageActu';
+    pluralName: 'page-actus';
+    singularName: 'page-actu';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    actualites: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::actualite.actualite'
+    >;
+    ActuCategorie: Schema.Attribute.Enumeration<['any']> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    hero: Schema.Attribute.Component<'sections.hero', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::page-actu.page-actu'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    SEO: Schema.Attribute.Component<'shared.seo', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -853,19 +982,33 @@ export interface ApiPageProjetPageProjet extends Struct.SingleTypeSchema {
   options: {
     draftAndPublish: true;
   };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    HeroProjet: Schema.Attribute.Component<'sections.projethero', false>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    HeroProjet: Schema.Attribute.Component<'sections.projethero', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::page-projet.page-projet'
-    > &
-      Schema.Attribute.Private;
+    >;
     publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.Component<'shared.seo', false>;
+    seo: Schema.Attribute.Component<'shared.seo', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -888,10 +1031,38 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
+    actualite: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::actualite.actualite'
+    >;
+    annee: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    brochure: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    coordonees: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.RichText &
+    description_complete: Schema.Attribute.Blocks &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    description_courte: Schema.Attribute.RichText &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -912,11 +1083,29 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
         };
       }>;
     locale: Schema.Attribute.String;
+    localisation: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::project.project'
     >;
+    nombre_lots: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     public_cible: Schema.Attribute.Enumeration<['B2C', 'B2B', 'Mixte']> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    publie: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -946,6 +1135,22 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    surface_develope: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    surface_terrain: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    territoire: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::territoire.territoire'
+    >;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique &
@@ -954,25 +1159,14 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    type_operation: Schema.Attribute.Enumeration<
-      ['Foncier', 'Immobilier', 'Mixte']
-    > &
+    type: Schema.Attribute.Component<'shared.typologie', true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    typologie: Schema.Attribute.Enumeration<
-      [
-        'Foncier',
-        'Appartements',
-        'Villas',
-        'Lots R+3',
-        'Lots R+4',
-        'Lots Villas',
-        'Mixte-Tertiaire',
-        'Investissement',
-      ]
+    type_operation: Schema.Attribute.Enumeration<
+      ['Foncier', 'Immobilier', 'Mixte']
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -988,6 +1182,74 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    ville: Schema.Attribute.Component<'shared.ville', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
+export interface ApiTerritoireTerritoire extends Struct.CollectionTypeSchema {
+  collectionName: 'territoires';
+  info: {
+    displayName: 'Territoire';
+    pluralName: 'territoires';
+    singularName: 'territoire';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    latitude: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::territoire.territoire'
+    >;
+    longitude: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    nom: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -1502,14 +1764,15 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::about.about': ApiAboutAbout;
       'api::acceuil.acceuil': ApiAcceuilAcceuil;
       'api::actualite.actualite': ApiActualiteActualite;
       'api::contact.contact': ApiContactContact;
       'api::demande.demande': ApiDemandeDemande;
       'api::le-groupe.le-groupe': ApiLeGroupeLeGroupe;
+      'api::page-actu.page-actu': ApiPageActuPageActu;
       'api::page-projet.page-projet': ApiPageProjetPageProjet;
       'api::project.project': ApiProjectProject;
+      'api::territoire.territoire': ApiTerritoireTerritoire;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
