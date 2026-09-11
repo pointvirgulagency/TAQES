@@ -14,6 +14,8 @@ import {
   PhoneCall,
   CalendarDays,
   FileBox,
+  Construction,
+  Users,
 } from "lucide-react";
 
 import { getProjectBySlug } from "@/lib/strapi";
@@ -29,6 +31,14 @@ interface StrapiMedia {
   name?: string;
 }
 
+interface ProjectType {
+  id?: number;
+  titre?: string;
+  client?: string;
+  image?: StrapiMedia;
+  description?: string;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -39,7 +49,10 @@ export async function generateMetadata({
 
   if (!project) {
     return {
-      title: locale === "ar" ? "المشروع غير موجود" : "Projet introuvable",
+      title:
+        locale === "ar"
+          ? "المشروع غير موجود"
+          : "Projet introuvable",
     };
   }
 
@@ -67,14 +80,18 @@ export default async function ProjectPage({
       >
         <div className="mx-auto max-w-7xl text-center">
           <h1 className="text-4xl font-semibold text-[#094734]">
-            {isArabic ? "المشروع غير موجود" : "Projet introuvable"}
+            {isArabic
+              ? "المشروع غير موجود"
+              : "Projet introuvable"}
           </h1>
 
           <Link
             href={`/${locale}/projects`}
             className="mt-8 inline-flex rounded-md bg-[#00674F] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#00674F]/90"
           >
-            {isArabic ? "العودة إلى المشاريع" : "Retour aux projets"}
+            {isArabic
+              ? "العودة إلى المشاريع"
+              : "Retour aux projets"}
           </Link>
         </div>
       </main>
@@ -82,26 +99,40 @@ export default async function ProjectPage({
   }
 
   const image = project.FeaturedImage;
+
   const gallery = (project.gallery ?? []) as StrapiMedia[];
-  const brochure = project.brochure as StrapiMedia | undefined;
+
+  const brochure = project.brochure as
+    | StrapiMedia
+    | undefined;
+
+  const types = (project.type ?? []) as ProjectType[];
+
+  const typologies = types
+    .map((item) => item.titre)
+    .filter(Boolean);
 
   return (
     <main
       dir={isArabic ? "rtl" : "ltr"}
       className="bg-[#F5F2EC] text-[#094734] selection:bg-[#00674F] selection:text-white"
     >
-      {/* 1. HERO SECTION */}
+      {/* =====================================================
+          1. HERO
+      ===================================================== */}
+
       <section className="relative min-h-[85vh] w-full overflow-hidden bg-[#094734] pt-40 md:pt-48">
         {image?.url && (
           <img
             src={`${STRAPI_URL}${image.url}`}
-            alt={image.alternativeText || project.title}
+            alt={
+              image.alternativeText ||
+              project.title
+            }
             className="absolute inset-0 h-full w-full object-cover opacity-60"
             loading="eager"
           />
         )}
-
-        <div className="absolute inset-0 bg-gradient-to-r from-[#094734]/95 via-[#094734]/70 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#094734] via-transparent to-transparent" />
 
         <div className="relative z-10 mx-auto flex min-h-[70vh] max-w-7xl flex-col justify-between px-6 pb-12 pt-6 md:px-10 lg:px-16">
@@ -125,34 +156,47 @@ export default async function ProjectPage({
               {project.title}
             </h1>
 
-            {project.localisation && (
+            {(project.localisation ||
+              project.ville?.ville) && (
               <div className="mt-4 flex items-center gap-2 text-[#EBE2DC]/90">
                 <MapPin className="h-4 w-4 text-[#00674F]" />
 
                 <span className="text-sm font-medium tracking-wide">
-                  {project.localisation}{" "}
-                  {project.ville
-                    ? `- ${project.ville.ville}`
-                    : ""}
+                  {project.localisation}
+
+                  {project.localisation &&
+                    project.ville?.ville &&
+                    " - "}
+
+                  {project.ville?.ville}
                 </span>
               </div>
             )}
 
             <div className="mt-6 flex flex-wrap gap-3">
-              {[
-                project.typologie,
-                project.public_cible,
-                project.statut,
-              ]
-                .filter(Boolean)
-                .map((tag, i) => (
-                  <span
-                    key={i}
-                    className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium text-[#EBE2DC] backdrop-blur-md"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              {project.type_operation && (
+                <ProjectTag>
+                  {project.type_operation}
+                </ProjectTag>
+              )}
+
+              {project.zonage && (
+                <ProjectTag>
+                  {project.zonage}
+                </ProjectTag>
+              )}
+
+              {project.statut && (
+                <ProjectTag>
+                  {project.statut}
+                </ProjectTag>
+              )}
+
+              {project.phase && (
+                <ProjectTag>
+                  {project.phase}
+                </ProjectTag>
+              )}
             </div>
 
             {project.description_courte && (
@@ -161,113 +205,266 @@ export default async function ProjectPage({
               </p>
             )}
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              {brochure?.url && (
-                <a
-                  href={`${STRAPI_URL}${brochure.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-md bg-[#00674F] px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-[#00674F]/90"
-                >
-                  <Download className="h-4 w-4" />
+            {(project.cta_b2c ||
+              project.cta_b2b ||
+              brochure?.url) && (
+              <div className="mt-8 flex flex-wrap gap-4">
+                {brochure?.url && (
+                  <a
+                    href={`${STRAPI_URL}${brochure.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-md bg-[#00674F] px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-[#00674F]/90"
+                  >
+                    <Download className="h-4 w-4" />
 
-                  <span>
-                    {isArabic
-                      ? "تحميل الكتيب"
-                      : "DEMANDER LA BROCHURE"}
-                  </span>
-                </a>
-              )}
+                    <span>
+                      {isArabic
+                        ? "تحميل الكتيب"
+                        : "DEMANDER LA BROCHURE"}
+                    </span>
+                  </a>
+                )}
 
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-md border border-[#EBE2DC]/40 bg-white/5 px-6 py-3.5 text-sm font-semibold text-[#EBE2DC] backdrop-blur-md transition hover:bg-white/10"
-              >
-                <span>
-                  {isArabic ? "اتصل بنا" : "ÊTRE RAPPELÉ"}
-                </span>
-              </a>
-            </div>
+                {(project.cta_b2c ||
+                  project.cta_b2b) && (
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-2 rounded-md border border-[#EBE2DC]/40 bg-white/5 px-6 py-3.5 text-sm font-semibold text-[#EBE2DC] backdrop-blur-md transition hover:bg-white/10"
+                  >
+                    <span>
+                      {project.cta_b2c ||
+                        project.cta_b2b}
+                    </span>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* 2. SPECIFICATIONS GRID BAR */}
+      {/* =====================================================
+          2. PROJECT INFORMATION
+      ===================================================== */}
+
       <section className="relative z-20 mx-auto -mt-8 max-w-7xl px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-2 gap-4 rounded-2xl border border-[#094734]/10 bg-white p-6 shadow-xl md:grid-cols-3 lg:grid-cols-6">
-          <SpecItem
-            icon={Building2}
-            label={isArabic ? "التصنيف" : "TYPOLOGIE"}
-            value={project.typologie}
-          />
+          {typologies.length > 0 && (
+            <SpecItem
+              icon={Building2}
+              label={
+                isArabic
+                  ? "التصنيف"
+                  : "TYPOLOGIE"
+              }
+              value={typologies.join(" / ")}
+            />
+          )}
 
-          <SpecItem
-            icon={Maximize2}
-            label={isArabic ? "مساحة الأرض" : "SURFACE TERRAIN"}
-            value={project.surface_terrain}
-          />
+          {project.zonage && (
+            <SpecItem
+              icon={Construction}
+              label={
+                isArabic
+                  ? "التقسيم"
+                  : "ZONAGE"
+              }
+              value={project.zonage}
+            />
+          )}
 
-          <SpecItem
-            icon={Layers}
-            label={isArabic ? "المساحة المطورة" : "SURFACE DÉVELOPPÉE"}
-            value={project.surface_develope}
-          />
+          {project.surface_terrain && (
+            <SpecItem
+              icon={Maximize2}
+              label={
+                isArabic
+                  ? "مساحة الأرض"
+                  : "SURFACE TERRAIN"
+              }
+              value={project.surface_terrain}
+            />
+          )}
 
-          <SpecItem
-            icon={FileBox}
-            label={isArabic ? "عدد الوحدات" : "NOMBRE DE LOTS"}
-            value={project.nombre_lots}
-          />
+          {project.surface_develope && (
+            <SpecItem
+              icon={Layers}
+              label={
+                isArabic
+                  ? "المساحة المطورة"
+                  : "SURFACE DÉVELOPPÉE"
+              }
+              value={project.surface_develope}
+            />
+          )}
 
-          <SpecItem
-            icon={Activity}
-            label={isArabic ? "الحالة" : "STATUT"}
-            value={project.statut}
-          />
+          {project.nombre_lots && (
+            <SpecItem
+              icon={FileBox}
+              label={
+                isArabic
+                  ? "عدد الوحدات"
+                  : "NOMBRE DE LOTS"
+              }
+              value={project.nombre_lots}
+            />
+          )}
 
-          <SpecItem
-            icon={Calendar}
-            label={isArabic ? "السنة" : "ANNÉE"}
-            value={project.annee}
-          />
+          {project.statut && (
+            <SpecItem
+              icon={Activity}
+              label={
+                isArabic
+                  ? "الحالة"
+                  : "STATUT"
+              }
+              value={project.statut}
+            />
+          )}
+
+          {project.annee && (
+            <SpecItem
+              icon={Calendar}
+              label={
+                isArabic
+                  ? "السنة"
+                  : "ANNÉE"
+              }
+              value={project.annee}
+            />
+          )}
+
+          {project.public_cible && (
+            <SpecItem
+              icon={Users}
+              label={
+                isArabic
+                  ? "الجمهور"
+                  : "PUBLIC"
+              }
+              value={project.public_cible}
+            />
+          )}
         </div>
       </section>
 
-      {/* 3. GALLERY SLIDER / PREVIEW */}
+      {/* =====================================================
+          3. GALLERY
+      ===================================================== */}
+
       {gallery.length > 0 && (
         <section className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-16">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {gallery.slice(0, 4).map((item, idx) => (
-              <div
-                key={idx}
-                className="relative aspect-[4/3] overflow-hidden rounded-xl bg-stone-200 shadow-md"
-              >
-                <img
-                  src={`${STRAPI_URL}${item.url}`}
-                  alt={
-                    item.alternativeText ||
-                    `Gallery image ${idx + 1}`
-                  }
-                  className="h-full w-full object-cover transition duration-500 hover:scale-105"
-                />
-              </div>
-            ))}
+            {gallery.slice(0, 4).map(
+              (item, idx) => (
+                <div
+                  key={idx}
+                  className="relative aspect-[4/3] overflow-hidden rounded-xl bg-stone-200 shadow-md"
+                >
+                  <img
+                    src={`${STRAPI_URL}${item.url}`}
+                    alt={
+                      item.alternativeText ||
+                      `${project.title} - ${
+                        idx + 1
+                      }`
+                    }
+                    className="h-full w-full object-cover transition duration-500 hover:scale-105"
+                  />
+                </div>
+              )
+            )}
           </div>
         </section>
       )}
 
-      {/* 4. PLANS & DOCUMENTS / LOCALISATION SECTION */}
+      {/* =====================================================
+          4. DETAILS / DOCUMENTS / LOCATION
+      ===================================================== */}
+
       <section className="mx-auto max-w-7xl px-6 py-12 md:px-10 lg:px-16">
         <div className="grid gap-12 lg:grid-cols-2">
           <div className="rounded-2xl border border-[#094734]/10 bg-white p-8 shadow-sm">
             <h3 className="mb-6 text-xl font-semibold tracking-tight text-[#094734]">
               {isArabic
-                ? "الخطط والمستندات"
-                : "PLANS & DOCUMENTS"}
+                ? "معلومات المشروع"
+                : "INFORMATIONS DU PROJET"}
             </h3>
 
             <div className="divide-y divide-[#094734]/10">
-              {brochure?.url ? (
+              {project.type_operation && (
+                <DetailRow
+                  label={
+                    isArabic
+                      ? "نوع العملية"
+                      : "TYPE D'OPÉRATION"
+                  }
+                  value={
+                    project.type_operation
+                  }
+                />
+              )}
+
+              {project.zonage && (
+                <DetailRow
+                  label={
+                    isArabic
+                      ? "التقسيم"
+                      : "ZONAGE"
+                  }
+                  value={project.zonage}
+                />
+              )}
+
+              {project.phase && (
+                <DetailRow
+                  label={
+                    isArabic
+                      ? "المرحلة"
+                      : "PHASE"
+                  }
+                  value={project.phase}
+                />
+              )}
+
+              {project.disponibilite && (
+                <DetailRow
+                  label={
+                    isArabic
+                      ? "التوفر"
+                      : "DISPONIBILITÉ"
+                  }
+                  value={
+                    project.disponibilite
+                  }
+                />
+              )}
+
+              {project.public_cible && (
+                <DetailRow
+                  label={
+                    isArabic
+                      ? "الجمهور المستهدف"
+                      : "PUBLIC CIBLE"
+                  }
+                  value={
+                    project.public_cible
+                  }
+                />
+              )}
+
+              {project.annee && (
+                <DetailRow
+                  label={
+                    isArabic
+                      ? "الفترة"
+                      : "PÉRIODE"
+                  }
+                  value={project.annee}
+                />
+              )}
+
+              {brochure?.url && (
                 <a
                   href={`${STRAPI_URL}${brochure.url}`}
                   target="_blank"
@@ -279,36 +476,15 @@ export default async function ProjectPage({
 
                     <span className="text-sm font-medium">
                       {isArabic
-                        ? "كتيب المشروع الكامل"
-                        : "Cahier des charges / Brochure"}
+                        ? "كتيب المشروع"
+                        : "Brochure du projet"}
                     </span>
                   </div>
 
                   <Download className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
                 </a>
-              ) : (
-                <p className="py-4 text-sm text-[#094734]/60">
-                  {isArabic
-                    ? "لا توجد مستندات متاحة حاليا."
-                    : "Aucun document disponible pour le moment."}
-                </p>
               )}
             </div>
-
-            {brochure?.url && (
-              <div className="mt-8">
-                <a
-                  href={`${STRAPI_URL}${brochure.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full rounded-md bg-[#094734] py-4 text-center text-sm font-semibold text-white shadow-md transition hover:bg-[#094734]/90"
-                >
-                  {isArabic
-                    ? "تحميل الملف الكامل"
-                    : "TÉLÉCHARGER LE DOSSIER COMPLET"}
-                </a>
-              </div>
-            )}
           </div>
 
           <div className="flex flex-col justify-between rounded-2xl border border-[#094734]/10 bg-white p-8 shadow-sm">
@@ -319,12 +495,16 @@ export default async function ProjectPage({
                   : "LOCALISATION"}
               </h3>
 
-              {project.localisation && (
+              {(project.localisation ||
+                project.ville?.ville) && (
                 <p className="mb-6 text-sm leading-relaxed text-[#094734]/80">
-                  {project.localisation}{" "}
-                  {project.ville
-                    ? `- ${project.ville.ville}`
-                    : ""}
+                  {project.localisation}
+
+                  {project.localisation &&
+                    project.ville?.ville &&
+                    " - "}
+
+                  {project.ville?.ville}
                 </p>
               )}
 
@@ -340,7 +520,7 @@ export default async function ProjectPage({
 
             <div className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-xl border border-[#094734]/10 bg-[#EFE9E2]">
               <div className="p-4 text-center">
-                <MapPin className="mx-auto mb-2 h-8 w-8 animate-bounce text-[#00674F]" />
+                <MapPin className="mx-auto mb-2 h-8 w-8 text-[#00674F]" />
 
                 <span className="text-xs font-semibold text-[#094734]">
                   {project.ville?.ville ||
@@ -355,7 +535,10 @@ export default async function ProjectPage({
         </div>
       </section>
 
-      {/* 5. FULL DESCRIPTION SECTION */}
+      {/* =====================================================
+          5. DESCRIPTION
+      ===================================================== */}
+
       {project.description_complete && (
         <section className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-16">
           <div className="relative overflow-hidden rounded-3xl bg-[#094734] p-8 text-[#EBE2DC] shadow-xl md:p-14">
@@ -370,15 +553,34 @@ export default async function ProjectPage({
                 {project.title}
               </h2>
 
-              <div className="space-y-4 text-base leading-relaxed text-[#EBE2DC]/90">
-                <RichText content={project.description_complete} />
+            <div className="space-y-4 text-base leading-relaxed !text-white">
+                <RichText
+                  content={
+                    project.description_complete
+                  }
+                />
               </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* 6. ACTION CARDS */}
+      {/* =====================================================
+          6. NOTICE
+      ===================================================== */}
+
+      {project.mention && (
+        <section className="mx-auto max-w-7xl px-6 pb-8 md:px-10 lg:px-16">
+          <div className="rounded-xl border border-[#094734]/10 bg-[#EFE9E2] p-5 text-sm leading-relaxed text-[#094734]/70">
+            {project.mention}
+          </div>
+        </section>
+      )}
+
+      {/* =====================================================
+          7. ACTION CARDS
+      ===================================================== */}
+
       <section
         id="contact"
         className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-16"
@@ -393,10 +595,15 @@ export default async function ProjectPage({
             }
             description={
               isArabic
-                ? "احصل على تفاصيل المشروع كاملة بريدك الإلكتروني."
+                ? "احصل على تفاصيل المشروع كاملة."
                 : "Recevez la documentation complète du projet."
             }
-            linkText={isArabic ? "اطلب الآن" : "Demander"}
+            linkText={
+              project.cta_b2c ||
+              (isArabic
+                ? "اطلب الآن"
+                : "Demander")
+            }
             locale={locale}
             isArabic={isArabic}
           />
@@ -410,10 +617,14 @@ export default async function ProjectPage({
             }
             description={
               isArabic
-                ? "حدد موعداً مع مستشارينا لمناقشة مشروعك."
+                ? "حدد موعداً مع مستشارينا."
                 : "Planifiez un rendez-vous avec nos conseillers."
             }
-            linkText={isArabic ? "حجز موعد" : "Prendre RDV"}
+            linkText={
+              isArabic
+                ? "حجز موعد"
+                : "Prendre RDV"
+            }
             locale={locale}
             isArabic={isArabic}
           />
@@ -427,17 +638,25 @@ export default async function ProjectPage({
             }
             description={
               isArabic
-                ? "اترك لنا رقمك وسنقوم بالاتصال بك في أقرب وقت."
+                ? "اترك لنا بياناتك وسنتواصل معك."
                 : "Laissez-nous vos coordonnées, nous vous rappelons."
             }
-            linkText={isArabic ? "اتصل بي" : "Être rappelé"}
+            linkText={
+              project.cta_b2b ||
+              (isArabic
+                ? "اتصل بي"
+                : "Être rappelé")
+            }
             locale={locale}
             isArabic={isArabic}
           />
         </div>
       </section>
 
-      {/* 7. BACK LINK */}
+      {/* =====================================================
+          8. BACK
+      ===================================================== */}
+
       <section className="border-t border-[#094734]/10 px-6 py-12 md:px-10 lg:px-16">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link
@@ -445,7 +664,9 @@ export default async function ProjectPage({
             className="inline-flex items-center gap-3 text-sm font-semibold text-[#00674F] transition hover:opacity-80"
           >
             <span
-              className={`${isArabic ? "rotate-180" : ""}`}
+              className={
+                isArabic ? "rotate-180" : ""
+              }
             >
               ←
             </span>
@@ -468,6 +689,18 @@ export default async function ProjectPage({
         </div>
       </section>
     </main>
+  );
+}
+
+function ProjectTag({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium text-[#EBE2DC] backdrop-blur-md">
+      {children}
+    </span>
   );
 }
 
@@ -494,6 +727,28 @@ function SpecItem({
       </span>
 
       <span className="text-sm font-semibold text-[#094734]">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string;
+  value?: string | number;
+}) {
+  if (!value) return null;
+
+  return (
+    <div className="flex items-center justify-between gap-6 py-4">
+      <span className="text-xs font-semibold uppercase tracking-wider text-[#094734]/50">
+        {label}
+      </span>
+
+      <span className="text-right text-sm font-medium text-[#094734]">
         {value}
       </span>
     </div>

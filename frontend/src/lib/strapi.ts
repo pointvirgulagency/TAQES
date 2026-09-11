@@ -33,7 +33,8 @@ export async function getProjects(locale: Locale) {
     `&populate[videos][populate]=*` +
     `&populate[brochure][populate]=*` +
     `&populate[type][populate]=*` +
-    `&populate[ville][populate]=*`;
+    `&populate[territoire][populate]=*` +
+    `&populate[actualite][populate]=*`;
 
   return fetchStrapi(
     url,
@@ -57,7 +58,8 @@ export async function getProjectBySlug(
     "populate[videos][populate]": "*",
     "populate[brochure][populate]": "*",
     "populate[type][populate]": "*",
-    "populate[ville][populate]": "*",
+    "populate[territoire][populate]": "*",
+    "populate[actualite][populate]": "*",
   });
 
   const res = await fetch(
@@ -95,8 +97,10 @@ export async function getProjetsPage(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/page-projet?locale=${locale}` +
     `&populate[HeroProjet][populate][projet][populate][FeaturedImage][populate]=*` +
+    `&populate[HeroProjet][populate][projet][populate][gallery][populate]=*` +
     `&populate[HeroProjet][populate][projet][populate][type][populate]=*` +
-    `&populate[HeroProjet][populate][projet][populate][ville][populate]=*`;
+    `&populate[HeroProjet][populate][projet][populate][territoire][populate]=*` +
+    `&populate[HeroProjet][populate][projet][populate][actualite][populate]=*`;
 
   return fetchStrapi(
     url,
@@ -344,7 +348,8 @@ export async function getProjectByTitle(
     "populate[videos][populate]": "*",
     "populate[brochure][populate]": "*",
     "populate[type][populate]": "*",
-    "populate[ville][populate]": "*",
+    "populate[territoire][populate]": "*",
+    "populate[actualite][populate]": "*",
   });
 
   const res = await fetch(
@@ -417,4 +422,28 @@ export async function uploadFiles(
   return Promise.all(
     files.map((file) => uploadFile(file))
   );
+}
+
+export async function getTerritoires(locale: Locale) {
+  const url =
+    `${STRAPI_URL}/api/territoires?locale=${locale}` +
+    `&pagination[pageSize]=100` +
+    `&sort=nom:asc`;
+
+  const response = await fetchStrapi(
+    url,
+    "Failed to fetch territoires"
+  );
+
+  console.log(
+    "TERRITOIRES API:",
+    response.data?.map(
+      (territoire: { id?: number; nom?: string }) => ({
+        id: territoire.id,
+        nom: territoire.nom,
+      })
+    )
+  );
+
+  return response;
 }

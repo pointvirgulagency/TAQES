@@ -23,7 +23,6 @@ interface RichTextProps {
   className?: string;
 }
 
-
 function renderChild(
   child: RichTextChild,
   key: string | number
@@ -80,7 +79,6 @@ function renderChildren(children?: RichTextChild[]) {
   );
 }
 
-
 function getBlockText(block: RichTextBlock): string {
   return (block.children ?? [])
     .map((child) => {
@@ -94,8 +92,6 @@ function getBlockText(block: RichTextBlock): string {
     })
     .join("");
 }
-
-
 
 function parseManualHeading(text: string) {
   const match = text.match(
@@ -112,10 +108,6 @@ function parseManualHeading(text: string) {
   };
 }
 
-/* =========================================================
-   HEADING COMPONENT
-========================================================= */
-
 function Heading({
   level,
   children,
@@ -129,17 +121,16 @@ function Heading({
   );
 
   const classes = {
-    1: "mt-10 mb-6 text-4xl font-bold leading-tight tracking-tight text-[#094734]",
-    2: "mt-10 mb-5 text-3xl font-bold leading-tight tracking-tight text-[#094734]",
-    3: "mt-8 mb-4 text-2xl font-bold leading-tight text-[#094734]",
-    4: "mt-7 mb-3 text-xl font-semibold leading-tight text-[#094734]",
-    5: "mt-6 mb-3 text-lg font-semibold leading-tight text-[#094734]",
-    6: "mt-5 mb-2 text-base font-semibold leading-tight text-[#094734]",
+    1: "mt-10 mb-6 text-4xl font-bold leading-tight tracking-tight",
+    2: "mt-10 mb-5 text-3xl font-bold leading-tight tracking-tight",
+    3: "mt-8 mb-4 text-2xl font-bold leading-tight",
+    4: "mt-7 mb-3 text-xl font-semibold leading-tight",
+    5: "mt-6 mb-3 text-lg font-semibold leading-tight",
+    6: "mt-5 mb-2 text-base font-semibold leading-tight",
   } as const;
 
-  const className = classes[
-    safeLevel as keyof typeof classes
-  ];
+  const className =
+    classes[safeLevel as keyof typeof classes];
 
   switch (safeLevel) {
     case 1:
@@ -165,10 +156,6 @@ function Heading({
   }
 }
 
-/* =========================================================
-   MAIN COMPONENT
-========================================================= */
-
 export default function RichText({
   content,
   className = "",
@@ -176,10 +163,6 @@ export default function RichText({
   if (!content) {
     return null;
   }
-
-  /* =======================================================
-     PLAIN STRING
-  ======================================================= */
 
   if (typeof content === "string") {
     const lines = content.split("\n");
@@ -190,10 +173,14 @@ export default function RichText({
           const trimmed = line.trim();
 
           if (!trimmed) {
-            return <div key={index} className="h-4" />;
+            return (
+              <div
+                key={index}
+                className="h-4"
+              />
+            );
           }
 
-          /* Manual [H1] ... [H6] */
           const manualHeading =
             parseManualHeading(trimmed);
 
@@ -211,7 +198,7 @@ export default function RichText({
           return (
             <p
               key={index}
-              className="mb-5 text-base leading-8 text-gray-700"
+              className="mb-5 text-base leading-8"
             >
               {line}
             </p>
@@ -221,17 +208,9 @@ export default function RichText({
     );
   }
 
-  /* =======================================================
-     INVALID CONTENT
-  ======================================================= */
-
   if (!Array.isArray(content)) {
     return null;
   }
-
-  /* =======================================================
-     STRAPI BLOCKS
-  ======================================================= */
 
   return (
     <div className={`rich-text ${className}`}>
@@ -246,10 +225,6 @@ export default function RichText({
         const text = getBlockText(block);
         const trimmedText = text.trim();
 
-        /* =================================================
-           MANUAL [H2], [H3], ETC.
-        ================================================= */
-
         const manualHeading =
           parseManualHeading(trimmedText);
 
@@ -263,10 +238,6 @@ export default function RichText({
             </Heading>
           );
         }
-
-        /* =================================================
-           STRAPI REAL HEADING
-        ================================================= */
 
         if (block.type === "heading") {
           const level =
@@ -284,15 +255,7 @@ export default function RichText({
           );
         }
 
-        /* =================================================
-           PARAGRAPH
-        ================================================= */
-
         if (block.type === "paragraph") {
-          /*
-           * Also detect [H2] if it is stored as a paragraph.
-           */
-
           const paragraphHeading =
             parseManualHeading(trimmedText);
 
@@ -319,40 +282,39 @@ export default function RichText({
           return (
             <p
               key={index}
-              className="mb-5 text-base leading-8 text-gray-700"
+              className="mb-5 text-base leading-8"
             >
               {renderChildren(block.children)}
             </p>
           );
         }
 
-        /* =================================================
-           QUOTE
-        ================================================= */
-
         if (block.type === "quote") {
           return (
             <blockquote
               key={index}
-              className="my-8 border-l-4 border-[#7929e9] pl-6 text-lg italic leading-8 text-gray-600"
+              className="my-8 border-l-4 border-[#7929e9] pl-6 text-lg italic leading-8"
             >
               {renderChildren(block.children)}
             </blockquote>
           );
         }
 
-        /* =================================================
-           LIST
-        ================================================= */
         if (block.type === "list") {
-          const isOrdered = block.format === "ordered";
-          const ListTag = isOrdered ? "ol" : "ul";
+          const isOrdered =
+            block.format === "ordered";
+
+          const ListTag = isOrdered
+            ? "ol"
+            : "ul";
 
           return (
             <ListTag
               key={index}
-              className={`mb-6 ml-6 space-y-1 text-base leading-6 text-gray-700 ${
-                isOrdered ? "list-decimal" : "list-disc"
+              className={`mb-6 ml-6 space-y-1 text-base leading-6 ${
+                isOrdered
+                  ? "list-decimal"
+                  : "list-disc"
               }`}
             >
               <li>
@@ -361,9 +323,6 @@ export default function RichText({
             </ListTag>
           );
         }
-        /* =================================================
-           CODE
-        ================================================= */
 
         if (block.type === "code") {
           return (
@@ -378,31 +337,23 @@ export default function RichText({
           );
         }
 
-        /* =================================================
-           LINK
-        ================================================= */
-
         if (block.type === "link") {
           return (
             <a
               key={index}
               href={text}
-              className="text-[#7929e9] underline underline-offset-2"
+              className="underline underline-offset-2"
             >
               {renderChildren(block.children)}
             </a>
           );
         }
 
-        /* =================================================
-           FALLBACK
-        ================================================= */
-
         if (trimmedText) {
           return (
             <p
               key={index}
-              className="mb-5 text-base leading-8 text-gray-700"
+              className="mb-5 text-base leading-8"
             >
               {renderChildren(block.children)}
             </p>

@@ -432,7 +432,14 @@ export interface SharedVille extends Struct.ComponentSchema {
   };
   attributes: {
     ville: Schema.Attribute.Enumeration<
-      ['Skhirat', 'A\u00EFn Attig', 'Sala El Jadida', 'Bouznika', 'Sid El Abed']
+      [
+        'Skhirat',
+        'A\u00EFn Attig',
+        'Sala El Jadida',
+        'Bouznika',
+        'Sid El Abed',
+        'Sal\u00E9',
+      ]
     >;
   };
 }
