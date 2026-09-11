@@ -12,7 +12,6 @@ import {
 } from "react-leaflet";
 import type { CSSProperties, ComponentType, ReactNode } from "react";
 import type {
-  EventedProps,
   LatLngExpression,
   MapOptions,
   MarkerOptions,
@@ -56,8 +55,11 @@ interface TypedTileLayerProps extends TileLayerOptions {
   attribution?: string;
 }
 
-interface TypedMarkerProps extends MarkerOptions, EventedProps {
+interface TypedMarkerProps extends MarkerOptions {
   position: LatLngExpression;
+  eventHandlers?: {
+    click?: () => void;
+  };
 }
 
 const TypedMapContainer =
@@ -79,10 +81,13 @@ const REGION_BOUNDS: L.LatLngBoundsExpression = [
 const FIXED_ZOOM = 9.5;
 
 function toCoord(value: unknown): number | null {
-  if (typeof value === "number" && !Number.isNaN(value)) return value;
+  if (typeof value === "number" && !Number.isNaN(value)) {
+    return value;
+  }
 
   if (typeof value === "string" && value.trim()) {
     const parsed = Number(value);
+
     return Number.isNaN(parsed) ? null : parsed;
   }
 
@@ -96,6 +101,7 @@ function haversineDistanceKm(
   lon2: number
 ) {
   const R = 6371;
+
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
 
@@ -116,7 +122,10 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function buildMarkerIcon(nom: string | undefined, selected: boolean) {
+function buildMarkerIcon(
+  nom: string | undefined,
+  selected: boolean
+) {
   const size = selected ? 16 : 11;
   const safeNom = nom ? escapeHtml(nom) : "";
 
@@ -151,7 +160,9 @@ function MapController({
     const lat = toCoord(selectedTerritoire?.latitude);
     const lng = toCoord(selectedTerritoire?.longitude);
 
-    if (lat === null || lng === null) return;
+    if (lat === null || lng === null) {
+      return;
+    }
 
     map.panTo([lat, lng], {
       animate: true,
@@ -201,15 +212,18 @@ export default function TerritoiresMap({
     (a, b) => b.latitude - a.latitude
   );
 
-  const routePositions: [number, number][] = sortedByLat.map((territoire) => [
-    territoire.latitude,
-    territoire.longitude,
-  ]);
+  const routePositions: [number, number][] =
+    sortedByLat.map((territoire) => [
+      territoire.latitude,
+      territoire.longitude,
+    ]);
 
   const axisFrom = sortedByLat[0]?.nom;
   const axisTo = sortedByLat[sortedByLat.length - 1]?.nom;
 
-  const selectedProjectCount = Array.isArray(selectedTerritoire?.projects)
+  const selectedProjectCount = Array.isArray(
+    selectedTerritoire?.projects
+  )
     ? selectedTerritoire.projects.length
     : null;
 
@@ -270,6 +284,7 @@ export default function TerritoiresMap({
       {axisFrom && axisTo && axisFrom !== axisTo && (
         <div className="absolute left-4 top-4 z-[400] flex items-center gap-1.5 rounded-full bg-[#094734] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#F4F0E8] shadow-[0_4px_14px_rgba(9,71,52,0.28)]">
           <MapPin className="h-3 w-3 shrink-0" />
+
           <span className="truncate">
             Axe {axisFrom} – {axisTo}
           </span>
@@ -289,16 +304,21 @@ export default function TerritoiresMap({
           touchZoom
           zoomControl={false}
           attributionControl
-          style={{ height: "100%", width: "100%" }}
+          style={{
+            height: "100%",
+            width: "100%",
+          }}
           className="absolute inset-0 z-0 h-full w-full"
         >
           <TypedTileLayer
             url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
             maxZoom={20}
-            attribution={`&copy; <a href="https://stadiamaps.com/attribution/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>`}
+            attribution={`&copy; <a href="https://stadiamaps.com/attribution/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>`}
           />
 
-          <MapController selectedTerritoire={selectedTerritoire} />
+          <MapController
+            selectedTerritoire={selectedTerritoire}
+          />
 
           {routePositions.length > 1 && (
             <Polyline
@@ -321,13 +341,17 @@ export default function TerritoiresMap({
                 territoire.slug ??
                 territoire.nom
               }
-              position={[territoire.latitude, territoire.longitude]}
+              position={[
+                territoire.latitude,
+                territoire.longitude,
+              ]}
               icon={buildMarkerIcon(
                 territoire.nom,
                 selectedTerritoire?.id === territoire.id
               )}
               eventHandlers={{
-                click: () => onSelectTerritoire?.(territoire),
+                click: () =>
+                  onSelectTerritoire?.(territoire),
               }}
             />
           ))}
@@ -343,7 +367,9 @@ export default function TerritoiresMap({
           <div className="relative overflow-hidden rounded-xl border border-white/80 bg-[#F8F5EF] shadow-[0_8px_30px_rgba(38,65,56,0.14)]">
             <button
               type="button"
-              onClick={() => onSelectTerritoire?.(null)}
+              onClick={() =>
+                onSelectTerritoire?.(null)
+              }
               className="absolute right-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#E6E0D6]/60 text-[#094734] transition hover:bg-[#E6E0D6]"
               aria-label="Fermer"
             >
@@ -377,9 +403,13 @@ export default function TerritoiresMap({
                 <p className="mt-1 line-clamp-2 text-[9px] leading-[1.4] text-[#78847F]">
                   {selectedProjectCount !== null
                     ? `${selectedProjectCount} projet${
-                        selectedProjectCount > 1 ? "s" : ""
+                        selectedProjectCount > 1
+                          ? "s"
+                          : ""
                       } associé${
-                        selectedProjectCount > 1 ? "s" : ""
+                        selectedProjectCount > 1
+                          ? "s"
+                          : ""
                       }`
                     : "Découvrez ce territoire et les projets associés."}
                 </p>
@@ -402,3 +432,4 @@ export default function TerritoiresMap({
     </div>
   );
 }
+
