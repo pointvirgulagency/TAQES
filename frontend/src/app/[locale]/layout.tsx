@@ -1,6 +1,4 @@
-import Navbar from "@/components/Layout/Navbar";
-import Footer from "@/components/Layout/Footer";
-import "../globals.css"; // Adjust dot nesting depending on file location depth
+import "../globals.css";
 
 export default async function LocaleLayout({
   children,
@@ -13,12 +11,10 @@ export default async function LocaleLayout({
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
-    <div dir={dir} className="w-full min-h-screen flex flex-col justify-between">
-      <Navbar />
+    <div dir={dir} className="w-full min-h-screen">
       <main className="flex-grow">
         {children}
       </main>
-      <Footer />
     </div>
   );
 }
