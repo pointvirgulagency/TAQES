@@ -41,6 +41,15 @@ interface Project {
 
 interface ProjectFiltersProps {
   projects: Project[];
+  typologies: Array<{
+    titre: string;
+    description?: string;
+    client?: string;
+    image?: {
+      url: string;
+      alternativeText?: string | null;
+    };
+  }>;
   locale: "fr" | "ar";
   initialTypologie?: string;
   initialStatut?: string;
