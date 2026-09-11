@@ -1,3 +1,5 @@
+import Navbar from "@/components/Layout/Navbar";
+import Footer from "@/components/Layout/Footer";
 import "../globals.css";
 
 export default async function LocaleLayout({
@@ -11,10 +13,12 @@ export default async function LocaleLayout({
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
-    <div dir={dir} className="w-full min-h-screen">
+    <div dir={dir} className="w-full min-h-screen flex flex-col justify-between">
+      <Navbar />
       <main className="flex-grow">
         {children}
       </main>
+      <Footer />
     </div>
   );
 }
