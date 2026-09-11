@@ -1,7 +1,4 @@
-// TODO: I don't have your ProjectCard.tsx source, so this mirrors the
-// styling conventions used across the codebase (colors, rounded corners,
-// arrow link) rather than copying ProjectCard exactly. Swap in ProjectCard's
-// actual markup if you want pixel-perfect parity.
+
 
 interface ArticleCardProps {
   title: string;

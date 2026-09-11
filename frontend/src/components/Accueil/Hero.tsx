@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 type HeroProps = {
   data: {
@@ -36,6 +39,21 @@ type HeroProps = {
 };
 
 export default function Hero({ data, strapiUrl }: HeroProps) {
+  const params = useParams();
+  const locale = (params?.locale as string) || "fr";
+
+  // Strapi link fields can be a relative internal path ("/projets") or a
+  // full external URL ("https://..."). Only internal paths get the locale
+  // prefix; external/absolute URLs and mailto/tel links pass through as-is.
+  const localize = (href?: string) => {
+    if (!href) return "#";
+    if (/^(https?:)?\/\//.test(href) || /^(mailto:|tel:)/.test(href)) {
+      return href;
+    }
+    const path = href.startsWith("/") ? href : `/${href}`;
+    return `/${locale}${path}`;
+  };
+
   const desktopImage = data.imagedesktop
     ? `${strapiUrl}${data.imagedesktop.url}`
     : "";
@@ -109,14 +127,14 @@ export default function Hero({ data, strapiUrl }: HeroProps) {
 
           <div className="mt-12 flex w-full flex-wrap gap-5 justify-start rtl:justify-end">
             <Link
-              href={data.lienbouton1 ?? "#"}
+              href={localize(data.lienbouton1)}
               className="rounded-full bg-[#00674F] px-8 py-4 font-medium text-[#EBE2DC] transition hover:bg-[#449383]"
             >
               {data.Libellebouton1}
             </Link>
 
             <Link
-              href={data.lienboutonprincipal ?? "#"}
+              href={localize(data.lienboutonprincipal)}
               className="rounded-full border border-[#EBE2DC]/60 px-8 py-4 font-medium text-[#EBE2DC] transition hover:bg-[#EBE2DC] hover:text-[#094734]"
             >
               {data.libelleboutonprincipal}

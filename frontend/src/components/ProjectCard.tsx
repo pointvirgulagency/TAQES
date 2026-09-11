@@ -3,22 +3,22 @@ import Link from "next/link";
 
 type ProjectCardProps = {
   title: string;
+  slug: string;
   description: string;
   imageUrl?: string;
-  slug?: string;
   typologie?: string;
   statut?: string;
   typeOperation?: string;
   publicCible?: string;
   reference?: string;
-  locale: string;
+  locale: "fr" | "ar";
 };
 
 export default function ProjectCard({
   title,
+  slug,
   description,
   imageUrl,
-  slug,
   typologie,
   statut,
   typeOperation,
@@ -26,8 +26,15 @@ export default function ProjectCard({
   reference,
   locale,
 }: ProjectCardProps) {
+  const isArabic = locale === "ar";
+  const projectUrl = `/${locale}/projects/${slug}`;
+
   return (
-    <article className="group overflow-hidden rounded-2xl bg-[#EBE2DC]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <Link
+      href={projectUrl}
+      dir={isArabic ? "rtl" : "ltr"}
+      className="group block overflow-hidden rounded-2xl bg-[#EBE2DC]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
       {imageUrl && (
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image
@@ -39,7 +46,11 @@ export default function ProjectCard({
           />
 
           {statut && (
-            <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[#094734] backdrop-blur-sm">
+            <span
+              className={`absolute top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[#094734] backdrop-blur-sm ${
+                isArabic ? "right-4" : "left-4"
+              }`}
+            >
               {statut}
             </span>
           )}
@@ -59,7 +70,7 @@ export default function ProjectCard({
 
         {reference && (
           <p className="mt-2 text-xs text-[#094734]/50">
-            Réf. {reference}
+            {isArabic ? `المرجع: ${reference}` : `Réf. ${reference}`}
           </p>
         )}
 
@@ -81,18 +92,22 @@ export default function ProjectCard({
           )}
         </div>
 
-        {slug && (
-          <Link
-            href={`/${locale}/projects/${slug}`}
-            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#00674F] transition-colors hover:text-[#094734]"
+        <div className="mt-6 inline-flex items-center gap-3 text-sm font-semibold text-[#00674F]">
+          <span>
+            {isArabic ? "اكتشف المشروع" : "Voir le projet"}
+          </span>
+
+          <span
+            className={`transition-transform duration-300 ${
+              isArabic
+                ? "group-hover:-translate-x-1"
+                : "group-hover:translate-x-1"
+            }`}
           >
-            Voir le projet
-            <span className="transition-transform duration-200 group-hover:translate-x-1">
-              →
-            </span>
-          </Link>
-        )}
+            {isArabic ? "←" : "→"}
+          </span>
+        </div>
       </div>
-    </article>
+    </Link>
   );
 }

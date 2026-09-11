@@ -11,5 +11,9 @@ export default async function LocaleLayout({
 
   const dir = locale === "ar" ? "rtl" : "ltr";
 
-  return <div dir={dir}>{children}</div>;
+  return (
+    <div dir={dir} className="w-full min-h-screen">
+      {children}
+    </div>
+  );
 }

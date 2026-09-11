@@ -1,80 +1,191 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ProjectCard from "@/components/ProjectCard";
+import { translations } from "@/i18n";
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL!;
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "";
+
+interface ProjectType {
+  id?: number;
+  titre?: string;
+  client?: string;
+  description?: string;
+}
+
+interface ProjectVille {
+  id?: number;
+  ville?: string;
+}
+
+interface ProjectImage {
+  url: string;
+  alternativeText?: string;
+}
 
 interface Project {
   id: number;
   title: string;
   slug?: string;
-  description: string;
+  description?: string;
   reference?: string;
-  typologie?: string;
+  localisation?: string;
+  ville?: ProjectVille | null;
   statut?: string;
   type_operation?: string;
   public_cible?: string;
-  FeaturedImage?: {
-    url: string;
-    alternativeText?: string;
-  };
+  annee?: string;
+  type?: ProjectType[] | null;
+  FeaturedImage?: ProjectImage | null;
 }
 
 interface ProjectFiltersProps {
   projects: Project[];
   locale: "fr" | "ar";
+  initialTypologie?: string;
+  initialStatut?: string;
+  initialLocation?: string;
 }
 
-const typologies = [
-  { label: "Foncier", value: "Foncier" },
-  { label: "Appartements", value: "Appartements" },
-  { label: "Villas", value: "Villas" },
-  { label: "Lots R+3", value: "Lots R+3" },
-  { label: "Lots R+4", value: "Lots R+4" },
-  { label: "Lots Villas", value: "Lots Villas" },
-  { label: "Mixte ou tertiaire", value: "Mixte-Tertiaire" },
-  { label: "Investissement", value: "Investissement" },
-];
-
 export default function ProjectFilters({
-  projects,
+  projects = [],
   locale,
+  initialTypologie = "",
+  initialStatut = "",
+  initialLocation = "",
 }: ProjectFiltersProps) {
-  const [audience, setAudience] = useState<"B2C" | "B2B">("B2C");
-  const [selectedTypology, setSelectedTypology] = useState("");
-  const [location, setLocation] = useState("");
-  const [status, setStatus] = useState("");
-  const [availability, setAvailability] = useState("");
-  const [sort, setSort] = useState("recent");
+  const t = translations[locale];
 
-  const locations = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          projects
-            .map((project) => project.reference)
-            .filter(Boolean)
-        )
-      ) as string[],
-    [projects]
-  );
+  const [audience, setAudience] =
+    useState<"B2C" | "B2B">("B2C");
 
-  const statuses = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          projects
-            .map((project) => project.statut)
-            .filter(Boolean)
-        )
-      ) as string[],
-    [projects]
-  );
+  const [selectedTypology, setSelectedTypology] =
+    useState(initialTypologie);
+
+  const [location, setLocation] =
+    useState(initialLocation);
+
+  const [status, setStatus] =
+    useState(initialStatut);
+
+  const [operation, setOperation] =
+    useState("");
+
+  const [year, setYear] =
+    useState("");
+
+  const [sort, setSort] =
+    useState("recent");
+
+  const resultsRef =
+    useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const savedTypologie =
+      sessionStorage.getItem("selectedTypologie");
+
+    if (savedTypologie) {
+      setSelectedTypology(savedTypologie);
+      sessionStorage.removeItem("selectedTypologie");
+
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+
+      return;
+    }
+
+    if (
+      initialTypologie ||
+      initialStatut ||
+      initialLocation
+    ) {
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  }, [
+    initialTypologie,
+    initialStatut,
+    initialLocation,
+  ]);
+
+  const typologies = useMemo(() => {
+    const values = projects.flatMap((project) =>
+      Array.isArray(project.type)
+        ? project.type
+            .map((item) => item?.titre)
+            .filter(
+              (value): value is string =>
+                typeof value === "string" &&
+                value.trim().length > 0
+            )
+        : []
+    );
+
+    return Array.from(new Set(values));
+  }, [projects]);
+
+  const locations = useMemo(() => {
+    const values = projects
+      .map((project) => project.ville?.ville)
+      .filter(
+        (value): value is string =>
+          typeof value === "string" &&
+          value.trim().length > 0
+      );
+
+    return Array.from(new Set(values));
+  }, [projects]);
+
+  const statuses = useMemo(() => {
+    const values = projects
+      .map((project) => project.statut)
+      .filter(
+        (value): value is string =>
+          typeof value === "string" &&
+          value.trim().length > 0
+      );
+
+    return Array.from(new Set(values));
+  }, [projects]);
+
+  const operations = useMemo(() => {
+    const values = projects
+      .map((project) => project.type_operation)
+      .filter(
+        (value): value is string =>
+          typeof value === "string" &&
+          value.trim().length > 0
+      );
+
+    return Array.from(new Set(values));
+  }, [projects]);
+
+  const years = useMemo(() => {
+    const values = projects
+      .map((project) => project.annee)
+      .filter(
+        (value): value is string =>
+          typeof value === "string" &&
+          value.trim().length > 0
+      );
+
+    return Array.from(new Set(values)).sort(
+      (a, b) => Number(b) - Number(a)
+    );
+  }, [projects]);
 
   const filteredProjects = useMemo(() => {
     const filtered = projects.filter((project) => {
       const matchesAudience =
+        !project.public_cible ||
         audience === "B2C"
           ? project.public_cible === "B2C" ||
             project.public_cible === "Mixte"
@@ -83,21 +194,35 @@ export default function ProjectFilters({
 
       const matchesTypology =
         !selectedTypology ||
-        project.typologie === selectedTypology;
+        (Array.isArray(project.type) &&
+          project.type.some(
+            (item) =>
+              item?.titre === selectedTypology
+          ));
 
       const matchesLocation =
         !location ||
-        project.reference === location;
+        project.ville?.ville === location;
 
       const matchesStatus =
         !status ||
         project.statut === status;
 
+      const matchesOperation =
+        !operation ||
+        project.type_operation === operation;
+
+      const matchesYear =
+        !year ||
+        project.annee === year;
+
       return (
         matchesAudience &&
         matchesTypology &&
         matchesLocation &&
-        matchesStatus
+        matchesStatus &&
+        matchesOperation &&
+        matchesYear
       );
     });
 
@@ -118,6 +243,8 @@ export default function ProjectFilters({
     selectedTypology,
     location,
     status,
+    operation,
+    year,
     sort,
   ]);
 
@@ -126,24 +253,31 @@ export default function ProjectFilters({
     setSelectedTypology("");
     setLocation("");
     setStatus("");
-    setAvailability("");
+    setOperation("");
+    setYear("");
     setSort("recent");
   }
 
-  return (
-    <section className="bg-white px-6 py-20 md:px-10 lg:px-16">
-      <div className="mx-auto max-w-7xl">
+  const resultText =
+    filteredProjects.length === 1
+      ? t.projects.filters.results.singular
+      : t.projects.filters.results.plural;
 
-        {/* Title */}
+  return (
+    <section
+      ref={resultsRef}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className="bg-white px-6 py-20 md:px-10 lg:px-16"
+    >
+      <div className="mx-auto max-w-7xl">
         <div className="mb-10 text-center">
           <h2 className="text-3xl font-semibold text-[#094734] md:text-4xl">
-            Que recherchez-vous ?
+            {t.projects.filters.title}
           </h2>
 
           <div className="mx-auto mt-3 h-px w-12 bg-[#C7A96B]" />
         </div>
 
-        {/* Audience */}
         <div className="mb-8 grid grid-cols-2 overflow-hidden rounded-xl border border-[#094734]/10">
           <button
             type="button"
@@ -155,7 +289,9 @@ export default function ProjectFilters({
             }`}
           >
             <span>♟</span>
-            <span>VOUS ÊTES PARTICULIER</span>
+            <span>
+              {t.projects.filters.audience.individual}
+            </span>
           </button>
 
           <button
@@ -168,135 +304,150 @@ export default function ProjectFilters({
             }`}
           >
             <span>▣</span>
-            <span>VOUS ÊTES INVESTISSEUR / PROFESSIONNEL</span>
+            <span>
+              {t.projects.filters.audience.professional}
+            </span>
           </button>
         </div>
 
-        {/* Typologies */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-          {typologies.map((typology) => {
-            const active =
-              selectedTypology === typology.value;
+        <div className="mb-8">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-[#094734]/60">
+              {t.projects.filters.typology.label}
+            </h3>
+          </div>
 
-            return (
-              <button
-                key={typology.value}
-                type="button"
-                onClick={() =>
-                  setSelectedTypology(
-                    active ? "" : typology.value
-                  )
-                }
-                className={`group rounded-xl border p-3 text-center transition ${
-                  active
-                    ? "border-[#094734] bg-[#094734] text-white"
-                    : "border-[#094734]/10 bg-white hover:-translate-y-1 hover:border-[#00674F]/40 hover:shadow-md"
-                }`}
-              >
-                <div className="mb-3 aspect-square overflow-hidden rounded-lg bg-[#EBE2DC]">
-                  <div className="flex h-full items-center justify-center text-xs text-[#094734]/50">
-                    Image
-                  </div>
-                </div>
+          {typologies.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+              {typologies.map((typology) => {
+                const active =
+                  selectedTypology === typology;
 
-                <p
-                  className={`min-h-[40px] text-xs font-medium ${
-                    active
-                      ? "text-white"
-                      : "text-[#094734]"
-                  }`}
-                >
-                  {typology.label}
-                </p>
+                return (
+                  <button
+                    key={typology}
+                    type="button"
+                    onClick={() =>
+                      setSelectedTypology(
+                        active ? "" : typology
+                      )
+                    }
+                    className={`group rounded-xl border p-3 text-center transition ${
+                      active
+                        ? "border-[#094734] bg-[#094734] text-white"
+                        : "border-[#094734]/10 bg-white hover:-translate-y-1 hover:border-[#00674F]/40 hover:shadow-md"
+                    }`}
+                  >
+                    <div className="mb-3 aspect-square overflow-hidden rounded-lg bg-[#EBE2DC]">
+                      <div className="flex h-full items-center justify-center px-2 text-xs text-[#094734]/50">
+                        {typology}
+                      </div>
+                    </div>
 
-                <span
-                  className={`mx-auto mt-2 flex h-7 w-7 items-center justify-center rounded-full text-sm ${
-                    active
-                      ? "bg-white text-[#094734]"
-                      : "bg-[#094734] text-white"
-                  }`}
-                >
-                  →
-                </span>
-              </button>
-            );
-          })}
+                    <p
+                      className={`min-h-[40px] text-xs font-medium ${
+                        active
+                          ? "text-white"
+                          : "text-[#094734]"
+                      }`}
+                    >
+                      {typology}
+                    </p>
+
+                    <span
+                      className={`mx-auto mt-2 flex h-7 w-7 items-center justify-center rounded-full text-sm ${
+                        active
+                          ? "bg-white text-[#094734]"
+                          : "bg-[#094734] text-white"
+                      }`}
+                    >
+                      {locale === "ar"
+                        ? "←"
+                        : "→"}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-[#094734]/10 bg-[#EBE2DC]/30 px-6 py-8 text-center text-sm text-[#094734]/60">
+              Aucune typologie disponible.
+            </div>
+          )}
         </div>
 
-        {/* Filters */}
-        <div className="mt-8 rounded-2xl bg-[#EBE2DC]/50 p-5 md:p-6">
+        <div className="rounded-2xl bg-[#EBE2DC]/50 p-5 md:p-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-
             <FilterSelect
-              label="LOCALISATION"
+              label={t.projects.filters.location.label}
               value={location}
               onChange={setLocation}
               options={locations}
-              placeholder="Toutes les villes"
+              placeholder={
+                t.projects.filters.location.placeholder
+              }
+              locale={locale}
             />
 
             <FilterSelect
-              label="TYPOLOGIE"
+              label={t.projects.filters.typology.label}
               value={selectedTypology}
               onChange={setSelectedTypology}
-              options={typologies.map(
-                (typology) => typology.value
-              )}
-              placeholder="Toutes les typologies"
+              options={typologies}
+              placeholder={
+                t.projects.filters.typology.placeholder
+              }
+              locale={locale}
             />
 
             <FilterSelect
-              label="STATUT"
+              label={t.projects.filters.status.label}
               value={status}
               onChange={setStatus}
               options={statuses}
-              placeholder="Tous les statuts"
+              placeholder={t.projects.filters.status.placeholder}
+              locale={locale}
             />
 
             <FilterSelect
-              label="DISPONIBILITÉ"
-              value={availability}
-              onChange={setAvailability}
-              options={[
-                "Disponible",
-                "En cours",
-                "Indisponible",
-              ]}
-              placeholder="Disponible"
+              label="Type d'opération"
+              value={operation}
+              onChange={setOperation}
+              options={operations}
+              placeholder="Toutes les opérations"
+              locale={locale}
             />
 
-            <div className="flex items-end gap-3">
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="flex-1 px-3 py-3 text-xs font-medium uppercase tracking-wide text-[#094734]/70 transition hover:text-[#094734]"
-              >
-                ↻ Réinitialiser
-              </button>
+            <FilterSelect
+              label="Année"
+              value={year}
+              onChange={setYear}
+              options={years}
+              placeholder="Toutes les années"
+              locale={locale}
+            />
+          </div>
 
-              <button
-                type="button"
-                className="flex-1 rounded-lg bg-[#094734] px-4 py-3 text-xs font-medium uppercase tracking-wide text-white transition hover:bg-[#00674F]"
-              >
-                Filtrer
-              </button>
-            </div>
-
+          <div className="mt-4 flex justify-end">
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="rounded-lg px-4 py-3 text-xs font-medium uppercase tracking-wide text-[#094734]/70 transition hover:text-[#094734]"
+            >
+              ↻ {t.projects.filters.reset}
+            </button>
           </div>
         </div>
 
-        {/* Results */}
         <div className="mt-16">
-
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
             <p className="text-sm font-medium text-[#094734]">
-              {filteredProjects.length} projets trouvés
+              {filteredProjects.length} {resultText}
             </p>
 
             <div className="flex items-center gap-3">
               <label className="text-xs font-medium uppercase tracking-wide text-[#094734]/60">
-                Trier par :
+                {t.projects.filters.sort.label}
               </label>
 
               <select
@@ -307,43 +458,59 @@ export default function ProjectFilters({
                 className="rounded-lg border border-[#094734]/10 bg-white px-4 py-2 text-sm text-[#094734] outline-none"
               >
                 <option value="recent">
-                  Les plus récents
+                  {t.projects.filters.sort.recent}
                 </option>
 
                 <option value="oldest">
-                  Les plus anciens
+                  {t.projects.filters.sort.oldest}
                 </option>
 
                 <option value="name">
-                  Nom du projet
+                  {t.projects.filters.sort.name}
                 </option>
               </select>
             </div>
-
           </div>
 
           {filteredProjects.length > 0 ? (
             <>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {filteredProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    title={project.title}
-                    description={project.description}
-                    slug={project.slug}
-                    reference={project.reference}
-                    typologie={project.typologie}
-                    statut={project.statut}
-                    typeOperation={project.type_operation}
-                    publicCible={project.public_cible}
-                    locale={locale}
-                    imageUrl={
-                      project.FeaturedImage
-                        ? `${STRAPI_URL}${project.FeaturedImage.url}`
-                        : ""
-                    }
-                  />
-                ))}
+                {filteredProjects.map((project) => {
+                  console.log(
+                    "PROJECT CARD DATA:",
+                    project
+                  );
+
+                  return (
+                    <ProjectCard
+                      key={project.id}
+                      title={project.title}
+                      description={
+                        project.description ?? ""
+                      }
+                      slug={project.slug ?? ""}
+                      reference={project.reference}
+                      typologie={
+                        Array.isArray(project.type)
+                          ? project.type[0]?.titre
+                          : undefined
+                      }
+                      statut={project.statut}
+                      typeOperation={
+                        project.type_operation
+                      }
+                      publicCible={
+                        project.public_cible
+                      }
+                      locale={locale}
+                      imageUrl={
+                        project.FeaturedImage?.url
+                          ? `${STRAPI_URL}${project.FeaturedImage.url}`
+                          : ""
+                      }
+                    />
+                  );
+                })}
               </div>
 
               {filteredProjects.length > 8 && (
@@ -352,10 +519,12 @@ export default function ProjectFilters({
                     type="button"
                     className="group flex items-center gap-4 rounded-full bg-[#094734] px-8 py-3 text-sm font-medium uppercase tracking-wide text-white transition hover:bg-[#00674F]"
                   >
-                    Voir plus de projets
+                    {t.projects.filters.loadMore}
 
                     <span className="flex h-7 w-7 items-center justify-center rounded-full border border-white/40 transition group-hover:translate-x-1">
-                      →
+                      {locale === "ar"
+                        ? "←"
+                        : "→"}
                     </span>
                   </button>
                 </div>
@@ -364,11 +533,10 @@ export default function ProjectFilters({
           ) : (
             <div className="rounded-xl bg-[#EBE2DC]/50 px-6 py-16 text-center">
               <p className="text-lg text-[#094734]/70">
-                Aucun projet ne correspond à vos critères.
+                {t.projects.filters.noResults}
               </p>
             </div>
           )}
-
         </div>
       </div>
     </section>
@@ -379,14 +547,16 @@ function FilterSelect({
   label,
   value,
   onChange,
-  options,
+  options = [],
   placeholder,
+  locale,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  options: string[];
+  options?: string[];
   placeholder: string;
+  locale?: "fr" | "ar";
 }) {
   return (
     <div>
@@ -399,15 +569,28 @@ function FilterSelect({
         onChange={(event) =>
           onChange(event.target.value)
         }
+        dir={locale === "ar" ? "rtl" : "ltr"}
         className="w-full appearance-none rounded-lg border-0 bg-white px-4 py-3 text-sm text-[#094734] outline-none ring-1 ring-[#094734]/5 focus:ring-2 focus:ring-[#00674F]/30"
       >
-        <option value="">{placeholder}</option>
+        <option value="">
+          {placeholder}
+        </option>
 
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
+        {Array.isArray(options) &&
+          options
+            .filter(
+              (option) =>
+                typeof option === "string" &&
+                option.trim().length > 0
+            )
+            .map((option) => (
+              <option
+                key={option}
+                value={option}
+              >
+                {option}
+              </option>
+            ))}
       </select>
     </div>
   );

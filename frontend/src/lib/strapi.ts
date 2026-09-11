@@ -1,65 +1,137 @@
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL!;
 
-export async function getProjects(locale: string) {
+type Locale = "fr" | "ar";
+
+async function fetchStrapi(
+  url: string,
+  errorMessage: string
+) {
+  const res = await fetch(url, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+
+    console.error(`${errorMessage}:`, error);
+
+    throw new Error(errorMessage);
+  }
+
+  return res.json();
+}
+
+/* =========================================================
+   PROJECTS
+========================================================= */
+
+export async function getProjects(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/projects?locale=${locale}` +
-    `&populate=FeaturedImage`;
+    `&populate[FeaturedImage][populate]=*` +
+    `&populate[gallery][populate]=*` +
+    `&populate[videos][populate]=*` +
+    `&populate[brochure][populate]=*` +
+    `&populate[type][populate]=*` +
+    `&populate[ville][populate]=*`;
 
-  const res = await fetch(url, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to fetch projects");
-  }
-
-  return res.json();
+  return fetchStrapi(
+    url,
+    "Failed to fetch projects"
+  );
 }
 
-export async function getProjetsPage(locale: string) {
+/* =========================================================
+   PROJECT BY SLUG
+========================================================= */
+
+export async function getProjectBySlug(
+  locale: Locale,
+  slug: string
+) {
+  const query = new URLSearchParams({
+    locale,
+    "filters[slug][$eq]": slug,
+    "populate[FeaturedImage][populate]": "*",
+    "populate[gallery][populate]": "*",
+    "populate[videos][populate]": "*",
+    "populate[brochure][populate]": "*",
+    "populate[type][populate]": "*",
+    "populate[ville][populate]": "*",
+  });
+
+  const res = await fetch(
+    `${STRAPI_URL}/api/projects?${query.toString()}`,
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.text();
+
+    console.error(
+      `Failed to fetch project "${slug}":`,
+      error
+    );
+
+    throw new Error(
+      `Failed to fetch project "${slug}": ${res.status}`
+    );
+  }
+
+  const json = await res.json();
+
+  return json.data?.[0] ?? null;
+}
+
+/* =========================================================
+   PROJECTS PAGE
+========================================================= */
+
+export async function getProjetsPage(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/page-projet?locale=${locale}` +
-    `&populate[HeroProjet][populate][projet][populate]=FeaturedImage`;
+    `&populate[HeroProjet][populate][projet][populate][FeaturedImage][populate]=*` +
+    `&populate[HeroProjet][populate][projet][populate][type][populate]=*` +
+    `&populate[HeroProjet][populate][projet][populate][ville][populate]=*`;
 
-  const res = await fetch(url, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to fetch projets page");
-  }
-
-  return res.json();
+  return fetchStrapi(
+    url,
+    "Failed to fetch projets page"
+  );
 }
 
-export async function getAccueil(locale: string) {
+/* =========================================================
+   ACCUEIL
+========================================================= */
+
+export async function getAccueil(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/acceuil?locale=${locale}` +
     `&populate[Hero][populate]=*` +
     `&populate[Nouvelle_Identite][populate]=*` +
     `&populate[Projets_Mis_En_Avant][populate][projects][populate]=*` +
-    `&populate[Territoires][populate][projects][populate]=*` +
+    `&populate[territoires][populate]=*` +
     `&populate[NotreApproche][populate]=*` +
     `&populate[Actualites][populate][articlePrincipal][populate]=*` +
     `&populate[Actualites][populate][articlesSecondaires][populate]=*` +
     `&populate[CTAFinal][populate]=*` +
-    `&populate[SEO][populate]=*`;
+    `&populate[typologie][populate]=*`;
 
-  const res = await fetch(url, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to fetch accueil");
-  }
-
-  return res.json();
+  return fetchStrapi(
+    url,
+    "Failed to fetch accueil"
+  );
 }
 
-export async function getGroupe(locale: string) {
+/* =========================================================
+   LE GROUPE
+========================================================= */
+
+export async function getGroupe(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/le-groupe?locale=${locale}` +
     `&populate[Hero][populate]=*` +
@@ -69,112 +141,280 @@ export async function getGroupe(locale: string) {
     `&populate[transition][populate]=*` +
     `&populate[vision][populate]=*` +
     `&populate[mission][populate]=*` +
+    `&populate[valeurs][populate]=*` +
     `&populate[chiffrescles][populate]=*` +
-    `&populate[gouvernance][populate]=*` +
-    `&populate[SEO][populate]=*`;
+    `&populate[gouvernance][populate]=*`;
 
-  const res = await fetch(url, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to fetch groupe");
-  }
-
-  return res.json();
+  return fetchStrapi(
+    url,
+    "Failed to fetch groupe"
+  );
 }
 
+/* =========================================================
+   CONTACT
+========================================================= */
 
-export async function getContactPage(locale: string) {
+export async function getContactPage(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/contact?locale=${locale}` +
     `&populate[Hero][populate]=*` +
-    `&populate[demandes][populate]=*` +
-    `&populate[Selection][populate]=*` +
-    `&populate[SEO][populate]=*`;
+    `&populate[demandes][populate]=*`;
 
-  const res = await fetch(url, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to fetch contact page");
-  }
-
-  return res.json();
+  return fetchStrapi(
+    url,
+    "Failed to fetch contact page"
+  );
 }
 
+/* =========================================================
+   SUBMIT DEMANDE
+========================================================= */
+
 export async function submitDemande(payload: {
-  nomComplet: string;
-  email: string;
+  nom_complet: string;
   telephone?: string;
-  sujet?: string;
-  message: string;
-  type?: string;
-  locale: string;
+  email: string;
+  preference_contact?: string;
+  langue: string;
+  ville?: string;
+  message: unknown;
+  consentement: boolean;
+  locale: Locale;
+
+  demande_detail?: {
+    __component:
+      | "shared.demande-projet"
+      | "shared.demande-partenariat"
+      | "shared.demande-foncier"
+      | "shared.demande-reclamation";
+
+    project?: number;
+    zone?: string;
+    type_bien?: string;
+    surface_recherchee?: string;
+    delai_souhaite?: string;
+
+    organisation?: string;
+    fonction?: string;
+    type_demande?: string;
+    message_detail?: unknown;
+
+    localisation?: string;
+    superficie?: string;
+    nature_proposition?: string;
+    document_foncier?: number;
+
+    reference_dossier?: string;
+    objet?: string;
+    piece_jointe?: number[];
+  };
 }) {
   const url = `${STRAPI_URL}/api/demandes`;
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      data: {
-        nomComplet: payload.nomComplet,
-        email: payload.email,
-        telephone: payload.telephone,
-        sujet: payload.sujet,
-        message: payload.message,
-        type: payload.type ?? "Nous contacter",
-        locale: payload.locale,
+  const data: Record<string, unknown> = {
+    nom_complet: payload.nom_complet,
+    telephone: payload.telephone,
+    email: payload.email,
+    preference_contact: payload.preference_contact,
+    langue: payload.langue,
+    ville: payload.ville,
+    message: payload.message,
+    consentement: payload.consentement,
+  };
+
+  if (payload.demande_detail) {
+    data.demande_detail = [payload.demande_detail];
+  }
+
+  const res = await fetch(
+    `${url}?locale=${payload.locale}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    }),
-  });
+      body: JSON.stringify({
+        data,
+      }),
+    }
+  );
 
   if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to submit demande");
+    const error = await res.text();
+
+    console.error(
+      "Failed to submit demande:",
+      error
+    );
+
+    throw new Error(
+      "Failed to submit demande"
+    );
   }
 
   return res.json();
 }
 
-export async function getActualitesPage(locale: string) {
+/* =========================================================
+   ACTUALITES PAGE
+========================================================= */
+
+export async function getActualitesPage(locale: Locale) {
   const url =
-    `${STRAPI_URL}/api/page-actualite?locale=${locale}` +
-    `&populate[Hero][populate]=*` +
-    `&populate[SEO][populate]=*`;
+    `${STRAPI_URL}/api/page-actu?locale=${locale}` +
+    `&populate[hero][populate]=*`;
 
-  const res = await fetch(url, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to fetch actualites page");
-  }
-
-  return res.json();
+  return fetchStrapi(
+    url,
+    "Failed to fetch actualites page"
+  );
 }
 
-export async function getArticles(locale: string) {
-  const url =
-    `${STRAPI_URL}/api/articles?locale=${locale}` +
-    `&populate=FeaturedImage` +
-    `&sort=publishedAt:desc`;
+/* =========================================================
+   ARTICLES
+========================================================= */
 
-  const res = await fetch(url, {
-    cache: "no-store",
+export async function getArticles(locale: Locale) {
+  const url =
+    `${STRAPI_URL}/api/actualites?locale=${locale}` +
+    `&populate[image][populate]=*` +
+    `&sort[0]=Date:desc`;
+
+  return fetchStrapi(
+    url,
+    "Failed to fetch articles"
+  );
+}
+
+/* =========================================================
+   ARTICLE BY SLUG
+========================================================= */
+
+export async function getArticleBySlug(
+  locale: Locale,
+  slug: string
+) {
+  const query = new URLSearchParams({
+    locale,
+    "filters[slug][$eq]": slug,
+    "populate[image][populate]": "*",
   });
 
+  const res = await fetch(
+    `${STRAPI_URL}/api/actualites?${query.toString()}`,
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+
   if (!res.ok) {
-    console.log(await res.text());
-    throw new Error("Failed to fetch articles");
+    const error = await res.text();
+
+    console.error(
+      "Failed to fetch article:",
+      error
+    );
+
+    throw new Error(
+      `Failed to fetch article: ${res.status}`
+    );
   }
 
-  return res.json();
+  const json = await res.json();
+
+  return json.data?.[0] ?? null;
+}
+
+/* =========================================================
+   PROJECT BY TITLE
+========================================================= */
+
+export async function getProjectByTitle(
+  locale: Locale,
+  title: string
+) {
+  const query = new URLSearchParams({
+    locale,
+    "filters[title][$eq]": title,
+    "populate[FeaturedImage][populate]": "*",
+    "populate[gallery][populate]": "*",
+    "populate[videos][populate]": "*",
+    "populate[brochure][populate]": "*",
+    "populate[type][populate]": "*",
+    "populate[ville][populate]": "*",
+  });
+
+  const res = await fetch(
+    `${STRAPI_URL}/api/projects?${query.toString()}`,
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.text();
+
+    console.error(
+      `Failed to fetch project "${title}":`,
+      error
+    );
+
+    throw new Error(
+      `Failed to fetch project "${title}": ${res.status}`
+    );
+  }
+
+  const json = await res.json();
+
+  return json.data?.[0] ?? null;
+}
+
+/* =========================================================
+   UPLOAD
+========================================================= */
+
+export async function uploadFile(
+  file: File
+): Promise<number> {
+  const formData = new FormData();
+
+  formData.append("files", file);
+
+  const res = await fetch(
+    `${STRAPI_URL}/api/upload`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.text();
+
+    console.error(
+      "Failed to upload file:",
+      error
+    );
+
+    throw new Error(
+      "Failed to upload file"
+    );
+  }
+
+  const json = await res.json();
+
+  return json[0].id as number;
+}
+
+export async function uploadFiles(
+  files: File[]
+): Promise<number[]> {
+  return Promise.all(
+    files.map((file) => uploadFile(file))
+  );
 }
