@@ -108,7 +108,7 @@ export default async function ContactPage({
               {hero?.surtitre}
             </p>
 
-            <div className="mb-2 h-[1px] w-10 bg-[#c2825d]" />
+            <div className="mb-2 h-[2px] w-10 bg-[#c2825d]" />
 
             <h1 className="mt-4 font-serif text-4xl leading-tight md:text-5xl">
               {hero?.titre}

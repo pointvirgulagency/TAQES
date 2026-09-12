@@ -171,15 +171,6 @@ export default async function GroupePage({
         />
       )}
 
-      {/* CTA */}
-      {data.CTAFinal && (
-        <CTAFinal
-          data={data.CTAFinal}
-        />
-      )}
-
-      <BeforeFooter />
-
     </main>
   );
 }
