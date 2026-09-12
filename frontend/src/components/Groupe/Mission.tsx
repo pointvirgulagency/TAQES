@@ -1,9 +1,14 @@
-import { Eye, Target, Gem, Check } from "lucide-react";
 import RichText from "@/components/RichText";
+
+interface StrapiImage {
+  url: string;
+}
 
 interface SectionData {
   titre?: string | null;
+  soustitre?: string | null;
   description?: any;
+  image?: StrapiImage | StrapiImage[] | null;
 }
 
 interface Valeur {
@@ -14,135 +19,120 @@ interface Valeur {
 interface MissionProps {
   vision?: SectionData | null;
   mission?: SectionData | null;
+  transition?: SectionData | null;
   valeurs?: Valeur[] | null;
+  strapiUrl: string;
 }
 
 export default function Mission({
   vision,
   mission,
+  transition,
   valeurs,
+  strapiUrl,
 }: MissionProps) {
-  if (!vision && !mission && !valeurs?.length) {
+  if (!vision && !mission && !valeurs?.length && !transition) {
     return null;
   }
 
-  const midpoint = Math.ceil((valeurs?.length ?? 0) / 2);
-  const valeursCol1 = valeurs?.slice(0, midpoint) ?? [];
-  const valeursCol2 = valeurs?.slice(midpoint) ?? [];
+  const missionImage = Array.isArray(mission?.image)
+    ? mission.image[0]
+    : mission?.image;
+
+  const backgroundImage = missionImage?.url
+    ? `${strapiUrl.replace(/\/$/, "")}${missionImage.url}`
+    : undefined;
 
   return (
-    <section className="bg-[#F4F0EA] px-6 py-16 md:px-10 md:py-20 lg:px-16">
+    <section
+      className="relative min-h-[720px] w-full bg-cover bg-center bg-no-repeat px-6 py-12 md:px-12 lg:px-20"
+      style={{
+        backgroundImage: backgroundImage
+          ? `url("${backgroundImage}")`
+          : undefined,
+      }}
+    >
       <div className="mx-auto max-w-7xl">
-
-        <h2 className="mb-12 font-serif text-4xl font-normal text-[#094734] md:text-5xl">
-          Vision, mission &amp; valeurs
-        </h2>
-
-        <div className="grid grid-cols-1 items-stretch lg:grid-cols-3">
-
-          {/* VISION */}
-          <div className="flex flex-col px-0 lg:border-r lg:border-[#094734]/15 lg:pr-10">
-            {vision && (
-              <>
-                <div className="mb-4 flex items-center gap-3">
-                  <Eye
-                    strokeWidth={1.5}
-                    className="h-9 w-9 shrink-0 text-[#00674F]"
-                  />
-
-                  <h3 className="font-serif text-2xl font-medium text-[#00674F] md:text-3xl">
-                    {vision.titre}
-                  </h3>
-                </div>
-
-                <div className="text-base leading-7 text-[#094734]/60">
-                  <RichText
-                    content={vision.description}
-                    className="leading-6"
-                  />
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* MISSION */}
-          <div className="flex flex-col px-0 lg:border-r lg:border-[#094734]/15 lg:px-10">
-            {mission && (
-              <>
-                <div className="mb-4 flex items-center gap-3">
-                  <Target
-                    strokeWidth={1.5}
-                    className="h-9 w-9 shrink-0 text-[#00674F]"
-                  />
-
-                  <h3 className="font-serif text-2xl font-medium text-[#00674F] md:text-3xl">
-                    {mission.titre}
-                  </h3>
-                </div>
-
-                <div className="text-base leading-7 text-[#094734]/60">
-                  <RichText
-                    content={mission.description}
-                    className="leading-6"
-                  />
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* VALEURS */}
-          <div className="flex flex-col px-0 lg:pl-10">
-            {valeurs && valeurs.length > 0 && (
-              <>
-                <div className="mb-4 flex items-center gap-3">
-                  <Gem
-                    strokeWidth={1.5}
-                    className="h-9 w-9 shrink-0 text-[#00674F]"
-                  />
-
-                  <h3 className="font-serif text-2xl font-medium text-[#00674F] md:text-3xl">
-                    Valeurs
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                  <ul className="space-y-3">
-                    {valeursCol1.map((valeur) => (
-                      <li
-                        key={valeur.id}
-                        className="flex items-start gap-2 text-base font-medium text-[#094734]/80"
-                      >
-                        <Check
-                          strokeWidth={2.5}
-                          className="mt-1 h-4 w-4 shrink-0 text-[#00674F]"
-                        />
-
-                        <span>{valeur.titre}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <ul className="space-y-3">
-                    {valeursCol2.map((valeur) => (
-                      <li
-                        key={valeur.id}
-                        className="flex items-start gap-2 text-base font-medium text-[#094734]/80"
-                      >
-                        <Check
-                          strokeWidth={2.5}
-                          className="mt-1 h-4 w-4 shrink-0 text-[#00674F]"
-                        />
-
-                        <span>{valeur.titre}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </>
-            )}
-          </div>
-
+        <div className="mb-12 max-w-xl pl-4 md:pl-8">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#c2825d]">
+            CE QUI NOUS GUIDE
+          </p>
+          <h2 className="font-serif text-3xl font-normal leading-tight text-white md:text-5xl">
+            Une vision portée par la parole
+          </h2>
         </div>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
+          <div className="flex flex-col pt-4 pl-6 md:pl-10">
+            {vision && (
+              <div className="max-w-xs">
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0b3121]">
+                    {vision.titre}
+                  </span>
+                </div>
+                <div className="mb-3 h-[2px] w-10 bg-[#c2825d]" />
+                <div className="text-xs leading-relaxed text-[#0b3121] md:text-sm">
+                  <RichText content={vision.description} />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col items-center justify-center pt-8 text-center lg:pt-0">
+            {transition && (
+              <div className="max-w-xs">
+                {transition.titre && (
+                  <h3 className="font-serif text-3xl font-normal text-[#0b3121] md:text-4xl">
+                    {transition.titre}
+                  </h3>
+                )}
+                {transition.soustitre && (
+                  <p className="mt-1 font-serif text-base italic text-[#c2825d] md:text-lg">
+                    {transition.soustitre}
+                  </p>
+                )}
+                {transition.description && (
+                  <p className="mt-4 text-xs leading-relaxed text-[#0b3121] md:text-sm">
+                    {transition.description}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col pt-8 lg:pt-16 pl-4 md:pl-8">
+            {mission && (
+              <div className="ml-auto max-w-xs">
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0b3121]">
+                    {mission.titre || "MISSION"}
+                  </span>
+                </div>
+                <div className="mb-3 h-[2px] w-10 bg-[#c2825d]" />
+                <div className="text-xs leading-relaxed text-[#0b3121] md:text-sm">
+                  <RichText content={mission.description} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {valeurs && valeurs.length > 0 && (
+          <div className="mt-20 grid grid-cols-2 gap-6 md:grid-cols-4 lg:mt-32">
+            {valeurs.map((valeur) => (
+              <div key={valeur.id} className="flex flex-col items-center text-center">
+                <span className="mb-2 h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
+                <p className="font-serif text-sm font-medium text-[#0b3121] md:text-base">
+                  {valeur.titre}
+                </p>
+                <div className="mt-1 h-[1px] w-6 bg-[#c2825d]" />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

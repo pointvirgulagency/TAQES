@@ -115,42 +115,32 @@ function Heading({
   level: number;
   children: React.ReactNode;
 }) {
-  const safeLevel = Math.min(
-    Math.max(level, 1),
-    6
-  );
+  const safeLevel = Math.min(Math.max(level, 1), 6);
 
   const classes = {
-    1: "mt-10 mb-6 text-4xl font-bold leading-tight tracking-tight",
-    2: "mt-10 mb-5 text-3xl font-bold leading-tight tracking-tight",
-    3: "mt-8 mb-4 text-2xl font-bold leading-tight",
-    4: "mt-7 mb-3 text-xl font-semibold leading-tight",
-    5: "mt-6 mb-3 text-lg font-semibold leading-tight",
-    6: "mt-5 mb-2 text-base font-semibold leading-tight",
+    1: "mt-8 mb-4 text-4xl font-bold leading-tight tracking-tight",
+    2: "mt-8 mb-4 text-3xl font-bold leading-tight tracking-tight",
+    3: "mt-6 mb-3 text-2xl font-bold leading-tight",
+    4: "mt-5 mb-2 text-xl font-semibold leading-tight",
+    5: "mt-4 mb-2 text-lg font-semibold leading-tight",
+    6: "mt-4 mb-1 text-base font-semibold leading-tight",
   } as const;
 
-  const className =
-    classes[safeLevel as keyof typeof classes];
+  const className = classes[safeLevel as keyof typeof classes];
 
   switch (safeLevel) {
     case 1:
       return <h1 className={className}>{children}</h1>;
-
     case 2:
       return <h2 className={className}>{children}</h2>;
-
     case 3:
       return <h3 className={className}>{children}</h3>;
-
     case 4:
       return <h4 className={className}>{children}</h4>;
-
     case 5:
       return <h5 className={className}>{children}</h5>;
-
     case 6:
       return <h6 className={className}>{children}</h6>;
-
     default:
       return <h2 className={className}>{children}</h2>;
   }
@@ -165,24 +155,16 @@ export default function RichText({
   }
 
   if (typeof content === "string") {
-    const lines = content.split("\n");
-
     return (
       <div className={`rich-text ${className}`}>
-        {lines.map((line, index) => {
+        {content.split("\n").map((line, index) => {
           const trimmed = line.trim();
 
           if (!trimmed) {
-            return (
-              <div
-                key={index}
-                className="h-4"
-              />
-            );
+            return null;
           }
 
-          const manualHeading =
-            parseManualHeading(trimmed);
+          const manualHeading = parseManualHeading(trimmed);
 
           if (manualHeading) {
             return (
@@ -198,7 +180,7 @@ export default function RichText({
           return (
             <p
               key={index}
-              className="mb-5 text-base leading-8"
+              className="text-base leading-8"
             >
               {line}
             </p>
@@ -215,18 +197,14 @@ export default function RichText({
   return (
     <div className={`rich-text ${className}`}>
       {content.map((block, index) => {
-        if (
-          !block ||
-          typeof block !== "object"
-        ) {
+        if (!block || typeof block !== "object") {
           return null;
         }
 
         const text = getBlockText(block);
         const trimmedText = text.trim();
 
-        const manualHeading =
-          parseManualHeading(trimmedText);
+        const manualHeading = parseManualHeading(trimmedText);
 
         if (manualHeading) {
           return (
@@ -256,33 +234,14 @@ export default function RichText({
         }
 
         if (block.type === "paragraph") {
-          const paragraphHeading =
-            parseManualHeading(trimmedText);
-
-          if (paragraphHeading) {
-            return (
-              <Heading
-                key={index}
-                level={paragraphHeading.level}
-              >
-                {paragraphHeading.text}
-              </Heading>
-            );
-          }
-
           if (!trimmedText) {
-            return (
-              <div
-                key={index}
-                className="h-3"
-              />
-            );
+            return null;
           }
 
           return (
             <p
               key={index}
-              className="mb-5 text-base leading-8"
+              className="text-base leading-8"
             >
               {renderChildren(block.children)}
             </p>
@@ -293,7 +252,7 @@ export default function RichText({
           return (
             <blockquote
               key={index}
-              className="my-8 border-l-4 border-[#7929e9] pl-6 text-lg italic leading-8"
+              className="my-6 border-l-4 border-[#7929e9] pl-6 text-lg italic leading-8"
             >
               {renderChildren(block.children)}
             </blockquote>
@@ -301,20 +260,14 @@ export default function RichText({
         }
 
         if (block.type === "list") {
-          const isOrdered =
-            block.format === "ordered";
-
-          const ListTag = isOrdered
-            ? "ol"
-            : "ul";
+          const isOrdered = block.format === "ordered";
+          const ListTag = isOrdered ? "ol" : "ul";
 
           return (
             <ListTag
               key={index}
-              className={`mb-6 ml-6 space-y-1 text-base leading-6 ${
-                isOrdered
-                  ? "list-decimal"
-                  : "list-disc"
+              className={`ml-6 space-y-1 text-base leading-6 ${
+                isOrdered ? "list-decimal" : "list-disc"
               }`}
             >
               <li>
@@ -353,7 +306,7 @@ export default function RichText({
           return (
             <p
               key={index}
-              className="mb-5 text-base leading-8"
+              className="text-base leading-8"
             >
               {renderChildren(block.children)}
             </p>

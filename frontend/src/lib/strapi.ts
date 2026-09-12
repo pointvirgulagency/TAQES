@@ -142,12 +142,16 @@ export async function getGroupe(locale: Locale) {
     `&populate[foncierealia][populate]=*` +
     `&populate[chrono][populate][image][populate]=*` +
     `&populate[chrono][populate][projects][populate]=*` +
+    `&populate[chiffresimage][populate]=*` +
+    `&populate[territoire_background][populate]=*` +
     `&populate[transition][populate]=*` +
     `&populate[vision][populate]=*` +
     `&populate[mission][populate]=*` +
     `&populate[valeurs][populate]=*` +
     `&populate[chiffrescles][populate]=*` +
-    `&populate[gouvernance][populate]=*`;
+    `&populate[territoire][populate]=*` ;
+
+
 
   return fetchStrapi(
     url,

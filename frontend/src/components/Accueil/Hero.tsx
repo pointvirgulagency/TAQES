@@ -36,15 +36,17 @@ type HeroProps = {
     Territoires?: string;
   };
   strapiUrl: string;
+  showOverlay?: boolean;
 };
 
-export default function Hero({ data, strapiUrl }: HeroProps) {
+export default function Hero({
+  data,
+  strapiUrl,
+  showOverlay = true,
+}: HeroProps) {
   const params = useParams();
   const locale = (params?.locale as string) || "fr";
 
-  // Strapi link fields can be a relative internal path ("/projets") or a
-  // full external URL ("https://..."). Only internal paths get the locale
-  // prefix; external/absolute URLs and mailto/tel links pass through as-is.
   const localize = (href?: string) => {
     if (!href) return "#";
     if (/^(https?:)?\/\//.test(href) || /^(mailto:|tel:)/.test(href)) {
@@ -70,7 +72,6 @@ export default function Hero({ data, strapiUrl }: HeroProps) {
 
   return (
     <section className="relative isolate min-h-screen overflow-hidden">
-
       <picture className="absolute inset-0">
         <source media="(max-width:768px)" srcSet={mobileImage} />
 
@@ -96,11 +97,12 @@ export default function Hero({ data, strapiUrl }: HeroProps) {
         </video>
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#094734]/40 via-[#094734]/60 to-[#094734]/90" />
+      {showOverlay && (
+        <div className="absolute inset-0 bg-gradient-to-b from-[#094734]/40 via-[#094734]/60 to-[#094734]/90" />
+      )}
 
-     <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 md:px-10 lg:px-16">
-       <div className="w-full max-w-3xl text-left rtl:ml-auto rtl:text-right">
-
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 md:px-10 lg:px-16">
+        <div className="w-full max-w-3xl text-left rtl:ml-auto rtl:text-right">
           {data.surtitre && (
             <p className="mb-6 text-sm uppercase tracking-[0.35em] text-[#EBE2DC]/80">
               {data.surtitre}
@@ -125,7 +127,7 @@ export default function Hero({ data, strapiUrl }: HeroProps) {
             </div>
           )}
 
-          <div className="mt-12 flex w-full flex-wrap gap-5 justify-start rtl:justify-end">
+          <div className="mt-12 flex w-full flex-wrap justify-start gap-5 rtl:justify-end">
             <Link
               href={localize(data.lienbouton1)}
               className="rounded-full bg-[#00674F] px-8 py-4 font-medium text-[#EBE2DC] transition hover:bg-[#449383]"
@@ -140,13 +142,11 @@ export default function Hero({ data, strapiUrl }: HeroProps) {
               {data.libelleboutonprincipal}
             </Link>
           </div>
-
         </div>
       </div>
 
       <div className="absolute bottom-8 left-0 z-20 w-full px-6">
         <div className="mx-auto flex max-w-7xl items-end justify-between rtl:flex-row-reverse">
-
           <div className="flex flex-col items-center gap-3 text-[#EBE2DC]/80">
             <div className="flex h-10 w-6 justify-center rounded-full border border-[#EBE2DC]/60">
               <span className="mt-2 h-2 w-2 animate-bounce rounded-full bg-[#EBE2DC]" />
@@ -162,10 +162,8 @@ export default function Hero({ data, strapiUrl }: HeroProps) {
               {data.Territoires}
             </p>
           )}
-
         </div>
       </div>
-
     </section>
   );
 }

@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 
 import Hero from "@/components/Accueil/Hero";
 import CTAFinal from "@/components/Accueil/CTAFinal";
-
 import FonciereAlia from "@/components/Groupe/FonciereAlia";
 import Chronologie from "@/components/Groupe/Chronologie";
-import Transition from "@/components/Groupe/Transition";
 import Mission from "@/components/Groupe/Mission";
 import ChiffresCles from "@/components/Groupe/ChiffresCles";
-import Gouvernance from "@/components/Groupe/Gouvernance";
+import Territoire from "@/components/Groupe/territoire";
+import BeforeFooter from "@/components/Groupe/BeforeFooter";
 
 import { getGroupe } from "@/lib/strapi";
 import { generateSeoMetadata } from "@/lib/seo";
@@ -73,7 +72,6 @@ function normalizeRichText<T extends Record<string, any>>(
   return normalized;
 }
 
-
 export async function generateMetadata({
   params,
 }: GroupePageProps): Promise<Metadata> {
@@ -96,11 +94,17 @@ export default async function GroupePage({
   const groupe = await getGroupe(locale);
   const data = groupe.data;
 
+
+
+  console.log("TERRITOIRE BACKGROUND:", data.territoire_background);
+
   const hero = normalizeRichText(data.Hero);
   const foncierealia = normalizeRichText(data.foncierealia);
 
   const vision = normalizeRichText(data.vision);
   const mission = normalizeRichText(data.mission);
+
+  const transition = normalizeRichText(data.transition);
 
   const valeurs = data.valeurs ?? [];
 
@@ -113,10 +117,13 @@ export default async function GroupePage({
     <main>
       {/* HERO */}
       {hero && (
-        <Hero
-          data={hero}
-          strapiUrl={STRAPI_URL}
-        />
+        <div className="[&>section>picture>img]:scale-[1.055]">
+          <Hero
+            data={hero}
+            strapiUrl={STRAPI_URL}
+            showOverlay={false}
+          />
+        </div>
       )}
 
       {/* FONCIÈRE ALIA */}
@@ -135,34 +142,31 @@ export default async function GroupePage({
         />
       )}
 
-      {/* TRANSITION */}
-      {data.transition && (
-        <Transition
-          data={data.transition}
-          strapiUrl={STRAPI_URL}
-        />
-      )}
-
-      {/* VISION + MISSION + VALEURS */}
-      {(vision || mission || valeurs.length > 0) && (
-        <Mission
-          vision={vision}
-          mission={mission}
-          valeurs={valeurs}
-        />
-      )}
+      <Mission
+        vision={vision}
+        mission={mission}
+        transition={transition}
+        valeurs={valeurs}
+        strapiUrl={STRAPI_URL}
+      />
 
       {/* CHIFFRES CLÉS */}
       {data.chiffrescles && (
         <ChiffresCles
           data={data.chiffrescles}
+          chiffreeyebrow={data.chiffreeyebrow}
+          chiffetitre={data.chiffetitre}
+          chiffre_soustitre={data.chiffre_soustitre}
+          chiffresimage={data.chiffresimage}
+          strapiUrl={STRAPI_URL}
         />
       )}
 
-      {/* GOUVERNANCE */}
-      {data.gouvernance && (
-        <Gouvernance
-          data={data.gouvernance}
+      {/* TERRITOIRES */}
+      {data.territoire && data.territoire.length > 0 && (
+        <Territoire
+          data={data}
+          territoire_background={data.territoire_background}
           strapiUrl={STRAPI_URL}
         />
       )}
@@ -173,6 +177,9 @@ export default async function GroupePage({
           data={data.CTAFinal}
         />
       )}
+
+      <BeforeFooter />
+
     </main>
   );
 }

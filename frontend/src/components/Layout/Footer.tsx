@@ -2,92 +2,123 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { translations } from "@/i18n";
 
-// Local copy for the new footer sections. Fold these into your i18n
-// `translations` object (under `footer`) once the wording is final —
-// they're kept here so this component doesn't depend on keys that
-// don't exist yet in your i18n file.
+interface FooterProps {
+  backgroundSrc?: string;
+}
+
 const copy = {
   fr: {
-    ctaTitle: "Un projet, un foncier, une opportunité à développer ?",
-    ctaButton: "Échanger avec TAQÈS",
-    tagline: "L'immobilier nouvelle génération",
-    decouvrir: "Découvrir",
-    echanger: "Échanger",
-    nousRetrouver: "Nous retrouver",
-    decouvrirLinks: [
-      { id: "heritage", label: "De l'héritage à l'avenir", href: "/groupe" },
-      { id: "projets", label: "Nos projets", href: "/projects" },
-      { id: "territoires", label: "Nos territoires", href: "/territoires" },
-      { id: "journal", label: "Le Journal TAQÈS", href: "/actualites" },
-    ],
-    echangerLinks: [
-      { id: "contact", label: "Nous contacter", href: "/contact" },
-      {
-        id: "opportunites",
-        label: "Opportunités & Partenariats",
-        href: "/opportunites",
-      },
-      { id: "reclamation", label: "Réclamation", href: "/e-reclam" },
-      { id: "recrutement", label: "Recrutement", href: "/recrutement" },
-    ],
-    address: "Agdal, Rabat — Maroc",
-    phone: "+212 5 37 64 02 60",
-    email: "contact@taqes.ma",
-    rights: "L'immobilier nouvelle génération",
-    legalNotice: "Mentions légales",
-    privacyPolicy: "Politique de confidentialité",
-    cookies: "Gestion des cookies",
+    kicker: "POURSUIVRE L'HISTOIRE",
+    title:
+      "Notre histoire se poursuit à travers les territoires que nous développons.",
+    description:
+      "Découvrez les projets qui traduisent aujourd'hui notre vision, notre exigence et notre parole.",
+    primary: "Explorer nos projets",
+    primaryHref: "/projects",
+    secondary: "Échanger avec TAQÈS",
+    secondaryHref: "/contact",
+    vertical: "DES TERRITOIRES MEILLEURS DEMAIN",
+    brandTagline: "Bâtir des territoires d'avenir",
+    navigation: {
+      title: "Navigation",
+      links: [
+        { id: "accueil", label: "Accueil", href: "/" },
+        { id: "groupe", label: "Le Groupe", href: "/groupe" },
+      ],
+    },
+    projets: {
+      title: "Projets",
+      links: [
+        { id: "projets", label: "Projets", href: "/projects" },
+        { id: "actualites", label: "Actualités", href: "/actualites" },
+      ],
+    },
+    liensUtiles: {
+      title: "Liens utiles",
+      links: [
+        { id: "contact", label: "Contact", href: "/contact" },
+        { id: "mentions", label: "Mentions légales", href: "/mentions-legales" },
+        {
+          id: "confidentialite",
+          label: "Politique de confidentialité",
+          href: "/politique-confidentialite",
+        },
+      ],
+    },
+    nousContacter: {
+      title: "Nous contacter",
+      address: "Agdal, Rabat — Maroc",
+      phone: "+212 5 37 64 02 60",
+      email: "contact@taqes.ma",
+    },
+    newsletter: {
+      title: "Recevoir nos actualités",
+      placeholder: "Votre adresse e-mail",
+    },
+    rights: "Tous droits réservés",
   },
   ar: {
-    ctaTitle: "مشروع، وعاء عقاري، فرصة للتطوير؟",
-    ctaButton: "تواصل مع TAQÈS",
-    tagline: "العقار من الجيل الجديد",
-    decouvrir: "اكتشف",
-    echanger: "تواصل",
-    nousRetrouver: "أوجدنا",
-    decouvrirLinks: [
-      { id: "heritage", label: "من الإرث إلى المستقبل", href: "/groupe" },
-      { id: "projets", label: "مشاريعنا", href: "/projects" },
-      { id: "territoires", label: "أقاليمنا", href: "/territoires" },
-      { id: "journal", label: "مجلة TAQÈS", href: "/actualites" },
-    ],
-    echangerLinks: [
-      { id: "contact", label: "اتصل بنا", href: "/contact" },
-      { id: "opportunites", label: "فرص وشراكات", href: "/opportunites" },
-      { id: "reclamation", label: "شكاية", href: "/e-reclam" },
-      { id: "recrutement", label: "توظيف", href: "/recrutement" },
-    ],
-    address: "أكدال، الرباط — المغرب",
-    phone: "٥ ٦٤ ٠٢ ٦٠ ٣٧ ٢١٢+",
-    email: "contact@taqes.ma",
-    rights: "العقار من الجيل الجديد",
-    legalNotice: "الإشعار القانوني",
-    privacyPolicy: "سياسة الخصوصية",
-    cookies: "إدارة ملفات تعريف الارتباط",
+    kicker: "مواصلة المسيرة",
+    title: "تتواصل مسيرتنا عبر الأقاليم التي نطورها.",
+    description:
+      "اكتشف المشاريع التي تجسد اليوم رؤيتنا وطموحنا والتزامنا.",
+    primary: "اكتشف مشاريعنا",
+    primaryHref: "/projects",
+    secondary: "تواصل مع TAQÈS",
+    secondaryHref: "/contact",
+    vertical: "أقاليم أفضل، مستقبل أفضل",
+    brandTagline: "نبني أقاليم المستقبل",
+    navigation: {
+      title: "التصفح",
+      links: [
+        { id: "accueil", label: "الرئيسية", href: "/" },
+        { id: "groupe", label: "المجموعة", href: "/groupe" },
+      ],
+    },
+    projets: {
+      title: "المشاريع",
+      links: [
+        { id: "projets", label: "المشاريع", href: "/projects" },
+        { id: "actualites", label: "الأخبار", href: "/actualites" },
+      ],
+    },
+    liensUtiles: {
+      title: "روابط مفيدة",
+      links: [
+        { id: "contact", label: "اتصل بنا", href: "/contact" },
+        { id: "mentions", label: "الإشعار القانوني", href: "/mentions-legales" },
+        {
+          id: "confidentialite",
+          label: "سياسة الخصوصية",
+          href: "/politique-confidentialite",
+        },
+      ],
+    },
+    nousContacter: {
+      title: "اتصل بنا",
+      address: "أكدال، الرباط — المغرب",
+      phone: "٥ ٦٤ ٠٢ ٦٠ ٣٧ ٢١٢+",
+      email: "contact@taqes.ma",
+    },
+    newsletter: {
+      title: "استلم آخر أخبارنا",
+      placeholder: "بريدك الإلكتروني",
+    },
+    rights: "جميع الحقوق محفوظة",
   },
 } as const;
 
 function ArrowIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden="true">
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
       <path
         d="M4 10H16M16 10L11 5M16 10L11 15"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ChevronUpIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden="true">
-      <path
-        d="M5 12L10 7L15 12"
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
@@ -108,15 +139,16 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h3 className="mb-5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#EBE2DC]/50">
+      <h3 className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-[#EBE2DC]/85">
         {title}
       </h3>
-      <nav className="flex flex-col gap-2.5">
+      <div className="mb-3 h-px w-5 bg-[#b98650]" />
+      <nav className="flex flex-col gap-2">
         {items.map((item) => (
           <Link
             key={item.id}
             href={`/${locale}${item.href}`}
-            className="text-xs text-[#EBE2DC]/70 transition-colors hover:text-[#EBE2DC]"
+            className="text-xs text-[#EBE2DC]/60 transition-colors hover:text-[#EBE2DC]"
           >
             {item.label}
           </Link>
@@ -126,160 +158,189 @@ function FooterColumn({
   );
 }
 
-export default function Footer() {
+export default function Footer({ backgroundSrc = "/footer.png" }: FooterProps) {
   const params = useParams();
-
   const locale = params.locale === "ar" ? "ar" : "fr";
-  const t = translations[locale] ?? translations.fr;
   const c = copy[locale];
-
   const year = new Date().getFullYear();
 
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   return (
-    <footer dir={locale === "ar" ? "rtl" : "ltr"} className="relative bg-[#094734]">
-      {/* Scroll to top */}
-      <div className="pointer-events-none absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2">
-        <button
-          type="button"
-          onClick={scrollToTop}
-          aria-label={locale === "ar" ? "العودة إلى الأعلى" : "Revenir en haut"}
-          className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#094734]/15 bg-[#F4EFE9] text-[#094734] shadow-sm transition-transform duration-300 hover:-translate-y-0.5"
+    <footer
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className="relative min-h-[1100px] overflow-hidden bg-[#0a3a2b] bg-cover bg-center bg-no-repeat"
+      style={
+        backgroundSrc
+          ? { backgroundImage: `url("${backgroundSrc}")` }
+          : undefined
+      }
+    >
+      <div className="relative z-10 flex min-h-[1100px] flex-col px-6 pt-20 md:px-12 lg:px-20">
+        <div
+          aria-hidden="true"
+          className="absolute right-8 top-1/3 hidden -translate-y-1/2 rotate-180 [writing-mode:vertical-rl] text-[10px] tracking-[0.25em] text-[#EBE2DC]/50 lg:block"
         >
-          <ChevronUpIcon className="h-4 w-4" />
-        </button>
-      </div>
+          {c.vertical}
+        </div>
 
-      {/* Decorative diamond pattern */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[420px] opacity-[0.06] lg:block"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%23EBE2DC' stroke-width='1.5'%3E%3Cpath d='M42 4L80 42L42 80L4 42Z'/%3E%3C/g%3E%3C/svg%3E\")",
-          backgroundSize: "84px 84px",
-        }}
-      />
+        <div className="-translate-y-8 max-w-2xl">
+          <div className="mb-6">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#EBE2DC]/70">
+              {c.kicker}
+            </p>
+            <div className="mt-3 h-[2px] w-8 bg-[#b98650]" />
+          </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 pb-8 pt-16 md:px-10 lg:px-16">
-        {/* CTA */}
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <h2 className="max-w-xl font-serif text-[28px] leading-[1.2] text-[#F4EFE9] md:text-[34px]">
-            {c.ctaTitle}
+          <h2 className="max-w-2xl font-serif text-[30px] font-normal leading-[1.1] text-[#F4EFE9] md:text-[34px] lg:text-[48px]">
+            {c.title}
           </h2>
 
-          <Link
-            href={`/${locale}/contact`}
-            className="group inline-flex shrink-0 items-center gap-3 rounded-full bg-[#EBE2DC] px-6 py-3 text-sm font-medium text-[#094734] transition-colors duration-300 hover:bg-white"
-          >
-            {c.ctaButton}
-            <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
-        </div>
-
-        <div className="my-10 border-t border-[#EBE2DC]/15" />
-
-        {/* Columns */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-          {/* Brand */}
-          <div>
-            <Link href={`/${locale}`} className="inline-block">
-              <img src="/taqesheading.png" alt="TAQÈS" className="h-9 w-auto" />
-            </Link>
-            <p className="mt-4 max-w-[22ch] text-xs leading-5 text-[#EBE2DC]/60">
-              {c.tagline}
-            </p>
-          </div>
-
-          <FooterColumn title={c.decouvrir} items={c.decouvrirLinks} locale={locale} />
-          <FooterColumn title={c.echanger} items={c.echangerLinks} locale={locale} />
-
-          {/* Nous retrouver */}
-          <div>
-            <h3 className="mb-5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#EBE2DC]/50">
-              {c.nousRetrouver}
-            </h3>
-            <div className="flex flex-col gap-2.5 text-xs text-[#EBE2DC]/70">
-              <p>{c.address}</p>
-              <p dir="ltr" className={locale === "ar" ? "text-right" : undefined}>
-                {c.phone}
-              </p>
-              <p>{c.email}</p>
-              <div className="mt-1 flex gap-4">
-                <a
-                  href="https://www.linkedin.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition-colors hover:text-[#EBE2DC]"
-                >
-                  LinkedIn
-                </a>
-                <a
-                  href="https://www.instagram.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition-colors hover:text-[#EBE2DC]"
-                >
-                  Instagram
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-[#EBE2DC]/10 pt-5 text-[10px] text-[#EBE2DC]/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} TAQÈS — {c.rights}
+          <p className="mt-6 max-w-lg text-sm leading-relaxed text-[#EBE2DC]/70 md:text-[20px]">
+            {c.description}
           </p>
 
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="relative mt-10 flex translate-y-8 flex-wrap items-center gap-5">
+            <div
+              aria-hidden="true"
+              className="absolute left-[8%] right-[8%] top-1/2 hidden -translate-y-1/2 border-t border-dashed border-[#b98650]/50 sm:block"
+            />
+
             <Link
-              href={`/${locale}/mentions-legales`}
-              className="transition-colors hover:text-[#EBE2DC]"
+              href={`/${locale}${c.primaryHref}`}
+              className="group relative z-20 inline-flex items-center gap-3 rounded-full border-2 border-[#b98650] bg-[#12281c] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-white transition-colors duration-300 hover:bg-[#EBE2DC] hover:text-[#12281c]"
             >
-              {c.legalNotice}
+              {c.primary}
+              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-            <span aria-hidden="true">·</span>
+
+            <span
+              aria-hidden="true"
+              className="relative z-10 hidden h-2 w-2 rounded-full bg-[#b98650] sm:block"
+            />
+
             <Link
-              href={`/${locale}/politique-confidentialite`}
-              className="transition-colors hover:text-[#EBE2DC]"
+              href={`/${locale}${c.secondaryHref}`}
+              className="group relative z-10 inline-flex items-center gap-3 rounded-full bg-[#EBE2DC] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-[#12281c] transition-colors duration-300 hover:bg-white"
             >
-              {c.privacyPolicy}
+              {c.secondary}
+              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-            <span aria-hidden="true">·</span>
-            <Link
-              href={`/${locale}/gestion-cookies`}
-              className="transition-colors hover:text-[#EBE2DC]"
-            >
-              {c.cookies}
-            </Link>
-            <span aria-hidden="true">·</span>
-            <div className="flex items-center gap-1">
-              <Link
-                href="/fr"
-                className={
-                  locale === "fr"
-                    ? "text-[#EBE2DC]"
-                    : "transition-colors hover:text-[#EBE2DC]"
-                }
-              >
-                FR
-              </Link>
-              <span aria-hidden="true">/</span>
-              <Link
-                href="/ar"
-                className={
-                  locale === "ar"
-                    ? "text-[#EBE2DC]"
-                    : "transition-colors hover:text-[#EBE2DC]"
-                }
-              >
-                AR
-              </Link>
+          </div>
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-16 right-0 select-none font-serif text-[280px] leading-none text-[#EBE2DC]/[0.04] lg:text-[380px]"
+        >
+          &
+        </div>
+
+        <div className="relative z-10 mt-auto pb-0 pt-32">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid grid-cols-1 gap-10 border-t border-[#EBE2DC]/10 pt-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-8">
+              <div className="lg:col-span-1">
+                <Link href={`/${locale}`} className="inline-block">
+                  <img
+                    src="/taqesheading.png"
+                    alt="TAQÈS"
+                    className="h-8 w-auto"
+                  />
+                </Link>
+                <p className="mt-3 max-w-[20ch] text-[11px] uppercase tracking-[0.1em] text-[#EBE2DC]/50">
+                  {c.brandTagline}
+                </p>
+              </div>
+
+              <FooterColumn
+                title={c.navigation.title}
+                items={c.navigation.links}
+                locale={locale}
+              />
+
+              <FooterColumn
+                title={c.projets.title}
+                items={c.projets.links}
+                locale={locale}
+              />
+
+              <FooterColumn
+                title={c.liensUtiles.title}
+                items={c.liensUtiles.links}
+                locale={locale}
+              />
+
+              <div>
+                <h3 className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-[#EBE2DC]/85">
+                  {c.nousContacter.title}
+                </h3>
+                <div className="mb-3 h-px w-5 bg-[#b98650]" />
+                <div className="flex flex-col gap-2 text-xs text-[#EBE2DC]/60">
+                  <p>{c.nousContacter.address}</p>
+                  <p
+                    dir="ltr"
+                    className={locale === "ar" ? "text-right" : undefined}
+                  >
+                    {c.nousContacter.phone}
+                  </p>
+                  <p>{c.nousContacter.email}</p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-[#EBE2DC]/85">
+                  {c.newsletter.title}
+                </h3>
+                <div className="mb-3 h-px w-5 bg-[#b98650]" />
+                <form className="flex items-center justify-between border-b border-[#EBE2DC]/30 pb-2">
+                  <input
+                    type="email"
+                    placeholder={c.newsletter.placeholder}
+                    className="w-full bg-transparent text-xs text-[#EBE2DC] placeholder:text-[#EBE2DC]/40 focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    aria-label={locale === "ar" ? "إرسال" : "Envoyer"}
+                    className="shrink-0 text-[#EBE2DC] transition-transform hover:translate-x-1"
+                  >
+                    <ArrowIcon className="h-4 w-4" />
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div className="mt-10 flex flex-col gap-2 border-t border-[#EBE2DC]/10 pt-5 text-[10px] text-[#EBE2DC]/40 sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                © {year} TAQÈS — {c.rights}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <span className="uppercase tracking-[0.15em]">
+                  {c.vertical}
+                </span>
+                <span aria-hidden="true">·</span>
+                <div className="flex items-center gap-1">
+                  <Link
+                    href="/fr"
+                    className={
+                      locale === "fr"
+                        ? "text-[#EBE2DC]"
+                        : "transition-colors hover:text-[#EBE2DC]"
+                    }
+                  >
+                    FR
+                  </Link>
+                  <span aria-hidden="true">/</span>
+                  <Link
+                    href="/ar"
+                    className={
+                      locale === "ar"
+                        ? "text-[#EBE2DC]"
+                        : "transition-colors hover:text-[#EBE2DC]"
+                    }
+                  >
+                    AR
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
