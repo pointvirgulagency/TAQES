@@ -9,17 +9,10 @@
       "type": "string"
     },
     "description": {
-      "type": "blocks"
+      "type": "text"
     },
-    "image": {
-      "type": "media",
-      "multiple": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+    "soustitre": {
+      "type": "string"
     }
   },
   "config": {}

@@ -20,6 +20,15 @@
         "videos",
         "audios"
       ]
+    },
+    "titresecond": {
+      "type": "text"
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "soustitre": {
+      "type": "string"
     }
   },
   "config": {}

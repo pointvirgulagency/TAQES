@@ -64,11 +64,14 @@ export interface SectionsFonciereAlia extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Blocks;
+    eyebrow: Schema.Attribute.String;
     image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    soustitre: Schema.Attribute.String;
     titre: Schema.Attribute.String;
+    titresecond: Schema.Attribute.Text;
   };
 }
 
@@ -215,11 +218,8 @@ export interface SectionsTransitionTaqes extends Struct.ComponentSchema {
     displayName: 'transition-taqes';
   };
   attributes: {
-    description: Schema.Attribute.Blocks;
-    image: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
+    description: Schema.Attribute.Text;
+    soustitre: Schema.Attribute.String;
     titre: Schema.Attribute.String;
   };
 }
