@@ -374,6 +374,8 @@ export interface SharedSelection extends Struct.ComponentSchema {
     displayName: 'Selection';
   };
   attributes: {
+    adresse: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
     title: Schema.Attribute.String;
   };
 }

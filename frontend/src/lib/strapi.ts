@@ -167,6 +167,7 @@ export async function getContactPage(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/contact?locale=${locale}` +
     `&populate[Hero][populate]=*` +
+    `&populate[Selection][populate]=*` +
     `&populate[demandes][populate]=*`;
 
   return fetchStrapi(
