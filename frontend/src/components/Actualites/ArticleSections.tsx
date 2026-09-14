@@ -88,7 +88,7 @@ interface CTASectionData {
   surtitre?: string | null;
   titre?: string | null;
   description?: string | null;
-  libelle_bouton?: string | null;
+  libelle_boutton?: string | null;
   lien?: string | null;
   fond?: "blanc" | "nude" | "sage" | "vert" | null;
 }

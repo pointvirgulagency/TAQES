@@ -9,14 +9,13 @@ export default function ArticleNumberedList({
   section,
   number = 3,
 }: ArticleNumberedListProps) {
-  if (!section.element?.length) {
+  if (!section.elements?.length) {
     return null;
   }
 
   return (
     <section className="bg-[#FDFBF7] py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
-        {/* Section Header with Main Counter */}
         <div className="mb-16 flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <div className="flex items-start gap-6">
             <span className="font-serif text-6xl font-normal leading-none text-[#094734]/30 md:text-7xl lg:text-8xl">
@@ -29,16 +28,9 @@ export default function ArticleNumberedList({
                   {section.titre}
                 </h2>
               )}
-
-              {section.description && (
-                <p className="mt-2 text-sm text-[#094734]/70 md:text-base">
-                  {section.description}
-                </p>
-              )}
             </div>
           </div>
 
-          {/* Right Tagline with Vertical Separator */}
           <div className="flex items-center gap-6 md:pl-8">
             <div className="hidden h-16 w-[1px] bg-[#094734]/20 md:block" />
 
@@ -48,21 +40,22 @@ export default function ArticleNumberedList({
           </div>
         </div>
 
-        {/* 2x2 Grid with Thin Cross Dividers */}
         <div className="grid grid-cols-1 divide-y divide-[#094734]/15 md:grid-cols-2 md:divide-x md:divide-y-0">
-          {/* Left Column (Items 01 & 03) */}
           <div className="flex flex-col divide-y divide-[#094734]/15 md:pr-10 lg:pr-16">
-            {section.element
+            {section.elements
               .filter((_, idx) => idx % 2 === 0)
               .map((element, idx) => {
                 const itemIndex = idx * 2 + 1;
+
                 return (
                   <div
                     key={element.id ?? `item-${itemIndex}`}
                     className="flex items-start gap-6 py-8 first:pt-0 last:pb-0"
                   >
                     <span className="font-serif text-5xl font-semibold leading-none text-[#C4A484] md:text-6xl">
-                      {String(element.numero ?? itemIndex).padStart(2, "0")}
+                      {String(
+                        element.numero ?? itemIndex
+                      ).padStart(2, "0")}
                     </span>
 
                     <div className="space-y-2">
@@ -83,19 +76,21 @@ export default function ArticleNumberedList({
               })}
           </div>
 
-          {/* Right Column (Items 02 & 04) */}
           <div className="flex flex-col divide-y divide-[#094734]/15 pt-8 md:pl-10 md:pt-0 lg:pl-16">
-            {section.element
+            {section.elements
               .filter((_, idx) => idx % 2 === 1)
               .map((element, idx) => {
                 const itemIndex = idx * 2 + 2;
+
                 return (
                   <div
                     key={element.id ?? `item-${itemIndex}`}
                     className="flex items-start gap-6 py-8 first:pt-0 last:pb-0"
                   >
                     <span className="font-serif text-5xl font-semibold leading-none text-[#C4A484] md:text-6xl">
-                      {String(element.numero ?? itemIndex).padStart(2, "0")}
+                      {String(
+                        element.numero ?? itemIndex
+                      ).padStart(2, "0")}
                     </span>
 
                     <div className="space-y-2">

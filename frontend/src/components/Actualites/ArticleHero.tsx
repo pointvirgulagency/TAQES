@@ -26,10 +26,10 @@ export default function ArticleHero({
             article={article}
             locale={locale}
           />
-
+            <br/>
           <div className="mt-auto flex flex-col items-start">
             {article.categorie && (
-              <div className="mb-6 rounded-full bg-[#094734] px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+              <div className="mb-6 rounded-full bg-[#094734] px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-white">
                 {article.categorie}
               </div>
             )}

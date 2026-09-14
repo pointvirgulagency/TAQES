@@ -7,7 +7,7 @@ interface ArticleAuthorProps {
   article: Article & {
     auteur_logo?: {
       url?: string;
-      alternativeText?: string;
+      alternativeText?: string | null
     } | null;
     auteur_subtitle?: string | null;
   };
