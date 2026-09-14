@@ -82,7 +82,7 @@ export interface ListeNumeroteeSection {
   __component: "sections.liste-numerotee";
   id?: number;
   titre?: string | null;
-  elements?: ElementListe[] | null;
+  element?: ElementListe[] | null;
 }
 
 export interface CitationSection {
