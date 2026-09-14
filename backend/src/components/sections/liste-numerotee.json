@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_sections_liste_numerotees",
+  "info": {
+    "displayName": "liste-numerotee"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "element": {
+      "type": "component",
+      "component": "sections.element-liste",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

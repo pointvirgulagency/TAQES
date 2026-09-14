@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_sections_media_larges",
+  "info": {
+    "displayName": "media-large"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "alt": {
+      "type": "string"
+    },
+    "legende": {
+      "type": "string"
+    },
+    "format": {
+      "type": "enumeration",
+      "enum": [
+        "panoramique",
+        "contenu"
+      ]
+    }
+  },
+  "config": {}
+}

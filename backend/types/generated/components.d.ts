@@ -43,6 +43,18 @@ export interface SectionsChronologie extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsCitation extends Struct.ComponentSchema {
+  collectionName: 'components_sections_citations';
+  info: {
+    displayName: 'citation';
+  };
+  attributes: {
+    auteur: Schema.Attribute.String;
+    citation: Schema.Attribute.String;
+    fond: Schema.Attribute.Enumeration<['sage', 'vert']>;
+  };
+}
+
 export interface SectionsCtaFinal extends Struct.ComponentSchema {
   collectionName: 'components_sections_cta_finals';
   info: {
@@ -53,6 +65,18 @@ export interface SectionsCtaFinal extends Struct.ComponentSchema {
     lienBoutonContact: Schema.Attribute.String;
     lienBoutonProjets: Schema.Attribute.String;
     texte: Schema.Attribute.Blocks;
+    titre: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsElementListe extends Struct.ComponentSchema {
+  collectionName: 'components_sections_element_listes';
+  info: {
+    displayName: 'element-liste';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    numero: Schema.Attribute.Integer;
     titre: Schema.Attribute.String;
   };
 }
@@ -112,6 +136,53 @@ export interface SectionsHero extends Struct.ComponentSchema {
     Territoires: Schema.Attribute.Text;
     titre: Schema.Attribute.String;
     video: Schema.Attribute.Media<'files' | 'videos'>;
+  };
+}
+
+export interface SectionsInformationCle extends Struct.ComponentSchema {
+  collectionName: 'components_sections_information_cles';
+  info: {
+    displayName: 'information-cle';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    label: Schema.Attribute.String;
+    valeur: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsInformationsCles extends Struct.ComponentSchema {
+  collectionName: 'components_sections_informations_cles';
+  info: {
+    displayName: 'informations-cles';
+  };
+  attributes: {
+    informations: Schema.Attribute.Component<'sections.information-cle', true>;
+    titre: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsListeNumerotee extends Struct.ComponentSchema {
+  collectionName: 'components_sections_liste_numerotees';
+  info: {
+    displayName: 'liste-numerotee';
+  };
+  attributes: {
+    element: Schema.Attribute.Component<'sections.element-liste', true>;
+    titre: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsMediaLarge extends Struct.ComponentSchema {
+  collectionName: 'components_sections_media_larges';
+  info: {
+    displayName: 'media-large';
+  };
+  attributes: {
+    alt: Schema.Attribute.String;
+    format: Schema.Attribute.Enumeration<['panoramique', 'contenu']>;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    legende: Schema.Attribute.String;
   };
 }
 
@@ -191,6 +262,23 @@ export interface SectionsProjetsMisEnAvant extends Struct.ComponentSchema {
   };
   attributes: {
     projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
+    titre: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsSectionEditoriale extends Struct.ComponentSchema {
+  collectionName: 'components_sections_section_editoriales';
+  info: {
+    displayName: 'section-editoriale';
+  };
+  attributes: {
+    contenu: Schema.Attribute.Blocks;
+    fond: Schema.Attribute.Enumeration<['blanc', 'nude', 'sage']>;
+    format: Schema.Attribute.Enumeration<['standard', 'large']>;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    legende: Schema.Attribute.Text;
+    position: Schema.Attribute.Enumeration<['gauche', 'droite']>;
+    surtitre: Schema.Attribute.String;
     titre: Schema.Attribute.String;
   };
 }
@@ -452,16 +540,23 @@ declare module '@strapi/strapi' {
       'sections.actualites': SectionsActualites;
       'sections.chiffres': SectionsChiffres;
       'sections.chronologie': SectionsChronologie;
+      'sections.citation': SectionsCitation;
       'sections.cta-final': SectionsCtaFinal;
+      'sections.element-liste': SectionsElementListe;
       'sections.fonciere-alia': SectionsFonciereAlia;
       'sections.gouvernance': SectionsGouvernance;
       'sections.hero': SectionsHero;
+      'sections.information-cle': SectionsInformationCle;
+      'sections.informations-cles': SectionsInformationsCles;
+      'sections.liste-numerotee': SectionsListeNumerotee;
+      'sections.media-large': SectionsMediaLarge;
       'sections.membres': SectionsMembres;
       'sections.mission': SectionsMission;
       'sections.notre-approche': SectionsNotreApproche;
       'sections.nouvelle-identite': SectionsNouvelleIdentite;
       'sections.projethero': SectionsProjethero;
       'sections.projets-mis-en-avant': SectionsProjetsMisEnAvant;
+      'sections.section-editoriale': SectionsSectionEditoriale;
       'sections.territoires-d-intervention': SectionsTerritoiresDIntervention;
       'sections.transition-taqes': SectionsTransitionTaqes;
       'sections.type-demande': SectionsTypeDemande;

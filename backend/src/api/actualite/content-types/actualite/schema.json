@@ -142,6 +142,30 @@
       "relation": "oneToMany",
       "target": "api::project.project",
       "mappedBy": "actualite"
+    },
+    "SEO": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "shared.seo",
+      "repeatable": false
+    },
+    "sections": {
+      "type": "dynamiczone",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "components": [
+        "sections.section-editoriale",
+        "sections.informations-cles",
+        "sections.element-liste",
+        "sections.citation"
+      ]
     }
   }
 }

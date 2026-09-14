@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_sections_citations",
+  "info": {
+    "displayName": "citation"
+  },
+  "options": {},
+  "attributes": {
+    "citation": {
+      "type": "string"
+    },
+    "auteur": {
+      "type": "string"
+    },
+    "fond": {
+      "type": "enumeration",
+      "enum": [
+        "sage",
+        "vert"
+      ]
+    }
+  },
+  "config": {}
+}

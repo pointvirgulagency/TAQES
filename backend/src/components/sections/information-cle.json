@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_sections_information_cles",
+  "info": {
+    "displayName": "information-cle"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "valeur": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

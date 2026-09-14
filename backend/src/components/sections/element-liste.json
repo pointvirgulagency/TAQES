@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_sections_element_listes",
+  "info": {
+    "displayName": "element-liste"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "numero": {
+      "type": "integer"
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

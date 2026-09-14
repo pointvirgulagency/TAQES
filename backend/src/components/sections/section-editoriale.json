@@ -1,0 +1,54 @@
+{
+  "collectionName": "components_sections_section_editoriales",
+  "info": {
+    "displayName": "section-editoriale"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "surtitre": {
+      "type": "string"
+    },
+    "contenu": {
+      "type": "blocks"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "legende": {
+      "type": "text"
+    },
+    "position": {
+      "type": "enumeration",
+      "enum": [
+        "gauche",
+        "droite"
+      ]
+    },
+    "fond": {
+      "type": "enumeration",
+      "enum": [
+        "blanc",
+        "nude",
+        "sage"
+      ]
+    },
+    "format": {
+      "type": "enumeration",
+      "enum": [
+        "standard",
+        "large"
+      ]
+    }
+  },
+  "config": {}
+}

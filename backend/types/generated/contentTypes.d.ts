@@ -669,6 +669,25 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
       }>;
     projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
+    sections: Schema.Attribute.DynamicZone<
+      [
+        'sections.section-editoriale',
+        'sections.informations-cles',
+        'sections.element-liste',
+        'sections.citation',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    SEO: Schema.Attribute.Component<'shared.seo', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     slug: Schema.Attribute.UID<'titre'>;
     titre: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{

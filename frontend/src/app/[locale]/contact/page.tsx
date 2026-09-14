@@ -47,10 +47,10 @@ export default async function ContactPage({
   }));
 
   const coordonnees = {
-    telephone: "06 61 442 442",
-    email: "contact@taqes.ma",
+    telephone: "06 61 70 43 78",
+    email: "commercial@taqes.ma",
     adresse:
-      "Immeuble Yamna, 5ᵉ étage, Bd Moulay Ismail, Salé 11000 – Maroc",
+      "Rue Mellouza Villa N41 Nahda 2 RABAT",
     horaires: "Lundi – Vendredi : 9h00 – 18h00",
   };
 

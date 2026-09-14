@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_sections_informations_cles",
+  "info": {
+    "displayName": "informations-cles"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "informations": {
+      "type": "component",
+      "component": "sections.information-cle",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
