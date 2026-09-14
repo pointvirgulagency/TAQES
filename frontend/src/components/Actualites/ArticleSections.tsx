@@ -486,7 +486,7 @@ function ListeNumeroteeSection({
 
           <div className="lg:col-span-3">
             <div className="grid border-t border-[#094734]/15 md:grid-cols-2">
-              {section.elements?.map((element, index) => (
+              {section.element?.map((element, index) => (
                 <article
                   key={
                     element.id ??
@@ -667,7 +667,7 @@ function CTASection({
           </p>
         )}
 
-        {section.libelle_bouton && section.lien && (
+        {section.libelle_boutton && section.lien && (
           <Link
             href={getLocalizedUrl(
               section.lien,
