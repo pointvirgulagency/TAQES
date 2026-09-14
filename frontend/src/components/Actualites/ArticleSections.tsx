@@ -679,7 +679,7 @@ function CTASection({
                 : "bg-[#00674F] text-white"
             }`}
           >
-            {section.libelle_bouton}
+            {section.libelle_boutton}
           </Link>
         )}
       </div>
