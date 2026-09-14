@@ -135,6 +135,7 @@ export default async function Home({
           titre={titreApproche}
           data={approche}
           strapiUrl={STRAPI_URL}
+          locale={locale}
         />
       )}
 

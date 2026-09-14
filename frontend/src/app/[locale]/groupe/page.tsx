@@ -170,7 +170,7 @@ export default async function GroupePage({
           strapiUrl={STRAPI_URL}
         />
       )}
-
+      <BeforeFooter />
     </main>
   );
 }

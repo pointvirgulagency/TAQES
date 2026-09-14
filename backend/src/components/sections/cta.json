@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_sections_ctas",
+  "info": {
+    "displayName": "cta"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "surtitre": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "libelle_boutton": {
+      "type": "string"
+    },
+    "lien": {
+      "type": "string"
+    },
+    "fond": {
+      "type": "enumeration",
+      "enum": [
+        "blanc",
+        "nude",
+        "sage",
+        "vert"
+      ]
+    }
+  },
+  "config": {}
+}

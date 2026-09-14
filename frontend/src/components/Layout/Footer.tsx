@@ -3,113 +3,72 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-interface FooterProps {
-  backgroundSrc?: string;
-}
-
 const copy = {
   fr: {
-    kicker: "POURSUIVRE L'HISTOIRE",
-    title:
-      "Notre histoire se poursuit à travers les territoires que nous développons.",
-    description:
-      "Découvrez les projets qui traduisent aujourd'hui notre vision, notre exigence et notre parole.",
-    primary: "Explorer nos projets",
-    primaryHref: "/projects",
-    secondary: "Échanger avec TAQÈS",
-    secondaryHref: "/contact",
-    vertical: "DES TERRITOIRES MEILLEURS DEMAIN",
-    brandTagline: "Bâtir des territoires d'avenir",
-    navigation: {
-      title: "Navigation",
-      links: [
-        { id: "accueil", label: "Accueil", href: "/" },
-        { id: "groupe", label: "Le Groupe", href: "/groupe" },
-      ],
-    },
-    projets: {
-      title: "Projets",
-      links: [
-        { id: "projets", label: "Projets", href: "/projects" },
-        { id: "actualites", label: "Actualités", href: "/actualites" },
-      ],
-    },
-    liensUtiles: {
-      title: "Liens utiles",
-      links: [
-        { id: "contact", label: "Contact", href: "/contact" },
-        { id: "mentions", label: "Mentions légales", href: "/mentions-legales" },
-        {
-          id: "confidentialite",
-          label: "Politique de confidentialité",
-          href: "/politique-confidentialite",
-        },
-      ],
-    },
-    nousContacter: {
-      title: "Nous contacter",
-      address: "Agdal, Rabat — Maroc",
-      phone: "+212 5 37 64 02 60",
-      email: "contact@taqes.ma",
-    },
-    newsletter: {
-      title: "Recevoir nos actualités",
-      placeholder: "Votre adresse e-mail",
-    },
+    tagline: "BÂTIR DES\nTERRITOIRES\nD'AVENIR",
+    navigation: "NAVIGATION",
+    projets: "PROJETS",
+    liensUtiles: "LIENS UTILES",
+    nousContacter: "NOUS CONTACTER",
+    navigationLinks: [
+      { id: "accueil", label: "Accueil", href: "" },
+      { id: "groupe", label: "Le Groupe", href: "/groupe" },
+      { id: "actualites", label: "Actualités", href: "/actualites" },
+      { id: "contact", label: "Nous contacter", href: "/contact" },
+    ],
+    projetsLinks: [
+      { id: "tous", label: "Tous les projets", href: "/projects" },
+      { id: "fonciers", label: "Projets fonciers", href: "/projects?type=foncier" },
+      { id: "promotion", label: "Promotion immobilière", href: "/projects?type=promotion" },
+      { id: "commercialisation", label: "En commercialisation", href: "/projects?type=commercialisation" },
+    ],
+    liensUtilesLinks: [
+      { id: "opportunites", label: "Opportunités & Partenariats", href: "/contact" },
+      { id: "reclamation", label: "E-Réclamation", href: "/contact" },
+      { id: "recrutement", label: "Recrutement", href: "/contact" },
+    ],
+    addressLine1: "Avenue Mellouza, Villa N°41",
+    addressLine2: "Nahda 2, Rabat — Maroc",
+    phone: "+212 6 61 70 43 78",
+    email: "contact@taqes.ma",
     rights: "Tous droits réservés",
+    credits: "Site conçu et développé par Point Virgul ↗",
   },
   ar: {
-    kicker: "مواصلة المسيرة",
-    title: "تتواصل مسيرتنا عبر الأقاليم التي نطورها.",
-    description:
-      "اكتشف المشاريع التي تجسد اليوم رؤيتنا وطموحنا والتزامنا.",
-    primary: "اكتشف مشاريعنا",
-    primaryHref: "/projects",
-    secondary: "تواصل مع TAQÈS",
-    secondaryHref: "/contact",
-    vertical: "أقاليم أفضل، مستقبل أفضل",
-    brandTagline: "نبني أقاليم المستقبل",
-    navigation: {
-      title: "التصفح",
-      links: [
-        { id: "accueil", label: "الرئيسية", href: "/" },
-        { id: "groupe", label: "المجموعة", href: "/groupe" },
-      ],
-    },
-    projets: {
-      title: "المشاريع",
-      links: [
-        { id: "projets", label: "المشاريع", href: "/projects" },
-        { id: "actualites", label: "الأخبار", href: "/actualites" },
-      ],
-    },
-    liensUtiles: {
-      title: "روابط مفيدة",
-      links: [
-        { id: "contact", label: "اتصل بنا", href: "/contact" },
-        { id: "mentions", label: "الإشعار القانوني", href: "/mentions-legales" },
-        {
-          id: "confidentialite",
-          label: "سياسة الخصوصية",
-          href: "/politique-confidentialite",
-        },
-      ],
-    },
-    nousContacter: {
-      title: "اتصل بنا",
-      address: "أكدال، الرباط — المغرب",
-      phone: "٥ ٦٤ ٠٢ ٦٠ ٣٧ ٢١٢+",
-      email: "contact@taqes.ma",
-    },
-    newsletter: {
-      title: "استلم آخر أخبارنا",
-      placeholder: "بريدك الإلكتروني",
-    },
+    tagline: "بناء أقاليم\nالمستقبل",
+    navigation: "التصفح",
+    projets: "المشاريع",
+    liensUtiles: "روابط مفيدة",
+    nousContacter: "اتصل بنا",
+    navigationLinks: [
+      { id: "accueil", label: "الرئيسية", href: "" },
+      { id: "groupe", label: "المجموعة", href: "/groupe" },
+      { id: "actualites", label: "الأخبار", href: "/actualites" },
+      { id: "contact", label: "اتصل بنا", href: "/contact" },
+    ],
+    projetsLinks: [
+      { id: "tous", label: "جميع المشاريع", href: "/projects" },
+      { id: "fonciers", label: "مشاريع عقارية", href: "/projects?type=foncier" },
+      { id: "promotion", label: "التطوير العقاري", href: "/projects?type=promotion" },
+      { id: "commercialisation", label: "قيد التسويق", href: "/projects?type=commercialisation" },
+    ],
+    liensUtilesLinks: [
+      { id: "opportunites", label: "فرص وشراكات", href: "/opportunites" },
+      { id: "reclamation", label: "الشكايات الإلكترونية", href: "/e-reclam" },
+      { id: "recrutement", label: "التوظيف", href: "/recrutement" },
+      { id: "mentions", label: "الإشعار القانوني", href: "/mentions-legales" },
+      { id: "politique", label: "سياسة الخصوصية", href: "/politique-confidentialite" },
+    ],
+    addressLine1: "شارع ملوية، فيلا رقم 41",
+    addressLine2: "النهضة 2، الرباط — المغرب",
+    phone: "٧٨ ٤٣ ٧٠ ٦١ ٦ ٢١٢+",
+    email: "contact@taqes.ma",
     rights: "جميع الحقوق محفوظة",
+    credits: "تم تصميم وتطوير الموقع بواسطة Point Virgul ↗",
   },
 } as const;
 
-function ArrowIcon({ className }: { className?: string }) {
+function ChevronUpIcon({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 20 20"
@@ -118,12 +77,36 @@ function ArrowIcon({ className }: { className?: string }) {
       aria-hidden="true"
     >
       <path
-        d="M4 10H16M16 10L11 5M16 10L11 15"
+        d="M5 12L10 7L15 12"
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+    </svg>
+  );
+}
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
     </svg>
   );
 }
@@ -139,16 +122,16 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h3 className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-[#EBE2DC]/85">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-[#EBE2DC]">
         {title}
       </h3>
-      <div className="mb-3 h-px w-5 bg-[#b98650]" />
-      <nav className="flex flex-col gap-2">
+      <div className="mb-3 mt-2 h-[2px] w-5 bg-[#C4A484]/80" />
+      <nav className="flex flex-col gap-1.5">
         {items.map((item) => (
           <Link
             key={item.id}
             href={`/${locale}${item.href}`}
-            className="text-xs text-[#EBE2DC]/60 transition-colors hover:text-[#EBE2DC]"
+            className="text-xs font-light text-[#EBE2DC]/70 transition-colors hover:text-[#EBE2DC]"
           >
             {item.label}
           </Link>
@@ -158,190 +141,183 @@ function FooterColumn({
   );
 }
 
-export default function Footer({ backgroundSrc = "/footer.png" }: FooterProps) {
+export default function Footer() {
   const params = useParams();
   const locale = params.locale === "ar" ? "ar" : "fr";
   const c = copy[locale];
   const year = new Date().getFullYear();
 
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
     <footer
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className="relative min-h-[1100px] overflow-hidden bg-[#0a3a2b] bg-cover bg-center bg-no-repeat"
-      style={
-        backgroundSrc
-          ? { backgroundImage: `url("${backgroundSrc}")` }
-          : undefined
-      }
+      className="relative overflow-hidden bg-[#004233] text-[#EBE2DC]"
     >
-      <div className="relative z-10 flex min-h-[1100px] flex-col px-6 pt-20 md:px-12 lg:px-20">
-        <div
-          aria-hidden="true"
-          className="absolute right-8 top-1/3 hidden -translate-y-1/2 rotate-180 [writing-mode:vertical-rl] text-[10px] tracking-[0.25em] text-[#EBE2DC]/50 lg:block"
-        >
-          {c.vertical}
-        </div>
+      <svg
+        className="pointer-events-none absolute left-0 top-0 w-full"
+        viewBox="0 0 1440 120"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M-100 20 C 300 120, 700 -20, 1100 80 C 1300 130, 1500 50, 1600 30"
+          stroke="#C4A484"
+          strokeWidth="1.5"
+          strokeOpacity="0.6"
+          fill="none"
+        />
+      </svg>
 
-        <div className="-translate-y-8 max-w-2xl">
-          <div className="mb-6">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#EBE2DC]/70">
-              {c.kicker}
-            </p>
-            <div className="mt-3 h-[2px] w-8 bg-[#b98650]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-10 right-0 hidden w-[300px] opacity-15 lg:block"
+      >
+        <svg
+          viewBox="0 0 200 200"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className="w-full text-[#EBE2DC]"
+        >
+          <path d="M100 10 L190 100 L100 190 L10 100 Z" />
+          <path d="M100 35 L165 100 L100 165 L35 100 Z" />
+          <path d="M100 60 L140 100 L100 140 L60 100 Z" />
+        </svg>
+      </div>
+
+      <div className="relative mx-auto max-w-[1600px] px-6 pb-4 pt-12 md:px-10 lg:px-16 xl:px-20">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10">
+          <div className="flex flex-col justify-between">
+            <div>
+              <Link href={`/${locale}`} className="inline-block">
+                <img
+                  src="/taqesheading.png"
+                  alt="TAQÈS"
+                  className="h-8 w-auto"
+                />
+              </Link>
+
+              <p className="mt-3 whitespace-pre-line text-[11px] font-medium uppercase leading-relaxed tracking-wider text-[#EBE2DC]/75">
+                {c.tagline}
+              </p>
+            </div>
+
+            <div className="mt-5 flex gap-2.5">
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-7 w-7 items-center justify-center rounded border border-[#EBE2DC]/30 transition-colors hover:border-[#EBE2DC] hover:text-white"
+              >
+                <LinkedInIcon className="h-3.5 w-3.5" />
+              </a>
+
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-7 w-7 items-center justify-center rounded border border-[#EBE2DC]/30 transition-colors hover:border-[#EBE2DC] hover:text-white"
+              >
+                <InstagramIcon className="h-3.5 w-3.5" />
+              </a>
+            </div>
           </div>
 
-          <h2 className="max-w-2xl font-serif text-[30px] font-normal leading-[1.1] text-[#F4EFE9] md:text-[34px] lg:text-[48px]">
-            {c.title}
-          </h2>
+          <FooterColumn
+            title={c.navigation}
+            items={c.navigationLinks}
+            locale={locale}
+          />
 
-          <p className="mt-6 max-w-lg text-sm leading-relaxed text-[#EBE2DC]/70 md:text-[20px]">
-            {c.description}
+          <FooterColumn
+            title={c.projets}
+            items={c.projetsLinks}
+            locale={locale}
+          />
+
+          <FooterColumn
+            title={c.liensUtiles}
+            items={c.liensUtilesLinks}
+            locale={locale}
+          />
+
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#EBE2DC]">
+              {c.nousContacter}
+            </h3>
+
+            <div className="mb-3 mt-2 h-[2px] w-5 bg-[#C4A484]/80" />
+
+            <div className="flex flex-col gap-1.5 text-xs font-light text-[#EBE2DC]/70">
+              <p>{c.addressLine1}</p>
+              <p>{c.addressLine2}</p>
+              <p
+                dir="ltr"
+                className={`mt-1 ${locale === "ar" ? "text-right" : ""}`}
+              >
+                {c.phone}
+              </p>
+              <p>{c.email}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-[#EBE2DC]/15 pt-4 text-[11px] text-[#EBE2DC]/60 sm:flex-row">
+          <p>
+            © {year} TAQÈS — {c.rights}
           </p>
 
-          <div className="relative mt-10 flex translate-y-8 flex-wrap items-center gap-5">
-            <div
-              aria-hidden="true"
-              className="absolute left-[8%] right-[8%] top-1/2 hidden -translate-y-1/2 border-t border-dashed border-[#b98650]/50 sm:block"
-            />
-
-            <Link
-              href={`/${locale}${c.primaryHref}`}
-              className="group relative z-20 inline-flex items-center gap-3 rounded-full border-2 border-[#b98650] bg-[#12281c] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-white transition-colors duration-300 hover:bg-[#EBE2DC] hover:text-[#12281c]"
+          <div className="flex items-center gap-5">
+            <a
+              href="https://pointvirgul.ma"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors hover:text-[#EBE2DC]"
             >
-              {c.primary}
-              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+              {c.credits}
+            </a>
 
-            <span
-              aria-hidden="true"
-              className="relative z-10 hidden h-2 w-2 rounded-full bg-[#b98650] sm:block"
-            />
+            <div className="h-3 w-[1px] bg-[#EBE2DC]/20" />
 
-            <Link
-              href={`/${locale}${c.secondaryHref}`}
-              className="group relative z-10 inline-flex items-center gap-3 rounded-full bg-[#EBE2DC] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-[#12281c] transition-colors duration-300 hover:bg-white"
-            >
-              {c.secondary}
-              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
+            <div className="flex items-center gap-1 font-medium">
+              <Link
+                href="/fr"
+                className={
+                  locale === "fr"
+                    ? "text-[#EBE2DC]"
+                    : "opacity-50 hover:opacity-100"
+                }
+              >
+                FR
+              </Link>
 
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-16 right-0 select-none font-serif text-[280px] leading-none text-[#EBE2DC]/[0.04] lg:text-[380px]"
-        >
-          &
-        </div>
+              <span>/</span>
 
-        <div className="relative z-10 mt-auto pb-0 pt-32">
-          <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 gap-10 border-t border-[#EBE2DC]/10 pt-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-8">
-              <div className="lg:col-span-1">
-                <Link href={`/${locale}`} className="inline-block">
-                  <img
-                    src="/taqesheading.png"
-                    alt="TAQÈS"
-                    className="h-8 w-auto"
-                  />
-                </Link>
-                <p className="mt-3 max-w-[20ch] text-[11px] uppercase tracking-[0.1em] text-[#EBE2DC]/50">
-                  {c.brandTagline}
-                </p>
-              </div>
-
-              <FooterColumn
-                title={c.navigation.title}
-                items={c.navigation.links}
-                locale={locale}
-              />
-
-              <FooterColumn
-                title={c.projets.title}
-                items={c.projets.links}
-                locale={locale}
-              />
-
-              <FooterColumn
-                title={c.liensUtiles.title}
-                items={c.liensUtiles.links}
-                locale={locale}
-              />
-
-              <div>
-                <h3 className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-[#EBE2DC]/85">
-                  {c.nousContacter.title}
-                </h3>
-                <div className="mb-3 h-px w-5 bg-[#b98650]" />
-                <div className="flex flex-col gap-2 text-xs text-[#EBE2DC]/60">
-                  <p>{c.nousContacter.address}</p>
-                  <p
-                    dir="ltr"
-                    className={locale === "ar" ? "text-right" : undefined}
-                  >
-                    {c.nousContacter.phone}
-                  </p>
-                  <p>{c.nousContacter.email}</p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-[#EBE2DC]/85">
-                  {c.newsletter.title}
-                </h3>
-                <div className="mb-3 h-px w-5 bg-[#b98650]" />
-                <form className="flex items-center justify-between border-b border-[#EBE2DC]/30 pb-2">
-                  <input
-                    type="email"
-                    placeholder={c.newsletter.placeholder}
-                    className="w-full bg-transparent text-xs text-[#EBE2DC] placeholder:text-[#EBE2DC]/40 focus:outline-none"
-                  />
-                  <button
-                    type="submit"
-                    aria-label={locale === "ar" ? "إرسال" : "Envoyer"}
-                    className="shrink-0 text-[#EBE2DC] transition-transform hover:translate-x-1"
-                  >
-                    <ArrowIcon className="h-4 w-4" />
-                  </button>
-                </form>
-              </div>
+              <Link
+                href="/ar"
+                className={
+                  locale === "ar"
+                    ? "text-[#EBE2DC]"
+                    : "opacity-50 hover:opacity-100"
+                }
+              >
+                AR
+              </Link>
             </div>
 
-            <div className="mt-10 flex flex-col gap-2 border-t border-[#EBE2DC]/10 pt-5 text-[10px] text-[#EBE2DC]/40 sm:flex-row sm:items-center sm:justify-between">
-              <p>
-                © {year} TAQÈS — {c.rights}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                <span className="uppercase tracking-[0.15em]">
-                  {c.vertical}
-                </span>
-                <span aria-hidden="true">·</span>
-                <div className="flex items-center gap-1">
-                  <Link
-                    href="/fr"
-                    className={
-                      locale === "fr"
-                        ? "text-[#EBE2DC]"
-                        : "transition-colors hover:text-[#EBE2DC]"
-                    }
-                  >
-                    FR
-                  </Link>
-                  <span aria-hidden="true">/</span>
-                  <Link
-                    href="/ar"
-                    className={
-                      locale === "ar"
-                        ? "text-[#EBE2DC]"
-                        : "transition-colors hover:text-[#EBE2DC]"
-                    }
-                  >
-                    AR
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={scrollToTop}
+              aria-label={
+                locale === "ar" ? "العودة إلى الأعلى" : "Revenir en haut"
+              }
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#EBE2DC]/40 text-[#EBE2DC] transition-colors hover:border-[#EBE2DC] hover:bg-white/10"
+            >
+              <ChevronUpIcon className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </div>

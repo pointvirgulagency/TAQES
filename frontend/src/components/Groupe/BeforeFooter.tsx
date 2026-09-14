@@ -1,124 +1,124 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
-export type DemandeType =
-  | "contact"
-  | "reclamation"
-  | "partenariat"
-  | "recrutement"
-  | "projet"
-  | "foncier";
-
-export type DemandeBlock =
-  | "none"
-  | "projet"
-  | "foncier"
-  | "partenariat"
-  | "reclamation";
-
-interface TypeConfigEntry {
-  label: string;
-  strapiType: string;
-  icon: string;
-  block: DemandeBlock;
-}
-
-export const TYPE_CONFIG: Record<DemandeType, TypeConfigEntry> = {
-  contact: {
-    label: "Nous contacter",
-    strapiType: "Nous contacter",
-    icon: "/demande_generale.png",
-    block: "none",
+const copy = {
+  fr: {
+    kicker: "POURSUIVRE L'HISTOIRE",
+    title:
+      "Notre histoire se poursuit à travers les territoires que nous développons.",
+    description:
+      "Découvrez les projets qui traduisent aujourd'hui notre vision, notre exigence et notre parole.",
+    primary: "Explorer nos projets",
+    primaryHref: "/projects",
+    secondary: "Échanger avec TAQÈS",
+    secondaryHref: "/contact",
+    vertical: "DES TERRITOIRES MEILLEURS DEMAIN",
   },
-  reclamation: {
-    label: "E-Réclamation",
-    strapiType: "Réclamation",
-    icon: "📋",
-    block: "reclamation",
+  ar: {
+    kicker: "مواصلة المسيرة",
+    title: "تتواصل مسيرتنا عبر الأقاليم التي نطورها.",
+    description:
+      "اكتشف المشاريع التي تجسد اليوم رؤيتنا وطموحنا والتزامنا.",
+    primary: "اكتشف مشاريعنا",
+    primaryHref: "/projects",
+    secondary: "تواصل مع TAQÈS",
+    secondaryHref: "/contact",
+    vertical: "أقاليم أفضل، مستقبل أفضل",
   },
-  partenariat: {
-    label: "Opportunités & Partenariats",
-    strapiType: "Partenariat",
-    icon: "🤝",
-    block: "partenariat",
-  },
-  recrutement: {
-    label: "Recrutement",
-    strapiType: "Recrutement",
-    icon: "💼",
-    block: "none",
-  },
-  projet: {
-    label: "Demande de projet",
-    strapiType: "Projet",
-    icon: "🏗️",
-    block: "projet",
-  },
-  foncier: {
-    label: "Demande foncière",
-    strapiType: "Foncier",
-    icon: "🗺️",
-    block: "foncier",
-  },
-};
+} as const;
 
-const VISIBLE_TABS: DemandeType[] = [
-  "contact",
-  "reclamation",
-  "partenariat",
-  "recrutement",
-  "projet",
-  "foncier",
-];
-
-interface ContactTabsProps {
-  active: DemandeType;
-  onChange: (type: DemandeType) => void;
-}
-
-export default function ContactTabs({ active, onChange }: ContactTabsProps) {
+function ArrowIcon({ className }: { className?: string }) {
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-[#094734]/10 bg-white">
-      {VISIBLE_TABS.map((key, index) => {
-        const tab = TYPE_CONFIG[key];
-        const isActive = key === active;
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M4 10H16M16 10L11 5M16 10L11 15"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
-        return (
-          <button
-            key={key}
-            type="button"
-            onClick={() => onChange(key)}
-            className={[
-              "flex w-full items-center gap-3 px-5 py-4 text-left text-[15px] font-medium transition-colors",
-              isActive
-                ? "bg-[#094734] text-white"
-                : "bg-white text-[#094734]/80 hover:bg-[#EBE2DC]/40",
-              !isActive && index !== 0 ? "border-t border-[#094734]/10" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            <span className="relative h-5 w-5 shrink-0">
-              <img
-                src={tab.icon}
-                alt=""
-                className={[
-                  "h-full w-full object-contain",
-                  isActive ? "brightness-0 invert" : "",
-                ].join(" ")}
-              />
-            </span>
-            <span className="flex-1 truncate">{tab.label}</span>
-            <ChevronRight
-              className={[
-                "h-4 w-4 shrink-0",
-                isActive ? "text-white" : "text-[#094734]/40",
-              ].join(" ")}
+export default function BeforeFooter() {
+  const params = useParams();
+  const locale = params.locale === "ar" ? "ar" : "fr";
+  const c = copy[locale];
+
+  return (
+    <section
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className="relative min-h-[620px] overflow-hidden bg-[#0a3a2b] bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url("/footer.png")' }}
+    >
+      <div
+        aria-hidden="true"
+        className="absolute right-8 top-1/2 hidden -translate-y-1/2 rotate-180 [writing-mode:vertical-rl] text-[10px] tracking-[0.25em] text-[#EBE2DC]/50 lg:block"
+      >
+        {c.vertical}
+      </div>
+
+      <div className="relative z-10 flex min-h-[620px] items-center px-6 py-20 md:px-12 lg:px-20">
+        <div className="max-w-2xl">
+          <div className="mb-6">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#EBE2DC]/70">
+              {c.kicker}
+            </p>
+            <div className="mt-3 h-[2px] w-8 bg-[#b98650]" />
+          </div>
+
+          <h2 className="max-w-2xl font-serif text-[38px] font-normal leading-[1.1] text-[#F4EFE9] md:text-[52px] lg:text-[60px]">
+            {c.title}
+          </h2>
+
+          <p className="mt-6 max-w-lg text-sm leading-relaxed text-[#EBE2DC]/70 md:text-[15px]">
+            {c.description}
+          </p>
+
+          <div className="relative mt-10 flex flex-wrap items-center gap-5">
+            <div
+              aria-hidden="true"
+              className="absolute left-[8%] right-[8%] top-1/2 hidden -translate-y-1/2 border-t border-dashed border-[#b98650]/50 sm:block"
             />
-          </button>
-        );
-      })}
-    </div>
+
+            <Link
+              href={`/${locale}${c.primaryHref}`}
+              className="group relative z-10 inline-flex items-center gap-3 rounded-full border-2 border-[#b98650] bg-[#12281c] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-white transition-colors duration-300 hover:bg-[#EBE2DC] hover:text-[#12281c]"
+            >
+              {c.primary}
+              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+
+            <span
+              aria-hidden="true"
+              className="relative z-10 hidden h-2 w-2 rounded-full bg-[#b98650] sm:block"
+            />
+
+            <Link
+              href={`/${locale}${c.secondaryHref}`}
+              className="group relative z-10 inline-flex items-center gap-3 rounded-full bg-[#EBE2DC] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-[#12281c] transition-colors duration-300 hover:bg-white"
+            >
+              {c.secondary}
+              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-16 right-0 select-none font-serif text-[280px] leading-none text-[#EBE2DC]/[0.04] lg:text-[380px]"
+      >
+        &
+      </div>
+    </section>
   );
 }

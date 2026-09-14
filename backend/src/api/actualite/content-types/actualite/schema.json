@@ -34,21 +34,13 @@
           "localized": true
         }
       },
-      "multiple": true,
+      "multiple": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
       ]
-    },
-    "contenu": {
-      "type": "blocks",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
     },
     "categorie": {
       "type": "enumeration",
@@ -58,7 +50,7 @@
         }
       },
       "enum": [
-        "Projet",
+        "Projets & Chantiers",
         "Guide",
         "Décryptage",
         "Territoire",
@@ -81,55 +73,7 @@
         }
       }
     },
-    "H1": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "meta_description": {
-      "type": "text",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "extrait": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "mot_cles_principal": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "mots_cles": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "cta_label": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "cta_url": {
+    "introduction": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
@@ -163,9 +107,46 @@
       "components": [
         "sections.section-editoriale",
         "sections.informations-cles",
-        "sections.element-liste",
-        "sections.citation"
+        "sections.citation",
+        "sections.media-large",
+        "sections.cta",
+        "sections.liste-numerotee"
       ]
+    },
+    "auteur": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "auteur_logo": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "actualite": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::actualite.actualite",
+      "inversedBy": "articles_associes"
+    },
+    "articles_associes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::actualite.actualite",
+      "mappedBy": "actualite"
     }
   }
 }

@@ -272,14 +272,15 @@ export async function submitDemande(payload: {
 export async function getActualitesPage(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/page-actu?locale=${locale}` +
-    `&populate[hero][populate]=*`;
+    `&populate[hero][populate]=*` +
+    `&populate[actualites][populate]=*` +
+    `&populate[SEO][populate]=*`;
 
   return fetchStrapi(
     url,
     "Failed to fetch actualites page"
   );
 }
-
 /* =========================================================
    ARTICLES
 ========================================================= */
@@ -288,6 +289,11 @@ export async function getArticles(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/actualites?locale=${locale}` +
     `&populate[image][populate]=*` +
+    `&populate[SEO][populate]=*` +
+    `&populate[sections][populate]=*` +
+    `&populate[articles_associes][populate][image][populate]=*` +
+    `&populate[auteur_logo][populate]=*` +
+    `&populate[projects][populate]=*` +
     `&sort[0]=Date:desc`;
 
   return fetchStrapi(
@@ -304,11 +310,40 @@ export async function getArticleBySlug(
   locale: Locale,
   slug: string
 ) {
-  const query = new URLSearchParams({
-    locale,
-    "filters[slug][$eq]": slug,
-    "populate[image][populate]": "*",
-  });
+  const query = new URLSearchParams();
+
+  query.set("locale", locale);
+  query.set("filters[slug][$eq]", slug);
+
+  query.set(
+    "populate[image][populate]",
+    "*"
+  );
+
+  query.set(
+    "populate[auteur_logo][populate]",
+    "*"
+  );
+
+  query.set(
+    "populate[SEO][populate]",
+    "*"
+  );
+
+  query.set(
+    "populate[sections][populate]",
+    "*"
+  );
+
+  query.set(
+    "populate[articles_associes][populate][image][populate]",
+    "*"
+  );
+
+  query.set(
+    "populate[projects][populate]",
+    "*"
+  );
 
   const res = await fetch(
     `${STRAPI_URL}/api/actualites?${query.toString()}`,
@@ -336,7 +371,6 @@ export async function getArticleBySlug(
 
   return json.data?.[0] ?? null;
 }
-
 /* =========================================================
    PROJECT BY TITLE
 ========================================================= */

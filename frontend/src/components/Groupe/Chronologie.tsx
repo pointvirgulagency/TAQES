@@ -39,7 +39,9 @@ export default function Chronologie({
 
   useGSAP(
     () => {
-      if (!data?.length || !sectionRef.current) return;
+      if (!data?.length || !sectionRef.current) {
+        return;
+      }
 
       const steps = data.length;
 
@@ -48,8 +50,12 @@ export default function Chronologie({
         start: "top top",
         end: "bottom bottom",
         scrub: true,
+
         onUpdate: (self) => {
-          if (steps <= 1) return setActiveIndex(0);
+          if (steps <= 1) {
+            setActiveIndex(0);
+            return;
+          }
 
           const index = Math.min(
             steps - 1,
@@ -60,14 +66,23 @@ export default function Chronologie({
             current === index ? current : index
           );
         },
-        onEnter: () => setActiveIndex(0),
-        onLeaveBack: () => setActiveIndex(0),
-        onLeave: () => setActiveIndex(steps - 1),
+
+        onEnter: () => {
+          setActiveIndex(0);
+        },
+
+        onLeaveBack: () => {
+          setActiveIndex(0);
+        },
+
+        onLeave: () => {
+          setActiveIndex(steps - 1);
+        },
       });
 
-      requestAnimationFrame(() => ScrollTrigger.refresh());
-
-      return () => trigger.kill();
+      return () => {
+        trigger.kill();
+      };
     },
     {
       scope: sectionRef,
@@ -76,7 +91,9 @@ export default function Chronologie({
     }
   );
 
-  if (!data?.length) return null;
+  if (!data?.length) {
+    return null;
+  }
 
   return (
     <section
@@ -112,9 +129,15 @@ export default function Chronologie({
               ? etape.image[0]
               : etape.image;
 
-            if (!image?.url) return null;
+            if (!image?.url) {
+              return null;
+            }
 
-            const imageUrl = `${strapiUrl.replace(/\/$/, "")}${image.url}`;
+            const imageUrl = `${strapiUrl.replace(
+              /\/$/,
+              ""
+            )}${image.url}`;
+
             const active = activeIndex === idx;
 
             return (
@@ -127,8 +150,11 @@ export default function Chronologie({
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   opacity: active ? 1 : 0,
-                  transform: active ? "scale(1)" : "scale(1.05)",
-                  transition: "opacity 0.9s ease, transform 1.2s ease",
+                  transform: active
+                    ? "scale(1)"
+                    : "scale(1.05)",
+                  transition:
+                    "opacity 0.9s ease, transform 1.2s ease",
                   pointerEvents: "none",
                 }}
               />
@@ -188,7 +214,8 @@ export default function Chronologie({
                   <div
                     style={{
                       marginBottom: "14px",
-                      fontFamily: "Arial, Helvetica, sans-serif",
+                      fontFamily:
+                        "Arial, Helvetica, sans-serif",
                       fontSize: "9px",
                       fontWeight: 600,
                       letterSpacing: "0.19em",
@@ -399,7 +426,8 @@ export default function Chronologie({
               position: "relative",
               width: "100%",
               height: "1px",
-              background: "rgba(232,227,216,0.35)",
+              background:
+                "rgba(232,227,216,0.35)",
             }}
           >
             <div
@@ -410,7 +438,9 @@ export default function Chronologie({
                 width: `${
                   data.length <= 1
                     ? 100
-                    : (activeIndex / (data.length - 1)) * 100
+                    : (activeIndex /
+                        (data.length - 1)) *
+                      100
                 }%`,
                 height: "2px",
                 background: "#A87543",
@@ -423,4 +453,3 @@ export default function Chronologie({
     </section>
   );
 }
-

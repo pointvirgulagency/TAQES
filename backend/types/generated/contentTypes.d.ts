@@ -576,9 +576,31 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
+    actualite: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::actualite.actualite'
+    >;
+    articles_associes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::actualite.actualite'
+    >;
+    auteur: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    auteur_logo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     categorie: Schema.Attribute.Enumeration<
       [
-        'Projet',
+        'Projets & Chantiers',
         'Guide',
         'D\u00E9cryptage',
         'Territoire',
@@ -590,34 +612,10 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    contenu: Schema.Attribute.Blocks &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    cta_label: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    cta_url: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     Date: Schema.Attribute.DateTime &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    extrait: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -629,16 +627,13 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    H1: Schema.Attribute.String &
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    image: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    > &
+    introduction: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -649,32 +644,16 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::actualite.actualite'
     >;
-    meta_description: Schema.Attribute.Text &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    mot_cles_principal: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    mots_cles: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     sections: Schema.Attribute.DynamicZone<
       [
         'sections.section-editoriale',
         'sections.informations-cles',
-        'sections.element-liste',
         'sections.citation',
+        'sections.media-large',
+        'sections.cta',
+        'sections.liste-numerotee',
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

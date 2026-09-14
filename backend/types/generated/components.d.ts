@@ -55,6 +55,21 @@ export interface SectionsCitation extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsCta extends Struct.ComponentSchema {
+  collectionName: 'components_sections_ctas';
+  info: {
+    displayName: 'cta';
+  };
+  attributes: {
+    description: Schema.Attribute.String;
+    fond: Schema.Attribute.Enumeration<['blanc', 'nude', 'sage', 'vert']>;
+    libelle_boutton: Schema.Attribute.String;
+    lien: Schema.Attribute.String;
+    surtitre: Schema.Attribute.String;
+    titre: Schema.Attribute.String;
+  };
+}
+
 export interface SectionsCtaFinal extends Struct.ComponentSchema {
   collectionName: 'components_sections_cta_finals';
   info: {
@@ -541,6 +556,7 @@ declare module '@strapi/strapi' {
       'sections.chiffres': SectionsChiffres;
       'sections.chronologie': SectionsChronologie;
       'sections.citation': SectionsCitation;
+      'sections.cta': SectionsCta;
       'sections.cta-final': SectionsCtaFinal;
       'sections.element-liste': SectionsElementListe;
       'sections.fonciere-alia': SectionsFonciereAlia;
