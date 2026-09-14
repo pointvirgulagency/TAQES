@@ -9,7 +9,7 @@ export default function ArticleNumberedList({
   section,
   number = 3,
 }: ArticleNumberedListProps) {
-  if (!section.elements?.length) {
+  if (!section.element?.length) {
     return null;
   }
 
@@ -42,7 +42,7 @@ export default function ArticleNumberedList({
 
         <div className="grid grid-cols-1 divide-y divide-[#094734]/15 md:grid-cols-2 md:divide-x md:divide-y-0">
           <div className="flex flex-col divide-y divide-[#094734]/15 md:pr-10 lg:pr-16">
-            {section.elements
+            {section.element
               .filter((_, idx) => idx % 2 === 0)
               .map((element, idx) => {
                 const itemIndex = idx * 2 + 1;
@@ -77,7 +77,7 @@ export default function ArticleNumberedList({
           </div>
 
           <div className="flex flex-col divide-y divide-[#094734]/15 pt-8 md:pl-10 md:pt-0 lg:pl-16">
-            {section.elements
+            {section.element
               .filter((_, idx) => idx % 2 === 1)
               .map((element, idx) => {
                 const itemIndex = idx * 2 + 2;
