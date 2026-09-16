@@ -1,55 +1,45 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  MapPin,
-  Building2,
-  Layers3,
-  Activity,
-  Images,
-  Play,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-} from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface StrapiMedia {
   url: string;
+  alternativeText?: string | null;
+}
+
+interface Territoire {
+  id?: number;
+  nom?: string;
+  latitude?: string;
+  longitude?: string;
+}
+
+interface Typologie {
+  id?: number;
+  titre?: string;
 }
 
 interface Projet {
   id: number;
   title: string;
   slug: string;
-
   FeaturedImage?: StrapiMedia;
-  videos?: StrapiMedia[];
-  gallery?: StrapiMedia[];
-
-  reference?: string;
   statut?: string;
   type_operation?: string;
-  public_cible?: string;
-
   description_courte?: string;
-  description_complete?: unknown;
-
-  localisation?: string;
-  ville?: string;
-  surface_terrain?: string | number;
-  surface_develope?: string | number;
-  nombre_lots?: string | number;
-  annee?: string | number;
-  coordonees?: string;
-  brochure?: StrapiMedia;
-
-  typologie?: string;
-  type?: unknown;
+  territoire?: Territoire;
+  type?: Typologie[];
+  cta_b2c?: string;
+  cta_b2b?: string;
+  mention?: unknown;
+  publier?: boolean;
 }
 
 interface ProjetsMisEnAvantProps {
   data: {
-    titre: string;
+    titre?: string;
     projects: Projet[];
   };
   strapiUrl: string;
@@ -65,379 +55,238 @@ function stripMarkdown(value: string) {
     .trim();
 }
 
-function getSecondaryCta(
-  statut: string | undefined,
-  isArabic: boolean
-) {
-  if (!statut) return null;
+function getMention(value: unknown): string {
+  if (!Array.isArray(value)) return "";
 
-  const value = statut.toLowerCase().trim();
+  return value
+    .map((block) => {
+      if (!block || typeof block !== "object") return "";
 
-  if (
-    value.includes("à venir") ||
-    value.includes("a venir") ||
-    value.includes("venir")
-  ) {
-    return isArabic
-      ? "كن على اطلاع عند الإطلاق"
-      : "Être informé du lancement";
-  }
+      const children =
+        "children" in block && Array.isArray(block.children)
+          ? block.children
+          : [];
 
-  if (value.includes("autorisation")) {
-    return isArabic
-      ? "تلقي المعلومات"
-      : "Recevoir les informations";
-  }
-
-  if (
-    value.includes("commercialisation") ||
-    value.includes("commercialisé") ||
-    value.includes("commercialise")
-  ) {
-    return isArabic
-      ? "تلقي الكتيب"
-      : "Recevoir la brochure";
-  }
-
-  if (
-    value.includes("livré") ||
-    value.includes("livre") ||
-    value.includes("réalisé") ||
-    value.includes("realise")
-  ) {
-    return isArabic
-      ? "اكتشف الإنجاز"
-      : "Découvrir la réalisation";
-  }
-
-  return null;
+      return children
+        .map((child) =>
+          child &&
+          typeof child === "object" &&
+          "text" in child &&
+          typeof child.text === "string"
+            ? child.text
+            : ""
+        )
+        .join("");
+    })
+    .join(" ")
+    .trim();
 }
 
 export default function ProjetsMisEnAvant({
   data,
   strapiUrl,
-  locale,
+  locale = "fr",
 }: ProjetsMisEnAvantProps) {
-  const projects = data.projects ?? [];
+  const projects = (data.projects ?? []).filter(
+    (project) => project.publier !== false
+  );
 
   const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(true);
 
   const total = projects.length;
-
-  const resolvedLocale = locale || "fr";
-  const isArabic = resolvedLocale === "ar";
-
+  const isArabic = locale === "ar";
   const current = projects[index];
 
   useEffect(() => {
-    if (!playing || total <= 1) return;
-
-    const timer = setInterval(() => {
-      setIndex((currentIndex) => (currentIndex + 1) % total);
-    }, 6000);
-
-    return () => clearInterval(timer);
-  }, [playing, total]);
+    if (index >= total && total > 0) {
+      setIndex(0);
+    }
+  }, [index, total]);
 
   if (!current) return null;
-
-  const goPrev = () => {
-    setIndex((currentIndex) => (currentIndex - 1 + total) % total);
-  };
-
-  const goNext = () => {
-    setIndex((currentIndex) => (currentIndex + 1) % total);
-  };
 
   const description = current.description_courte
     ? stripMarkdown(current.description_courte)
     : "";
 
-  const galleryPreview = (current.gallery ?? []).slice(0, 4);
+  const typologie =
+    current.type?.find((item) => item.titre)?.titre || "";
 
-  const secondaryCta = getSecondaryCta(
+  const territoireName = current.territoire?.nom || "";
+  const mention = getMention(current.mention);
+
+  const projectDetailUrl = `/${locale}/projects/${current.slug}`;
+
+  const tags = [
+    territoireName,
+    current.type_operation,
+    typologie,
     current.statut,
-    isArabic
-  );
-
-  const projectUrl = `/${resolvedLocale}/projects/${current.slug}`;
+  ].filter(Boolean);
 
   return (
     <section
       dir={isArabic ? "rtl" : "ltr"}
-      className="relative min-h-[100svh] w-full overflow-hidden"
+      className="relative min-h-[85vh] w-full overflow-hidden bg-[#062c20]"
     >
+      {/* Background Image */}
       {current.FeaturedImage && (
         <img
           src={`${strapiUrl}${current.FeaturedImage.url}`}
-          alt={current.title}
-          className="absolute inset-0 h-full w-full object-cover"
+          alt={
+            current.FeaturedImage.alternativeText || current.title
+          }
+          className="absolute inset-0 h-full w-full object-cover object-right"
         />
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--green-dark)]/95 via-[var(--green-dark)]/60 to-[var(--green-dark)]/15" />
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#062c20] via-[#062c20]/85 via-50% to-transparent" />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-[var(--green-dark)]/80 via-transparent to-transparent" />
+      {/* Main Container */}
+      <div className="relative flex min-h-[85vh] flex-col justify-between px-8 pb-10 pt-28 md:px-16 lg:px-24">
+        {/* Content Section */}
+        <div className="max-w-2xl text-white">
+          {/* Subtitle Badge */}
+          <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.25em] text-[#d6be96]">
+            <span>
+              —{" "}
+              {data.titre ||
+                (isArabic ? "مشروع مميز" : "PROJET À LA UNE")}
+            </span>
 
-      <div className="relative flex min-h-[100svh] flex-col justify-between px-6 pb-8 pt-32 md:px-10 md:pb-10 md:pt-36 lg:px-16">
-        <div className="max-w-4xl">
-          {/* SURTITRE */}
-          <p className="mb-5 text-sm font-semibold uppercase tracking-[0.3em] text-[var(--gold-accent)]">
-            {data.titre ||
-              (isArabic ? "مشروع مميز" : "Projet à la une")}
-          </p>
+            {total > 1 && (
+              <span className="font-light text-white/50">
+                {String(index + 1).padStart(2, "0")}/
+                {String(total).padStart(2, "0")}
+              </span>
+            )}
+          </div>
 
-          {/* TITRE */}
-          <h2 className="text-5xl font-semibold leading-[0.98] tracking-tight text-[var(--beige-light)] md:text-6xl lg:text-8xl">
+          {/* Main Title */}
+          <h1 className="mt-6 font-serif text-5xl font-normal leading-[1.1] text-white md:text-6xl lg:text-7xl">
             {current.title}
-          </h2>
+          </h1>
 
-          {/* SOUS-TITRE */}
-          {current.typologie && (
-            <p className="mt-4 text-2xl font-light leading-tight text-[var(--beige-light)]/80 md:text-3xl">
-              {current.typologie}
-            </p>
-          )}
-
-          {/* DESCRIPTION COURTE */}
+          {/* Description Paragraph */}
           {description && (
-            <p className="mt-7 max-w-2xl text-base leading-relaxed text-[var(--beige-light)]/85 md:text-lg">
+            <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-white/90 md:text-lg">
               {description}
             </p>
           )}
 
-          {/* INFORMATIONS */}
-          <div className="mt-8 grid max-w-4xl grid-cols-1 gap-x-12 gap-y-5 sm:grid-cols-2">
-            {current.localisation && (
-              <div className="flex items-start gap-3">
-                <MapPin
-                  className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold-accent)]"
-                  strokeWidth={1.5}
-                />
-
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--beige-light)]/50">
-                    {isArabic ? "الموقع" : "Localisation"}
-                  </p>
-
-                  <p className="mt-1 text-base text-[var(--beige-light)]">
-                    {current.localisation}
-                  </p>
+          {/* Bulleted Tags */}
+          {tags.length > 0 && (
+            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-medium text-white/90 md:text-base">
+              {tags.map((tag, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="h-2 w-2 rounded-full bg-[#d6be96]" />
+                  <span>{tag}</span>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
+          )}
 
-            {current.type_operation && (
-              <div className="flex items-start gap-3">
-                <Building2
-                  className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold-accent)]"
-                  strokeWidth={1.5}
-                />
-
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--beige-light)]/50">
-                    {isArabic
-                      ? "طبيعة المشروع"
-                      : "Nature du projet"}
-                  </p>
-
-                  <p className="mt-1 text-base text-[var(--beige-light)]">
-                    {current.type_operation}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {current.typologie && (
-              <div className="flex items-start gap-3">
-                <Layers3
-                  className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold-accent)]"
-                  strokeWidth={1.5}
-                />
-
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--beige-light)]/50">
-                    {isArabic ? "التصنيف" : "Typologie"}
-                  </p>
-
-                  <p className="mt-1 text-base text-[var(--beige-light)]">
-                    {current.typologie}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {current.statut && (
-              <div className="flex items-start gap-3">
-                <Activity
-                  className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold-accent)]"
-                  strokeWidth={1.5}
-                />
-
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--beige-light)]/50">
-                    {isArabic ? "الحالة" : "Statut"}
-                  </p>
-
-                  <p className="mt-1 text-base text-[var(--beige-light)]">
-                    {current.statut}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* CTA */}
-          <div className="mt-9 flex flex-wrap gap-4">
-            <a
-              href={projectUrl}
-              className="btn-gold group inline-flex items-center gap-3 rounded-md px-7 py-3.5 text-base font-medium"
+          {/* Action Buttons */}
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <Link
+              href={projectDetailUrl}
+              className="inline-flex items-center gap-3 rounded-sm bg-[#d6be96] px-8 py-4 text-sm font-semibold tracking-wider text-[#062c20] transition-colors hover:bg-[#c4ab83]"
             >
               <span>
                 {isArabic
                   ? "اكتشف المشروع"
                   : "Découvrir le projet"}
               </span>
+              <span className="text-base">→</span>
+            </Link>
 
-              <span
-                className={`transition-transform duration-300 ${
-                  isArabic
-                    ? "group-hover:-translate-x-1"
-                    : "group-hover:translate-x-1"
-                }`}
-              >
-                {isArabic ? "←" : "→"}
+            <button
+              type="button"
+              className="inline-flex items-center gap-3 rounded-sm border border-white/50 bg-transparent px-8 py-4 text-sm font-semibold tracking-wider text-white backdrop-blur-xs transition-colors hover:bg-white/10"
+            >
+              <span>
+                {isArabic
+                  ? "كن مطلعاً"
+                  : "Être informé du lancement"}
               </span>
-            </a>
-
-            {secondaryCta && (
-              <button
-                type="button"
-                className="btn-outline-light rounded-md px-7 py-3.5 text-base font-medium"
-              >
-                {secondaryCta}
-              </button>
-            )}
+              <span className="text-base">→</span>
+            </button>
           </div>
         </div>
 
-        {/* BOTTOM */}
-        <div className="mt-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div>
-            {(galleryPreview.length > 0 ||
-              (current.videos?.length ?? 0) > 0) && (
-              <div className="flex items-center gap-3">
-                {galleryPreview.map((img, i) => (
-                  <img
+        {/* Bottom Bar Navigation */}
+        <div className="mt-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div className="flex flex-col gap-3">
+            <span className="text-xs font-bold uppercase tracking-[0.25em] text-white/70">
+              {isArabic ? "تصفح المشاريع" : "PARCOURIR LES PROJETS"}
+            </span>
+
+            {total > 1 && (
+              <div className="flex items-center gap-2">
+                {projects.map((_, i) => (
+                  <button
                     key={i}
-                    src={`${strapiUrl}${img.url}`}
-                    alt=""
-                    className="h-14 w-14 rounded-md object-cover ring-1 ring-[var(--beige-light)]/25 md:h-16 md:w-16"
+                    type="button"
+                    onClick={() => setIndex(i)}
+                    aria-label={`Slide ${i + 1}`}
+                    className={`h-[2px] transition-all duration-300 ${
+                      i === index
+                        ? "w-20 bg-white"
+                        : "w-10 bg-white/30 hover:bg-white/60"
+                    }`}
                   />
                 ))}
+              </div>
+            )}
+          </div>
 
-                {(current.videos?.length ?? 0) > 0 && (
-                  <button
-                    type="button"
-                    aria-label={
-                      isArabic
-                        ? "عرض فيديو المشروع"
-                        : "Voir la vidéo du projet"
-                    }
-                    className="flex h-14 w-14 items-center justify-center rounded-md bg-[var(--beige-light)]/10 ring-1 ring-[var(--beige-light)]/25 transition hover:bg-[var(--beige-light)]/20 md:h-16 md:w-16"
-                  >
-                    <Play
-                      className="h-5 w-5 text-[var(--beige-light)]"
-                      fill="currentColor"
-                    />
-                  </button>
-                )}
+          <div className="flex flex-col items-start gap-3 md:items-end">
+            {total > 1 && (
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIndex(
+                      (currentIndex) =>
+                        (currentIndex - 1 + total) % total
+                    )
+                  }
+                  aria-label="Previous"
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 text-white transition hover:bg-white/10"
+                >
+                  <ChevronLeft
+                    className={`h-5 w-5 ${
+                      isArabic ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-                <div className="ml-2 flex items-center gap-2">
-                  <Images className="h-4 w-4 text-[var(--gold-accent)]" />
-
-                  <span className="text-xs uppercase tracking-[0.18em] text-[var(--beige-light)]/60">
-                    {isArabic
-                      ? "استعرض المشاريع"
-                      : "Parcourir les projets"}
-                  </span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIndex(
+                      (currentIndex) =>
+                        (currentIndex + 1) % total
+                    )
+                  }
+                  aria-label="Next"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-[#d6be96] text-[#062c20] transition hover:bg-[#c4ab83]"
+                >
+                  <ChevronRight
+                    className={`h-5 w-5 ${
+                      isArabic ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
               </div>
             )}
 
-            {/* VISUAL MENTION */}
-            <p className="mt-3 text-[10px] uppercase tracking-[0.12em] text-[var(--beige-light)]/45">
-              {isArabic
-                ? "تصور مفاهيمي غير تعاقدي"
-                : "Visualisation conceptuelle non contractuelle"}
+            <p className="text-xs tracking-wide text-white/50">
+              {mention ||
+                "Visualisation conceptuelle non contractuelle"}
             </p>
           </div>
-
-          {/* PROJECT NAVIGATION */}
-          {total > 1 && (
-            <div className="flex items-center gap-4 self-start md:self-end">
-              <button
-                type="button"
-                onClick={goPrev}
-                aria-label={
-                  isArabic
-                    ? "المشروع السابق"
-                    : "Projet précédent"
-                }
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--beige-light)]/40 text-[var(--beige-light)] transition hover:bg-[var(--beige-light)]/10"
-              >
-                <ChevronLeft
-                  className={`h-4 w-4 ${
-                    isArabic ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              <span className="text-xs tabular-nums tracking-widest text-[var(--beige-light)]/80">
-                {String(index + 1).padStart(2, "0")} /{" "}
-                {String(total).padStart(2, "0")}
-              </span>
-
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label={
-                  isArabic
-                    ? "المشروع التالي"
-                    : "Projet suivant"
-                }
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--beige-light)]/40 text-[var(--beige-light)] transition hover:bg-[var(--beige-light)]/10"
-              >
-                <ChevronRight
-                  className={`h-4 w-4 ${
-                    isArabic ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setPlaying((value) => !value)}
-                aria-label={
-                  playing
-                    ? isArabic
-                      ? "إيقاف مؤقت"
-                      : "Mettre en pause"
-                    : isArabic
-                      ? "تشغيل التمرير"
-                      : "Lancer le défilement"
-                }
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--beige-light)]/40 text-[var(--beige-light)] transition hover:bg-[var(--beige-light)]/10"
-              >
-                {playing ? (
-                  <Pause className="h-4 w-4" />
-                ) : (
-                  <Play className="h-4 w-4" />
-                )}
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </section>

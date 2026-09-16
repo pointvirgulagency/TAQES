@@ -37,60 +37,6 @@
         }
       }
     },
-    "FeaturedImage": {
-      "type": "media",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "multiple": false,
-      "required": true,
-      "allowedTypes": [
-        "images",
-        "files"
-      ]
-    },
-    "gallery": {
-      "type": "media",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "multiple": true,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "audios"
-      ]
-    },
-    "description_courte": {
-      "type": "richtext",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "required": true
-    },
-    "description_complete": {
-      "type": "blocks",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "localisation": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "statut": {
       "type": "enumeration",
       "pluginOptions": {
@@ -99,13 +45,11 @@
         }
       },
       "enum": [
-        "En étude",
-        "En autorisation",
-        "En développement",
-        "En travaux",
+        "À venir",
+        "En cours d’autorisation",
         "En commercialisation",
-        "Livré",
-        "Commercialisé 100%"
+        "Commercialisé",
+        "Livré"
       ]
     },
     "type_operation": {
@@ -134,20 +78,74 @@
         "Mixte"
       ]
     },
-    "videos": {
-      "type": "media",
+    "surface_terrain": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "phase": {
+      "type": "enumeration",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "multiple": true,
-      "allowedTypes": [
-        "files",
-        "videos"
+      "enum": [
+        "À l’étude",
+        "En autorisation",
+        "En développement",
+        "En réalisation",
+        "Réalisé"
       ]
     },
-    "surface_terrain": {
+    "territoire": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::territoire.territoire",
+      "inversedBy": "projects"
+    },
+    "disponibilite": {
+      "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "enum": [
+        "À venir",
+        "Disponible",
+        "Disponibilité limitée",
+        "Commercialisé",
+        "Non disponible"
+      ]
+    },
+    "nombre_lots": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "destination_usage": {
+      "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "enum": [
+        "Résidentiel",
+        "Commerce",
+        "Tertiaire",
+        "Équipement",
+        "Mixte"
+      ]
+    },
+    "coordonees": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
@@ -163,13 +161,73 @@
         }
       }
     },
-    "nombre_lots": {
+    "periode_projet": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
+    },
+    "publier": {
+      "type": "boolean",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "zonage": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description_courte": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true
+    },
+    "description_complete": {
+      "type": "blocks",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "FeaturedImage": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "videos": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": true,
+      "allowedTypes": [
+        "files",
+        "videos"
+      ]
     },
     "annee": {
       "type": "string",
@@ -179,8 +237,23 @@
         }
       }
     },
-    "coordonees": {
-      "type": "string",
+    "gallery": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "audios"
+      ]
+    },
+    "date_mise_a_jour": {
+      "type": "date",
       "pluginOptions": {
         "i18n": {
           "localized": true
@@ -212,41 +285,11 @@
       "component": "shared.typologie",
       "repeatable": true
     },
-    "territoire": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::territoire.territoire",
-      "inversedBy": "projects"
-    },
     "actualite": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::actualite.actualite",
       "inversedBy": "projects"
-    },
-    "zonage": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "disponibilite": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "phase": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
     },
     "mention": {
       "type": "blocks",
@@ -272,13 +315,64 @@
         }
       }
     },
-    "publier": {
-      "type": "boolean",
+    "environnement_proche": {
+      "type": "blocks",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
+    },
+    "avancement": {
+      "type": "blocks",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "documents": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "accessibilite": {
+      "type": "blocks",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "location": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.project-location",
+      "repeatable": true
+    },
+    "Plan": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.plan",
+      "repeatable": false
     }
   }
 }

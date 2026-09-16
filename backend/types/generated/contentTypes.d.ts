@@ -457,7 +457,7 @@ export interface ApiAcceuilAcceuil extends Struct.SingleTypeSchema {
     };
   };
   attributes: {
-    Actualites: Schema.Attribute.Component<'sections.actualites', true> &
+    articles: Schema.Attribute.Component<'sections.actualites-acceuil', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1091,11 +1091,23 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
+    accessibilite: Schema.Attribute.Blocks &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     actualite: Schema.Attribute.Relation<
       'manyToOne',
       'api::actualite.actualite'
     >;
     annee: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    avancement: Schema.Attribute.Blocks &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1128,6 +1140,12 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    date_mise_a_jour: Schema.Attribute.Date &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     description_complete: Schema.Attribute.Blocks &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1141,7 +1159,38 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    disponibilite: Schema.Attribute.String &
+    destination_usage: Schema.Attribute.Enumeration<
+      ['R\u00E9sidentiel', 'Commerce', 'Tertiaire', '\u00C9quipement', 'Mixte']
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    disponibilite: Schema.Attribute.Enumeration<
+      [
+        '\u00C0 venir',
+        'Disponible',
+        'Disponibilit\u00E9 limit\u00E9e',
+        'Commercialis\u00E9',
+        'Non disponible',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    documents: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    environnement_proche: Schema.Attribute.Blocks &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1161,16 +1210,16 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
         };
       }>;
     locale: Schema.Attribute.String;
-    localisation: Schema.Attribute.String &
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::project.project'
+    >;
+    location: Schema.Attribute.Component<'sections.project-location', true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::project.project'
-    >;
     mention: Schema.Attribute.Blocks &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1183,7 +1232,27 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    phase: Schema.Attribute.String &
+    periode_projet: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    phase: Schema.Attribute.Enumeration<
+      [
+        '\u00C0 l\u2019\u00E9tude',
+        'En autorisation',
+        'En d\u00E9veloppement',
+        'En r\u00E9alisation',
+        'R\u00E9alis\u00E9',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    Plan: Schema.Attribute.Component<'sections.plan', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1211,13 +1280,11 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     slug: Schema.Attribute.UID<'title'>;
     statut: Schema.Attribute.Enumeration<
       [
-        'En \u00E9tude',
-        'En autorisation',
-        'En d\u00E9veloppement',
-        'En travaux',
+        '\u00C0 venir',
+        'En cours d\u2019autorisation',
         'En commercialisation',
+        'Commercialis\u00E9',
         'Livr\u00E9',
-        'Commercialis\u00E9 100%',
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

@@ -122,7 +122,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-[#EBE2DC]">
+      <h3 className="text-s font-semibold uppercase tracking-wider text-[#EBE2DC]">
         {title}
       </h3>
       <div className="mb-3 mt-2 h-[2px] w-5 bg-[#C4A484]/80" />
@@ -131,7 +131,7 @@ function FooterColumn({
           <Link
             key={item.id}
             href={`/${locale}${item.href}`}
-            className="text-xs font-light text-[#EBE2DC]/70 transition-colors hover:text-[#EBE2DC]"
+            className="text-s font-light text-[#EBE2DC]/70 transition-colors hover:text-[#EBE2DC]"
           >
             {item.label}
           </Link>
@@ -171,23 +171,6 @@ export default function Footer() {
         />
       </svg>
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-10 right-0 hidden w-[300px] opacity-15 lg:block"
-      >
-        <svg
-          viewBox="0 0 200 200"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="w-full text-[#EBE2DC]"
-        >
-          <path d="M100 10 L190 100 L100 190 L10 100 Z" />
-          <path d="M100 35 L165 100 L100 165 L35 100 Z" />
-          <path d="M100 60 L140 100 L100 140 L60 100 Z" />
-        </svg>
-      </div>
-
       <div className="relative mx-auto max-w-[1600px] px-6 pb-4 pt-12 md:px-10 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10">
           <div className="flex flex-col justify-between">
@@ -200,7 +183,7 @@ export default function Footer() {
                 />
               </Link>
 
-              <p className="mt-3 whitespace-pre-line text-[11px] font-medium uppercase leading-relaxed tracking-wider text-[#EBE2DC]/75">
+              <p className="mt-3 whitespace-pre-line text-[13px] font-medium uppercase leading-relaxed tracking-wider text-[#EBE2DC]/75">
                 {c.tagline}
               </p>
             </div>
@@ -245,13 +228,13 @@ export default function Footer() {
           />
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#EBE2DC]">
+            <h3 className="text-s font-semibold uppercase tracking-wider text-[#EBE2DC]">
               {c.nousContacter}
             </h3>
 
             <div className="mb-3 mt-2 h-[2px] w-5 bg-[#C4A484]/80" />
 
-            <div className="flex flex-col gap-1.5 text-xs font-light text-[#EBE2DC]/70">
+            <div className="flex flex-col gap-1.5 text-s font-light text-[#EBE2DC]/70">
               <p>{c.addressLine1}</p>
               <p>{c.addressLine2}</p>
               <p

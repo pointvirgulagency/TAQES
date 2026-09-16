@@ -112,13 +112,16 @@ export default function NouvelleIdentite({
         {chiffres.length > 0 && (
           <div className="mt-12 lg:mt-14">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-5 lg:gap-3">
-              {chiffres.map((c) => {
+              {chiffres.map((c, index) => {
                 const itemDescription = extractText(c.description);
+                const isLast = index === chiffres.length - 1;
 
                 return (
                   <div
                     key={c.id}
-                    className="group relative min-h-[175px] cursor-default px-5 py-5 transition-all duration-300 hover:-translate-y-2 hover:bg-[#094734] hover:shadow-lg"
+                    className={`group relative min-h-[175px] cursor-default px-5 py-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg ${
+                      isLast ? "hover:bg-[#094734]" : "hover:bg-[#486895]"
+                    }`}
                   >
                     <div className="mb-5 h-3 w-3 rounded-full bg-[#094734]/50 transition-colors duration-300 group-hover:bg-white" />
 
@@ -132,7 +135,7 @@ export default function NouvelleIdentite({
                       </p>
 
                       {itemDescription && (
-                        <p className="mt-2 text-xs leading-5 text-[#094734]/60 transition-colors duration-300 group-hover:text-white/65">
+                        <p className="mt-2 text-s leading-5 text-[#094734]/60 transition-colors duration-300 group-hover:text-white/65">
                           {itemDescription}
                         </p>
                       )}

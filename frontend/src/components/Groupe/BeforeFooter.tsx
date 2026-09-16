@@ -8,8 +8,15 @@ const copy = {
     kicker: "POURSUIVRE L'HISTOIRE",
     title:
       "Notre histoire se poursuit à travers les territoires que nous développons.",
-    description:
-      "Découvrez les projets qui traduisent aujourd'hui notre vision, notre exigence et notre parole.",
+    description: (
+      <>
+        Découvrez les projets qui traduisent aujourd'hui
+        <br />
+         notre vision, notre exigence et notre parole.
+      </>
+    ),
+
+
     primary: "Explorer nos projets",
     primaryHref: "/projects",
     secondary: "Échanger avec TAQÈS",
@@ -56,7 +63,7 @@ export default function BeforeFooter() {
   return (
     <section
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className="relative min-h-[620px] overflow-hidden bg-[#0a3a2b] bg-cover bg-center bg-no-repeat"
+      className="relative min-h-[620px] overflow-hidden bg-[#0a3a2b] bg-cover bg-[center_0%] bg-no-repeat"
       style={{ backgroundImage: 'url("/footer.png")' }}
     >
       <div
@@ -69,13 +76,13 @@ export default function BeforeFooter() {
       <div className="relative z-10 flex min-h-[620px] items-center px-6 py-20 md:px-12 lg:px-20">
         <div className="max-w-2xl">
           <div className="mb-6">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#EBE2DC]/70">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.5em] text-[#EBE2DC]/70">
               {c.kicker}
             </p>
             <div className="mt-3 h-[2px] w-8 bg-[#b98650]" />
           </div>
 
-          <h2 className="max-w-2xl font-serif text-[38px] font-normal leading-[1.1] text-[#F4EFE9] md:text-[52px] lg:text-[60px]">
+          <h2 className="max-w-2xl font-serif text-[38px] font-normal leading-[1.1] text-[#F4EFE9] md:text-[42px] lg:text-[50px]">
             {c.title}
           </h2>
 

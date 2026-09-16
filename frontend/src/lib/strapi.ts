@@ -26,18 +26,22 @@ async function fetchStrapi(
 ========================================================= */
 
 export async function getProjects(locale: Locale) {
-  const url =
-    `${STRAPI_URL}/api/projects?locale=${locale}` +
-    `&populate[FeaturedImage][populate]=*` +
-    `&populate[gallery][populate]=*` +
-    `&populate[videos][populate]=*` +
-    `&populate[brochure][populate]=*` +
-    `&populate[type][populate]=*` +
-    `&populate[territoire][populate]=*` +
-    `&populate[actualite][populate]=*`;
+  const query = new URLSearchParams({
+    locale,
+
+    "populate[FeaturedImage][populate]": "*",
+    "populate[gallery][populate]": "*",
+    "populate[videos][populate]": "*",
+    "populate[brochure][populate]": "*",
+    "populate[documents][populate]": "*",
+    "populate[Plan][populate]": "*",
+    "populate[type][populate]": "*",
+    "populate[location][populate]": "*",
+    "populate[actualite][populate]": "*",
+  });
 
   return fetchStrapi(
-    url,
+    `${STRAPI_URL}/api/projects?${query.toString()}`,
     "Failed to fetch projects"
   );
 }
@@ -53,12 +57,16 @@ export async function getProjectBySlug(
   const query = new URLSearchParams({
     locale,
     "filters[slug][$eq]": slug,
+
     "populate[FeaturedImage][populate]": "*",
     "populate[gallery][populate]": "*",
     "populate[videos][populate]": "*",
     "populate[brochure][populate]": "*",
+    "populate[documents][populate]": "*",
+    "populate[Plan][populate][image][populate]": "*",
+    "populate[Plan][populate][valeurs][populate]": "*",
     "populate[type][populate]": "*",
-    "populate[territoire][populate]": "*",
+    "populate[location][populate]": "*",
     "populate[actualite][populate]": "*",
   });
 
@@ -88,30 +96,35 @@ export async function getProjectBySlug(
 
   return json.data?.[0] ?? null;
 }
-
 /* =========================================================
    PROJECTS PAGE
 ========================================================= */
 
 export async function getProjetsPage(locale: Locale) {
-  const url =
-    `${STRAPI_URL}/api/page-projet?locale=${locale}` +
-    `&populate[HeroProjet][populate][projet][populate][FeaturedImage][populate]=*` +
-    `&populate[HeroProjet][populate][projet][populate][gallery][populate]=*` +
-    `&populate[HeroProjet][populate][projet][populate][type][populate]=*` +
-    `&populate[HeroProjet][populate][projet][populate][territoire][populate]=*` +
-    `&populate[HeroProjet][populate][projet][populate][actualite][populate]=*`;
+  const query = new URLSearchParams({
+    locale,
+
+    "populate[HeroProjet][populate][projet][populate][FeaturedImage][populate]": "*",
+    "populate[HeroProjet][populate][projet][populate][gallery][populate]":"*",
+    "populate[HeroProjet][populate][projet][populate][videos][populate]":"*",
+    "populate[HeroProjet][populate][projet][populate][brochure][populate]":"*",
+    "populate[HeroProjet][populate][projet][populate][documents][populate]":"*",
+    "populate[HeroProjet][populate][projet][populate][Plan][populate]":"*",
+    "populate[HeroProjet][populate][projet][populate][type][populate]":"*",
+    "populate[HeroProjet][populate][projet][populate][territoire][populate]":"*",
+    "populate[HeroProjet][populate][projet][populate][actualite][populate]": "*",
+  });
 
   return fetchStrapi(
-    url,
+    `${STRAPI_URL}/api/page-projet?${query.toString()}`,
     "Failed to fetch projets page"
   );
 }
 
+
 /* =========================================================
    ACCUEIL
 ========================================================= */
-
 export async function getAccueil(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/acceuil?locale=${locale}` +
@@ -120,10 +133,10 @@ export async function getAccueil(locale: Locale) {
     `&populate[Projets_Mis_En_Avant][populate][projects][populate]=*` +
     `&populate[territoires][populate]=*` +
     `&populate[NotreApproche][populate]=*` +
-    `&populate[Actualites][populate][articlePrincipal][populate]=*` +
-    `&populate[Actualites][populate][articlesSecondaires][populate]=*` +
     `&populate[CTAFinal][populate]=*` +
-    `&populate[typologie][populate]=*`;
+    `&populate[typologie][populate]=*` +
+    `&populate[articles][populate][actualites][populate]=*` +
+    `&populate[SEO][populate]=*`;
 
   return fetchStrapi(
     url,

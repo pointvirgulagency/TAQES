@@ -121,16 +121,39 @@ export default function Mission({
         </div>
 
         {valeurs && valeurs.length > 0 && (
-          <div className="mt-20 grid grid-cols-2 gap-6 md:grid-cols-4 lg:mt-32">
-            {valeurs.map((valeur) => (
-              <div key={valeur.id} className="flex flex-col items-center text-center">
-                <span className="mb-2 h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
-                <p className="font-serif text-sm font-medium text-[#0b3121] md:text-base">
-                  {valeur.titre}
-                </p>
-                <div className="mt-1 h-[1px] w-6 bg-[#c2825d]" />
-              </div>
-            ))}
+          <div className="absolute inset-0 pointer-events-none">
+            {valeurs.map((valeur, index) => {
+              const positions = [
+                { left: "22%", top: "72.2%" },
+                { left: "40%", top: "82.9%" },
+                { left: "57%", top: "80%" },
+                { left: "73%", top: "76%" },
+              ];
+
+              const position = positions[index] || {
+                left: `${20 + index * 15}%`,
+                top: "78%",
+              };
+
+              return (
+                <div
+                  key={valeur.id}
+                  className="absolute flex flex-col items-center text-center"
+                  style={{
+                    left: position.left,
+                    top: position.top,
+                  }}
+                >
+                  <span className="mb-2 h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
+
+                  <p className="whitespace-nowrap font-serif text-sm font-medium text-[#0b3121] md:text-base">
+                    {valeur.titre}
+                  </p>
+
+                  <div className="mt-1 h-[1px] w-6 bg-[#c2825d]" />
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

@@ -17,6 +17,23 @@ export interface SectionsActualites extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsActualitesAcceuil extends Struct.ComponentSchema {
+  collectionName: 'components_sections_actualites_acceuils';
+  info: {
+    displayName: 'actualites-acceuil';
+  };
+  attributes: {
+    actualites: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::actualite.actualite'
+    >;
+    description: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    libelle_bouton: Schema.Attribute.String;
+    titre: Schema.Attribute.String;
+  };
+}
+
 export interface SectionsChiffres extends Struct.ComponentSchema {
   collectionName: 'components_sections_chiffres';
   info: {
@@ -238,6 +255,7 @@ export interface SectionsNotreApproche extends Struct.ComponentSchema {
   attributes: {
     boutton: Schema.Attribute.String;
     description: Schema.Attribute.String;
+    eyebrow: Schema.Attribute.String;
     Icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     lien: Schema.Attribute.String;
     titre: Schema.Attribute.String;
@@ -256,6 +274,37 @@ export interface SectionsNouvelleIdentite extends Struct.ComponentSchema {
     libellebouton: Schema.Attribute.String;
     lien_boutton: Schema.Attribute.String;
     Titre: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsPlan extends Struct.ComponentSchema {
+  collectionName: 'components_sections_plans';
+  info: {
+    displayName: 'plan';
+  };
+  attributes: {
+    description: Schema.Attribute.Blocks;
+    image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    titre: Schema.Attribute.String;
+    valeurs: Schema.Attribute.Component<'sections.information-cle', true>;
+  };
+}
+
+export interface SectionsProjectLocation extends Struct.ComponentSchema {
+  collectionName: 'components_sections_project_locations';
+  info: {
+    displayName: 'project_location';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    latitude: Schema.Attribute.String;
+    longitude: Schema.Attribute.String;
+    nom: Schema.Attribute.String;
+    titre: Schema.Attribute.String;
   };
 }
 
@@ -553,6 +602,7 @@ declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
       'sections.actualites': SectionsActualites;
+      'sections.actualites-acceuil': SectionsActualitesAcceuil;
       'sections.chiffres': SectionsChiffres;
       'sections.chronologie': SectionsChronologie;
       'sections.citation': SectionsCitation;
@@ -570,6 +620,8 @@ declare module '@strapi/strapi' {
       'sections.mission': SectionsMission;
       'sections.notre-approche': SectionsNotreApproche;
       'sections.nouvelle-identite': SectionsNouvelleIdentite;
+      'sections.plan': SectionsPlan;
+      'sections.project-location': SectionsProjectLocation;
       'sections.projethero': SectionsProjethero;
       'sections.projets-mis-en-avant': SectionsProjetsMisEnAvant;
       'sections.section-editoriale': SectionsSectionEditoriale;

@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_sections_actualites_acceuils",
+  "info": {
+    "displayName": "actualites-acceuil"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "titre": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "libelle_bouton": {
+      "type": "string"
+    },
+    "actualites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::actualite.actualite"
+    }
+  },
+  "config": {}
+}

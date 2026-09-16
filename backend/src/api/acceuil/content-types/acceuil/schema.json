@@ -84,16 +84,6 @@
       "relation": "oneToMany",
       "target": "api::territoire.territoire"
     },
-    "Actualites": {
-      "type": "component",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "component": "sections.actualites",
-      "repeatable": true
-    },
     "CTAFinal": {
       "type": "component",
       "pluginOptions": {
@@ -139,6 +129,16 @@
       },
       "component": "shared.typologie",
       "repeatable": true
+    },
+    "articles": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.actualites-acceuil",
+      "repeatable": false
     }
   }
 }

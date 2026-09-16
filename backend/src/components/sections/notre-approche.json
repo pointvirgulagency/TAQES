@@ -26,6 +26,9 @@
     },
     "boutton": {
       "type": "string"
+    },
+    "eyebrow": {
+      "type": "string"
     }
   },
   "config": {}

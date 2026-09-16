@@ -47,38 +47,56 @@ export default function Hero({
   const params = useParams();
   const locale = (params?.locale as string) || "fr";
 
+  const baseStrapiUrl = strapiUrl.replace(/\/$/, "");
+
   const localize = (href?: string) => {
-    if (!href) return "#";
-    if (/^(https?:)?\/\//.test(href) || /^(mailto:|tel:)/.test(href)) {
+    if (!href) {
+      return "#";
+    }
+
+    if (
+      /^(https?:)?\/\//.test(href) ||
+      /^(mailto:|tel:)/.test(href)
+    ) {
       return href;
     }
+
     const path = href.startsWith("/") ? href : `/${href}`;
+
     return `/${locale}${path}`;
   };
 
   const desktopImage = data.imagedesktop
-    ? `${strapiUrl}${data.imagedesktop.url}`
+    ? `${baseStrapiUrl}${data.imagedesktop.url}`
     : "";
 
   const mobileImage = data.imagemobile
-    ? `${strapiUrl}${data.imagemobile.url}`
+    ? `${baseStrapiUrl}${data.imagemobile.url}`
     : desktopImage;
 
-  const video = data.video ? `${strapiUrl}${data.video.url}` : undefined;
+  const video = data.video
+    ? `${baseStrapiUrl}${data.video.url}`
+    : undefined;
 
   const videoPoster = data.imageposter
-    ? `${strapiUrl}${data.imageposter.url}`
+    ? `${baseStrapiUrl}${data.imageposter.url}`
     : undefined;
 
   return (
     <section className="relative isolate min-h-screen overflow-hidden">
       <picture className="absolute inset-0">
-        <source media="(max-width:768px)" srcSet={mobileImage} />
+        <source
+          media="(max-width:768px)"
+          srcSet={mobileImage}
+        />
 
         {desktopImage && (
           <img
             src={desktopImage}
-            alt={data.imagedesktop?.alternativeText ?? "TAQÈS"}
+            alt={
+              data.imagedesktop?.alternativeText ??
+              "TAQÈS"
+            }
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
         )}
@@ -93,7 +111,10 @@ export default function Hero({
           playsInline
           poster={videoPoster}
         >
-          <source src={video} type="video/mp4" />
+          <source
+            src={video}
+            type="video/mp4"
+          />
         </video>
       )}
 
@@ -120,7 +141,9 @@ export default function Hero({
               ) : (
                 data.description.map((block, index) => (
                   <p key={index}>
-                    {block.children.map((child) => child.text).join("")}
+                    {block.children
+                      .map((child) => child.text)
+                      .join("")}
                   </p>
                 ))
               )}

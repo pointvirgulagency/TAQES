@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_sections_project_locations",
+  "info": {
+    "displayName": "project_location"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "nom": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "string"
+    },
+    "longitude": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

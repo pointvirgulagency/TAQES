@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_sections_plans",
+  "info": {
+    "displayName": "plan"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "valeurs": {
+      "type": "component",
+      "component": "sections.information-cle",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

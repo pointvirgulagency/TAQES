@@ -84,7 +84,11 @@ export default async function Home({
   const projets = accueil.data?.Projets_Mis_En_Avant;
   const territoires = accueil.data?.territoires;
   const approche = accueil.data?.NotreApproche;
-  const actualites = accueil.data?.Actualites;
+  const articles = accueil.data?.articles;
+  console.log(
+    "ACTUALITES DATA:",
+    JSON.stringify(articles, null, 2)
+  );
   const ctaFinal = accueil.data?.CTAFinal;
 
   const titreTerritoires = accueil.data?.titreTerritoires;
@@ -92,7 +96,6 @@ export default async function Home({
     accueil.data?.descriptionTerritoires;
 
   const titreApproche = accueil.data?.titreApproche;
-  const titreActualites = accueil.data?.titreActualites;
 
   return (
     <main>
@@ -104,7 +107,7 @@ export default async function Home({
       )}
 
       <TypologiesSection
-        typologies={accueil.data.typologie ?? []}
+        typologies={accueil.data?.typologie ?? []}
         locale={locale}
       />
 
@@ -139,12 +142,14 @@ export default async function Home({
         />
       )}
 
-      {actualites && (
+      {articles && (
         <Actualites
-          titre={titreActualites}
+          articles={articles}
           strapiUrl={STRAPI_URL}
         />
       )}
+
+
 
       {ctaFinal && (
         <CTAFinal

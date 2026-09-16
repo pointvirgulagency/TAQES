@@ -38,12 +38,23 @@ export default function ChiffresCles({
       ? `${strapiUrl.replace(/\/$/, "")}${rawImage.url}`
       : undefined;
 
-  const markerStyles = [
-    { top: "60%", left: "22%" }, // +15
-    { top: "48%", left: "36%" }, // 13
-    { top: "24%", left: "50%" }, // 1 100 — pushed up (was 37%)
-    { top: "39%", left: "68%" }, // 100%
-    { top: "32%", left: "83%" }, // 4 — pushed up (was 48%)
+  // Position of each CHIFFRE
+  const chiffrePositions = [
+    { top: "73.3%", left: "15%" },
+    { top: "52.5%", left: "33%" },
+    { top: "24%", left: "51%" },
+    { top: "32.5%", left: "78%" },
+    { top: "52.7%", left: "96.5%" },
+  ];
+
+  // Position of each LABEL
+  // Change these independently from chiffrePositions
+  const labelPositions = [
+    { top: "92%", left: "15%" },
+    { top: "69%", left: "34%" },
+    { top: "40%", left: "52%" },
+    { top: "51%", left: "78%" },
+    { top: "71%", left: "96.5%" },
   ];
 
   return (
@@ -56,39 +67,68 @@ export default function ChiffresCles({
       }}
     >
       <div className="mx-auto max-w-7xl relative min-h-[620px]">
-        {/* Top-left: eyebrow ("Nos repères") + title only — nothing else here */}
         {/* Top-left: eyebrow + accent line + title */}
         <div className="max-w-md pt-2">
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#f4ede2]">
             {chiffre_soustitre}
           </p>
+
           <div className="mb-2 h-[2px] w-10 bg-[#c2825d]" />
+
           <h2 className="font-serif text-3xl font-normal leading-[1.2] text-[#f4ede2] md:text-4xl lg:text-[2.6rem]">
             {chiffetitre || "Une expérience qui se mesure sur le terrain"}
           </h2>
         </div>
 
-        {/* Stat markers container — nudged up slightly to offset the added line's height */}
+        {/* Stat markers container */}
         <div className="relative w-full h-[460px] -mt-2">
           {data?.map((chiffre, index) => {
-            const style = markerStyles[index] || { top: "50%", left: "50%" };
+            const chiffrePosition =
+              chiffrePositions[index] || {
+                top: "50%",
+                left: "50%",
+              };
+
+            const labelPosition =
+              labelPositions[index] || {
+                top: "50%",
+                left: "50%",
+              };
 
             return (
-              <div
-                key={chiffre.id}
-                className="absolute flex flex-col items-center text-center -translate-x-1/2 -translate-y-1/2 text-[#0b3121]"
-                style={{ top: style.top, left: style.left }}
-              >
-                <strong className="font-serif text-3xl font-normal leading-none md:text-4xl lg:text-5xl whitespace-nowrap mb-2">
+              <div key={chiffre.id}>
+                {/* CHIFFRE — position completely independent */}
+                <strong
+                  className="absolute -translate-x-1/2 -translate-y-1/2 font-serif text-5xl font-normal leading-none md:text-4xl lg:text-7xl whitespace-nowrap text-[#0b3121]"
+                  style={{
+                    top: chiffrePosition.top,
+                    left: chiffrePosition.left,
+                  }}
+                >
                   {chiffre.valeur}
                 </strong>
 
-                <div className="flex flex-col items-center mb-2">
+                {/* LINE + DOT — kept with the chiffre */}
+                <div
+                  className="absolute flex flex-col items-center"
+                  style={{
+                    top: `calc(${chiffrePosition.top} + 35px)`,
+                    left: chiffrePosition.left,
+                    transform: "translateX(-50%)",
+                  }}
+                >
                   <div className="h-4 w-px bg-[#c2825d]" />
                   <div className="h-1.5 w-1.5 rounded-full bg-[#c2825d]" />
                 </div>
 
-                <span className="max-w-[150px] text-[10px] font-semibold uppercase leading-tight tracking-[0.12em] whitespace-nowrap">
+                {/* LABEL — position completely independent */}
+                <span
+                  className="absolute -translate-x-1/2 -translate-y-1/2 w-[150px] text-center text-[12px] font-semibold uppercase leading-tight tracking-[0.12em] text-[#0b3121]"
+                  style={{
+                    top: labelPosition.top,
+                    left: labelPosition.left,
+                  }}
+                >
                   {chiffre.libelle}
                 </span>
               </div>
@@ -96,7 +136,7 @@ export default function ChiffresCles({
           })}
         </div>
 
-        {/* Bottom-right: the long tagline ("Des chiffres au service...") sits HERE, under the values, with the line */}
+        {/* Bottom-right: the long tagline */}
         <div className="absolute bottom-4 right-25 max-w-[250px] text-left">
           {chiffreeyebrow && (
             <p className="font-serif text-s font-semibold italic leading-relaxed tracking-wide text-[#0b3121]">

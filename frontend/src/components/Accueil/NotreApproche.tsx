@@ -1,8 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, LayoutPanelTop, Gem, CalendarCheck } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 interface Pilier {
   id: number;
+  eyebrow?: string;
   titre: string;
   description: string;
   boutton?: string;
@@ -14,97 +18,143 @@ interface Pilier {
 
 interface NotreApprocheProps {
   eyebrow?: string;
-  titre: string;
+  titre?: string;
   soustitre?: string;
   data: Pilier[];
   strapiUrl: string;
   locale: string;
 }
 
-const FALLBACK_ICONS = [LayoutPanelTop, Gem, CalendarCheck];
-
 export default function NotreApproche({
-  eyebrow = "Notre approche",
-  titre,
-  soustitre,
+  eyebrow = "VOTRE PARCOURS",
+  titre = "Comment pouvons-nous\nvous accompagner ?",
+  soustitre = "Un accès direct au bon parcours, selon votre besoin et votre profil.",
   data,
   strapiUrl,
   locale,
 }: NotreApprocheProps) {
-  return (
-    <section className="relative overflow-hidden bg-[#0B3A2D] px-6 py-14 md:px-10 md:py-16 lg:px-14">
-      <div className="pointer-events-none absolute -bottom-10 -left-10 h-56 w-56 rotate-45 border border-[#F3EEE7]/10" />
-      <div className="pointer-events-none absolute -bottom-24 left-16 h-40 w-40 rotate-45 border border-[#F3EEE7]/10" />
+  const [activeTab, setActiveTab] = useState<string>("Particuliers");
 
-      <div className="relative mx-auto grid max-w-[1500px] grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-6">
-        <div className="flex flex-col justify-between lg:col-span-3">
+  const baseUrl = strapiUrl?.replace(/\/$/, "") ?? "";
+  const tabs = ["Particuliers", "Professionnels", "Investisseurs"];
+
+  return (
+    <section className="bg-[#052E23] px-6 py-14 md:px-10 lg:px-14 lg:py-16">
+      <div className="mx-auto grid max-w-[1550px] grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
+
+        {/* Left Column */}
+        <div className="flex flex-col justify-between py-2 lg:col-span-4">
           <div>
-            <p className="flex items-center gap-2 text-[11px] tracking-wide text-[#F3EEE7]/50">
-              <span className="h-px w-4 bg-[#F3EEE7]/40" />
-              {eyebrow}
+            <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#ffdc96]">
+              <span className="h-[1px] w-4 bg-[#ffdc96]" />
+              {eyebrow.replace(/^—\s*/, "")}
             </p>
 
-            <h2 className="mt-5 font-serif text-[2.1rem] leading-[1.15] tracking-tight text-[#F3EEE7] md:text-[2.5rem]">
+            {/* Title */}
+            <h2 className="mt-5 font-serif text-3xl font-normal leading-[1.12] whitespace-pre-line text-white md:text-[40px]">
               {titre}
             </h2>
 
-            <p className="mt-4 max-w-[230px] text-[13px] leading-relaxed text-[#F3EEE7]/55">
-              {soustitre ??
-                "Toute notre équipe mobilisée à chaque étape de votre démarche."}
+            {/* Subtitle */}
+            <p className="mt-5 max-w-[260px] text-[13px] leading-relaxed text-[#A3B8B0]">
+              {soustitre}
+            </p>
+
+            {/* Entrance Filter Tabs */}
+            <div className="mt-12 border-t border-white/10 pt-6">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffdc96]">
+                SÉLECTIONNEZ UNE ENTRÉE
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-6 text-[13px]">
+                {tabs.map((tab) => {
+                  const isActive = activeTab === tab;
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`transition-colors duration-200 ${
+                        isActive
+                          ? "font-semibold text-[#ffdc96] underline underline-offset-8 decoration-[#ffdc96] decoration-2"
+                          : "text-[#869E94] hover:text-white"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Footnote */}
+          <div className="mt-12 lg:mt-0">
+            <p className="max-w-[260px] text-[11px] leading-relaxed text-[#869E94]/70">
+              Chaque parcours renvoie vers une page ou un formulaire réellement pertinent.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:col-span-9">
-          {data?.map((pilier, index) => {
-            const FallbackIcon =
-              FALLBACK_ICONS[index % FALLBACK_ICONS.length];
+        {/* Right Column: Cards */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:col-span-8">
+          {data?.slice(0, 3).map((pilier, index) => {
+            const itemNumber = String(index + 1).padStart(2, "0");
+
+            const getImageUrl = (url?: string) => {
+              if (!url) return "";
+              return url.startsWith("http") ? url : `${baseUrl}${url}`;
+            };
+
+            const imageUrl = pilier.Icon?.url ? getImageUrl(pilier.Icon.url) : "";
 
             const cardContent = (
               <>
-                {pilier.Icon ? (
+                {imageUrl ? (
                   <img
-                    src={`${strapiUrl}${pilier.Icon.url}`}
-                    alt=""
-                    className="absolute inset-0 h-full w-full object-cover"
+                    src={imageUrl}
+                    alt={pilier.titre}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-[#12483A]" />
+                  <div className="absolute inset-0 bg-[#0A3D30]" />
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B2019]/90 via-[#0B2019]/25 to-[#0B2019]/40" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#021711] via-[#021711]/40 to-black/20" />
 
-                <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-sm">
-                  <FallbackIcon
-                    className="h-4 w-4 text-white"
-                    strokeWidth={1.5}
-                  />
+                {/* Potent Gold Number Badge */}
+                <div className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[#E2B04E]/50 bg-black/30 font-serif text-[11px] font-semibold text-[#E2B04E] backdrop-blur-md">
+                  {itemNumber}
                 </div>
 
-                <div className="relative z-10 flex flex-col gap-2">
-                  <span className="font-serif text-[1.35rem] leading-tight text-white">
-                    {pilier.titre}
-                  </span>
+                {/* Bottom Card Content */}
+                <div className="relative z-10 flex flex-col">
+                  {pilier.eyebrow && (
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffdc96]">
+                      {pilier.eyebrow}
+                    </span>
+                  )}
 
-                  <p className="text-[12px] leading-relaxed text-white/65">
+                  <h3 className="mt-1 font-serif text-[22px] font-normal leading-tight text-white md:text-[24px]">
+                    {pilier.titre}
+                  </h3>
+
+                  <p className="mt-2 text-[11.5px] leading-relaxed text-white/70 line-clamp-2">
                     {pilier.description}
                   </p>
 
-                  {pilier.boutton && (
-                    <span className="mt-3 inline-flex items-center gap-1.5 text-[10px] tracking-wide text-white/85 transition-colors duration-300 group-hover:text-white">
-                      {pilier.boutton}
-                      <ArrowUpRight
-                        className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                        strokeWidth={1.5}
-                      />
-                    </span>
-                  )}
+                  <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ffdc96] transition-colors group-hover:text-white">
+                    <span>{pilier.boutton || "EN SAVOIR PLUS"}</span>
+                    <ArrowUpRight
+                      size={14}
+                      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
+                  </div>
                 </div>
               </>
             );
 
             const className =
-              "group relative flex min-h-[340px] flex-col justify-between overflow-hidden rounded-sm p-5 md:min-h-[380px]";
+              "group relative flex h-[520px] flex-col justify-between overflow-hidden rounded-[26px] p-6 text-white transition-all duration-300 border border-transparent hover:border-[#E2B04E]/40";
 
             const href = pilier.lien
               ? `/${locale}${pilier.lien.startsWith("/") ? pilier.lien : `/${pilier.lien}`}`
@@ -121,6 +171,7 @@ export default function NotreApproche({
             );
           })}
         </div>
+
       </div>
     </section>
   );
