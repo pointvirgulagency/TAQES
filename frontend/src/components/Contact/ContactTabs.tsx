@@ -16,7 +16,8 @@ export type DemandeBlock =
   | "projet"
   | "foncier"
   | "partenariat"
-  | "reclamation";
+  | "reclamation"
+  | "recrutement";
 
 interface TypeConfigEntry {
   label: string;
@@ -48,7 +49,7 @@ export const TYPE_CONFIG: Record<DemandeType, TypeConfigEntry> = {
     label: "Recrutement",
     strapiType: "Recrutement",
     icon: "/taqes-recrutement.png",
-    block: "none",
+    block: "recrutement",
   },
   projet: {
     label: "Demande de projet",

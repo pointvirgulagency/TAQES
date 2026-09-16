@@ -192,7 +192,6 @@ export async function getContactPage(locale: Locale) {
 /* =========================================================
    SUBMIT DEMANDE
 ========================================================= */
-
 export async function submitDemande(payload: {
   nom_complet: string;
   telephone?: string;
@@ -203,13 +202,13 @@ export async function submitDemande(payload: {
   message: unknown;
   consentement: boolean;
   locale: Locale;
-
   demande_detail?: {
     __component:
       | "shared.demande-projet"
       | "shared.demande-partenariat"
       | "shared.demande-foncier"
-      | "shared.demande-reclamation";
+      | "shared.demande-reclamation"
+      | "shared.demande-recrutement";
 
     project?: number;
     zone?: string;
@@ -230,6 +229,8 @@ export async function submitDemande(payload: {
     reference_dossier?: string;
     objet?: string;
     piece_jointe?: number[];
+
+    cv?: number;
   };
 }) {
   const url = `${STRAPI_URL}/api/demandes`;
@@ -249,35 +250,26 @@ export async function submitDemande(payload: {
     data.demande_detail = [payload.demande_detail];
   }
 
-  const res = await fetch(
-    `${url}?locale=${payload.locale}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        data,
-      }),
-    }
-  );
+  const res = await fetch(`${url}?locale=${payload.locale}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      data,
+    }),
+  });
 
   if (!res.ok) {
     const error = await res.text();
 
-    console.error(
-      "Failed to submit demande:",
-      error
-    );
+    console.error("Failed to submit demande:", error);
 
-    throw new Error(
-      "Failed to submit demande"
-    );
+    throw new Error("Failed to submit demande");
   }
 
   return res.json();
 }
-
 /* =========================================================
    ACTUALITES PAGE
 ========================================================= */
