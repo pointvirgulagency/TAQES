@@ -3,6 +3,7 @@ import RichText from "@/components/RichText";
 interface ProjectEnvironmentProps {
   project: any;
   locale: string;
+  strapiUrl: string
 }
 
 export default function ProjectEnvironment({

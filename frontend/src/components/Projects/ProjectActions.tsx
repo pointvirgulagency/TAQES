@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 interface ProjectActionsProps {
   project: any;
   locale: string;
+  strapiUrl: string
 }
 
 export default function ProjectActions({ project, locale }: ProjectActionsProps) {

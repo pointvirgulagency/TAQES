@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 interface ProjectProgressProps {
   project: any;
   locale?: string;
+  strapiUrl: string
 }
 
 interface ParsedStep {

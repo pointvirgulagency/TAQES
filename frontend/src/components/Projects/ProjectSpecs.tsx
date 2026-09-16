@@ -11,6 +11,7 @@ import {
 interface ProjectSpecsProps {
   project: any;
   locale: string;
+  strapiUrl: string
 }
 
 export default function ProjectSpecs({
