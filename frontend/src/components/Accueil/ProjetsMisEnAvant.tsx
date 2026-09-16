@@ -68,7 +68,7 @@ function getMention(value: unknown): string {
           : [];
 
       return children
-        .map((child) =>
+        .map((child: unknown) =>
           child &&
           typeof child === "object" &&
           "text" in child &&

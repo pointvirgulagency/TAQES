@@ -52,7 +52,8 @@ export async function generateMetadata({
 
   return generateSeoMetadata(
     project.SEO,
-    locale
+    locale as "fr" | "ar",
+    `/projects/${slug}`
   );
 }
 

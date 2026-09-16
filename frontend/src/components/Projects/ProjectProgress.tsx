@@ -41,7 +41,7 @@ export default function ProjectProgress({
 
       return { label: text, completed: true };
     })
-    .filter((step) => Boolean(step.label));
+    .filter((step: ParsedStep) => Boolean(step.label));
 
   // 2. Default fallback steps if none provided in Strapi
   const defaultSteps: ParsedStep[] = [
