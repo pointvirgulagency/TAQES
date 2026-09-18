@@ -29,6 +29,36 @@
         "videos",
         "audios"
       ]
+    },
+    "profil": {
+      "type": "enumeration",
+      "enum": [
+        "proprietaire_foncier",
+        "apporteur_affaires",
+        "mandataire"
+      ]
+    },
+    "statut": {
+      "type": "enumeration",
+      "enum": [
+        "particulier",
+        "societe"
+      ]
+    },
+    "nom_raison_sociale": {
+      "type": "string"
+    },
+    "fonction": {
+      "type": "string"
+    },
+    "situation_juridique": {
+      "type": "string"
+    },
+    "reference_fonciere": {
+      "type": "string"
+    },
+    "description_opportunite": {
+      "type": "blocks"
     }
   },
   "config": {}

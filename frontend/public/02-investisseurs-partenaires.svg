@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Investisseurs et partenaires</title>
+  <g stroke="#00674F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m8 27 9-9 11 7-7 7-13-5Zm48 0-9-9-11 7 7 7 13-5Z"/>
+    <path d="m21 32 9 9c2 2 5 2 7 0l6-6M27 26l6-3c2-1 4 0 6 2l5 5"/>
+    <path d="m24 39-4 4m9 1-4 4m10-3-4 5m10-9-4 6"/>
+    <path d="m32 28 4 4-4 4-4-4 4-4Z"/>
+  </g>
+</svg>

@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_shared_project_filter_options",
+  "info": {
+    "displayName": "ProjectFilterOption"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "field": {
+      "type": "enumeration",
+      "enum": [
+        "type_operation",
+        "statut",
+        "profile",
+        "disponibilite"
+      ]
+    }
+  },
+  "config": {}
+}

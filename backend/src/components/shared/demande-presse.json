@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_shared_demande_presses",
+  "info": {
+    "displayName": "DemandePresse"
+  },
+  "options": {},
+  "attributes": {
+    "media_organisation": {
+      "type": "string"
+    },
+    "fonction": {
+      "type": "string"
+    },
+    "nature_demande": {
+      "type": "enumeration",
+      "enum": [
+        "Demande d’interview",
+        "Informations institutionnelles",
+        "Communiqué ou dossier de presse",
+        "Visuels et éléments de marque",
+        "Reportage ou tournage",
+        "Invitation ou événement",
+        "Autre"
+      ]
+    },
+    "sujet_demande": {
+      "type": "string"
+    },
+    "date_echeance": {
+      "type": "date"
+    },
+    "piece_jointe": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

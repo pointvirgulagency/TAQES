@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_sections_last_section_actus",
+  "info": {
+    "displayName": "last_section_actu"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "background": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "libelle_bouton": {
+      "type": "string"
+    },
+    "eyebrow": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

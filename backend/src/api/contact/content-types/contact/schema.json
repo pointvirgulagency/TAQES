@@ -49,6 +49,16 @@
       },
       "component": "shared.seo",
       "repeatable": true
+    },
+    "last_section": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.last-section-contact",
+      "repeatable": false
     }
   }
 }

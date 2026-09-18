@@ -10,7 +10,7 @@
       "relation": "oneToOne",
       "target": "api::project.project"
     },
-    "zone": {
+    "zone_recherche": {
       "type": "string"
     },
     "type_bien": {
@@ -18,15 +18,25 @@
       "enum": [
         "Appartement",
         "Villa",
-        "Terrain",
-        "Bureau",
+        "Lot de terrain",
+        "Local commercial",
         "Autre"
       ]
     },
     "surface_recherchee": {
       "type": "string"
     },
-    "delai_souhaite": {
+    "horizon_acquisition": {
+      "type": "enumeration",
+      "enum": [
+        "Immédiatement",
+        "Moins de 3 mois",
+        "De 3 à 6 mois",
+        "De 6 à 12 mois",
+        "Simple prise d’information"
+      ]
+    },
+    "budget_indicatif": {
       "type": "string"
     }
   },

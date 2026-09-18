@@ -15,6 +15,16 @@
     }
   },
   "attributes": {
+    "hero": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.hero",
+      "repeatable": false
+    },
     "HeroProjet": {
       "type": "component",
       "pluginOptions": {
@@ -33,6 +43,26 @@
         }
       },
       "component": "shared.seo",
+      "repeatable": false
+    },
+    "ProjectFilters": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.project-filters",
+      "repeatable": true
+    },
+    "last_section": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.last-section",
       "repeatable": false
     }
   }

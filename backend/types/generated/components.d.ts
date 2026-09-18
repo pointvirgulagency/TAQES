@@ -41,6 +41,7 @@ export interface SectionsChiffres extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Text;
+    icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     libelle: Schema.Attribute.String;
     valeur: Schema.Attribute.String;
   };
@@ -150,6 +151,7 @@ export interface SectionsHero extends Struct.ComponentSchema {
     displayName: 'Hero';
   };
   attributes: {
+    article: Schema.Attribute.Relation<'oneToOne', 'api::actualite.actualite'>;
     description: Schema.Attribute.Blocks;
     imagedesktop: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
@@ -191,6 +193,48 @@ export interface SectionsInformationsCles extends Struct.ComponentSchema {
   attributes: {
     informations: Schema.Attribute.Component<'sections.information-cle', true>;
     titre: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsLastSection extends Struct.ComponentSchema {
+  collectionName: 'components_sections_last_sections';
+  info: {
+    displayName: 'last_section';
+  };
+  attributes: {
+    background: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    description: Schema.Attribute.Text;
+    libelle_bouton: Schema.Attribute.String;
+    text: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsLastSectionActu extends Struct.ComponentSchema {
+  collectionName: 'components_sections_last_section_actus';
+  info: {
+    displayName: 'last_section_actu';
+  };
+  attributes: {
+    background: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    eyebrow: Schema.Attribute.String;
+    libelle_bouton: Schema.Attribute.String;
+    titre: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsLastSectionContact extends Struct.ComponentSchema {
+  collectionName: 'components_sections_last_section_contacts';
+  info: {
+    displayName: 'last-section_contact';
+  };
+  attributes: {
+    description: Schema.Attribute.String;
+    pillars: Schema.Attribute.Component<'sections.chiffres', true>;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -293,6 +337,20 @@ export interface SectionsPlan extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsProjectFilters extends Struct.ComponentSchema {
+  collectionName: 'components_sections_project_filters';
+  info: {
+    displayName: 'Project Filters';
+  };
+  attributes: {
+    FilterOptions: Schema.Attribute.Component<
+      'shared.project-filter-option',
+      true
+    >;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface SectionsProjectLocation extends Struct.ComponentSchema {
   collectionName: 'components_sections_project_locations';
   info: {
@@ -314,7 +372,10 @@ export interface SectionsProjethero extends Struct.ComponentSchema {
     displayName: 'Projethero';
   };
   attributes: {
-    projet: Schema.Attribute.Relation<'oneToOne', 'api::project.project'>;
+    background: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     titre: Schema.Attribute.String;
   };
 }
@@ -419,13 +480,22 @@ export interface SharedDemandeFoncier extends Struct.ComponentSchema {
     displayName: 'DemandeFoncier';
   };
   attributes: {
+    description_opportunite: Schema.Attribute.Blocks;
     document_foncier: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
+    fonction: Schema.Attribute.String;
     localisation: Schema.Attribute.String;
     nature_proposition: Schema.Attribute.Enumeration<
       ['Vente', 'Partenariat', 'Apport foncier', 'Autre']
     >;
+    nom_raison_sociale: Schema.Attribute.String;
+    profil: Schema.Attribute.Enumeration<
+      ['proprietaire_foncier', 'apporteur_affaires', 'mandataire']
+    >;
+    reference_fonciere: Schema.Attribute.String;
+    situation_juridique: Schema.Attribute.String;
+    statut: Schema.Attribute.Enumeration<['particulier', 'societe']>;
     superficie: Schema.Attribute.String;
   };
 }
@@ -436,12 +506,51 @@ export interface SharedDemandePartenariat extends Struct.ComponentSchema {
     displayName: 'DemandePartenariat';
   };
   attributes: {
+    budget_investissement: Schema.Attribute.String;
+    documents_presentation: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    domaine_intervention: Schema.Attribute.String;
     fonction: Schema.Attribute.String;
     message_detail: Schema.Attribute.Blocks;
     organisation: Schema.Attribute.String;
-    type_demande: Schema.Attribute.Enumeration<
-      ['Partenariat', 'Presse', 'Interview', 'Autre']
+    profil: Schema.Attribute.Enumeration<
+      ['investisseur', 'entreprise', 'institution', 'partenaire']
     >;
+    secteur_activite: Schema.Attribute.String;
+    type_demande: Schema.Attribute.Enumeration<
+      ['Investissement  ', 'Partenariat  ', 'Collaboration ', 'Autre']
+    >;
+    type_partenariat_recherche: Schema.Attribute.String;
+    zone_geographique: Schema.Attribute.String;
+  };
+}
+
+export interface SharedDemandePresse extends Struct.ComponentSchema {
+  collectionName: 'components_shared_demande_presses';
+  info: {
+    displayName: 'DemandePresse';
+  };
+  attributes: {
+    date_echeance: Schema.Attribute.Date;
+    fonction: Schema.Attribute.String;
+    media_organisation: Schema.Attribute.String;
+    nature_demande: Schema.Attribute.Enumeration<
+      [
+        'Demande d\u2019interview',
+        'Informations institutionnelles',
+        'Communiqu\u00E9 ou dossier de presse',
+        'Visuels et \u00E9l\u00E9ments de marque',
+        'Reportage ou tournage',
+        'Invitation ou \u00E9v\u00E9nement',
+        'Autre',
+      ]
+    >;
+    piece_jointe: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    sujet_demande: Schema.Attribute.String;
   };
 }
 
@@ -451,13 +560,22 @@ export interface SharedDemandeProjet extends Struct.ComponentSchema {
     displayName: 'DemandeProjet';
   };
   attributes: {
-    delai_souhaite: Schema.Attribute.String;
+    budget_indicatif: Schema.Attribute.String;
+    horizon_acquisition: Schema.Attribute.Enumeration<
+      [
+        'Imm\u00E9diatement',
+        'Moins de 3 mois',
+        'De 3 \u00E0 6 mois',
+        'De 6 \u00E0 12 mois',
+        'Simple prise d\u2019information',
+      ]
+    >;
     project: Schema.Attribute.Relation<'oneToOne', 'api::project.project'>;
     surface_recherchee: Schema.Attribute.String;
     type_bien: Schema.Attribute.Enumeration<
-      ['Appartement', 'Villa', 'Terrain', 'Bureau', 'Autre']
+      ['Appartement', 'Villa', 'Lot de terrain', 'Local commercial', 'Autre']
     >;
-    zone: Schema.Attribute.String;
+    zone_recherche: Schema.Attribute.String;
   };
 }
 
@@ -493,6 +611,21 @@ export interface SharedMedia extends Struct.ComponentSchema {
   };
   attributes: {
     file: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+  };
+}
+
+export interface SharedProjectFilterOption extends Struct.ComponentSchema {
+  collectionName: 'components_shared_project_filter_options';
+  info: {
+    displayName: 'ProjectFilterOption';
+  };
+  attributes: {
+    active: Schema.Attribute.Boolean;
+    field: Schema.Attribute.Enumeration<
+      ['type_operation', 'statut', 'profile', 'disponibilite']
+    >;
+    label: Schema.Attribute.String;
+    order: Schema.Attribute.Integer;
   };
 }
 
@@ -614,6 +747,9 @@ declare module '@strapi/strapi' {
       'sections.hero': SectionsHero;
       'sections.information-cle': SectionsInformationCle;
       'sections.informations-cles': SectionsInformationsCles;
+      'sections.last-section': SectionsLastSection;
+      'sections.last-section-actu': SectionsLastSectionActu;
+      'sections.last-section-contact': SectionsLastSectionContact;
       'sections.liste-numerotee': SectionsListeNumerotee;
       'sections.media-large': SectionsMediaLarge;
       'sections.membres': SectionsMembres;
@@ -621,6 +757,7 @@ declare module '@strapi/strapi' {
       'sections.notre-approche': SectionsNotreApproche;
       'sections.nouvelle-identite': SectionsNouvelleIdentite;
       'sections.plan': SectionsPlan;
+      'sections.project-filters': SectionsProjectFilters;
       'sections.project-location': SectionsProjectLocation;
       'sections.projethero': SectionsProjethero;
       'sections.projets-mis-en-avant': SectionsProjetsMisEnAvant;
@@ -632,10 +769,12 @@ declare module '@strapi/strapi' {
       'sections.vision': SectionsVision;
       'shared.demande-foncier': SharedDemandeFoncier;
       'shared.demande-partenariat': SharedDemandePartenariat;
+      'shared.demande-presse': SharedDemandePresse;
       'shared.demande-projet': SharedDemandeProjet;
       'shared.demande-reclamation-field': SharedDemandeReclamationField;
       'shared.location': SharedLocation;
       'shared.media': SharedMedia;
+      'shared.project-filter-option': SharedProjectFilterOption;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.selection': SharedSelection;

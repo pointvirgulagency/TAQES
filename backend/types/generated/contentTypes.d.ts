@@ -706,6 +706,15 @@ export interface ApiContactContact extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
+    last_section: Schema.Attribute.Component<
+      'sections.last-section-contact',
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -761,6 +770,7 @@ export interface ApiDemandeDemande extends Struct.CollectionTypeSchema {
         'shared.demande-partenariat',
         'shared.demande-foncier',
         'shared.demande-reclamation-field',
+        'shared.demande-presse',
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
@@ -1014,6 +1024,15 @@ export interface ApiPageActuPageActu extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
+    last_section: Schema.Attribute.Component<
+      'sections.last-section-actu',
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1051,7 +1070,19 @@ export interface ApiPageProjetPageProjet extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    hero: Schema.Attribute.Component<'sections.hero', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     HeroProjet: Schema.Attribute.Component<'sections.projethero', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    last_section: Schema.Attribute.Component<'sections.last-section', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1062,6 +1093,15 @@ export interface ApiPageProjetPageProjet extends Struct.SingleTypeSchema {
       'oneToMany',
       'api::page-projet.page-projet'
     >;
+    ProjectFilters: Schema.Attribute.Component<
+      'sections.project-filters',
+      true
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
@@ -1168,13 +1208,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
         };
       }>;
     disponibilite: Schema.Attribute.Enumeration<
-      [
-        '\u00C0 venir',
-        'Disponible',
-        'Disponibilit\u00E9 limit\u00E9e',
-        'Commercialis\u00E9',
-        'Non disponible',
-      ]
+      ['Disponible', 'Entierement Commercialis\u00E9']
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1238,27 +1272,15 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    phase: Schema.Attribute.Enumeration<
-      [
-        '\u00C0 l\u2019\u00E9tude',
-        'En autorisation',
-        'En d\u00E9veloppement',
-        'En r\u00E9alisation',
-        'R\u00E9alis\u00E9',
-      ]
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     Plan: Schema.Attribute.Component<'sections.plan', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    public_cible: Schema.Attribute.Enumeration<['B2C', 'B2B', 'Mixte']> &
+    profile: Schema.Attribute.Enumeration<
+      ['Tous', 'Particulier', 'Investisseur']
+    > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1281,9 +1303,9 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     statut: Schema.Attribute.Enumeration<
       [
         '\u00C0 venir',
+        'Enti\u00E8rement commercialis\u00E9',
         'En cours d\u2019autorisation',
-        'En commercialisation',
-        'Commercialis\u00E9',
+        'En cours de commercialisation',
         'Livr\u00E9',
       ]
     > &
@@ -1323,7 +1345,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
         };
       }>;
     type_operation: Schema.Attribute.Enumeration<
-      ['Foncier', 'Immobilier', 'Mixte']
+      ['Lotissement Foncier', 'Promotion Immobili\u00E8re']
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

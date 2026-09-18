@@ -99,7 +99,8 @@
         "shared.demande-projet",
         "shared.demande-partenariat",
         "shared.demande-foncier",
-        "shared.demande-reclamation-field"
+        "shared.demande-reclamation-field",
+        "shared.demande-presse"
       ]
     }
   }

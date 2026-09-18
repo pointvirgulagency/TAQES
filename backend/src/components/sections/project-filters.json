@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_sections_project_filters",
+  "info": {
+    "displayName": "Project Filters"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "FilterOptions": {
+      "type": "component",
+      "component": "shared.project-filter-option",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -50,6 +50,16 @@
       },
       "component": "shared.seo",
       "repeatable": false
+    },
+    "last_section": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "sections.last-section-actu",
+      "repeatable": false
     }
   }
 }

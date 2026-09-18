@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_sections_last_section_contacts",
+  "info": {
+    "displayName": "last-section_contact"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "pillars": {
+      "type": "component",
+      "component": "sections.chiffres",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

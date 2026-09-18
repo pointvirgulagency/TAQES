@@ -46,9 +46,9 @@
       },
       "enum": [
         "À venir",
+        "Entièrement commercialisé",
         "En cours d’autorisation",
-        "En commercialisation",
-        "Commercialisé",
+        "En cours de commercialisation",
         "Livré"
       ]
     },
@@ -60,12 +60,11 @@
         }
       },
       "enum": [
-        "Foncier",
-        "Immobilier",
-        "Mixte"
+        "Lotissement Foncier",
+        "Promotion Immobilière"
       ]
     },
-    "public_cible": {
+    "profile": {
       "type": "enumeration",
       "pluginOptions": {
         "i18n": {
@@ -73,9 +72,9 @@
         }
       },
       "enum": [
-        "B2C",
-        "B2B",
-        "Mixte"
+        "Tous",
+        "Particulier",
+        "Investisseur"
       ]
     },
     "surface_terrain": {
@@ -85,21 +84,6 @@
           "localized": true
         }
       }
-    },
-    "phase": {
-      "type": "enumeration",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "enum": [
-        "À l’étude",
-        "En autorisation",
-        "En développement",
-        "En réalisation",
-        "Réalisé"
-      ]
     },
     "territoire": {
       "type": "relation",
@@ -115,11 +99,8 @@
         }
       },
       "enum": [
-        "À venir",
         "Disponible",
-        "Disponibilité limitée",
-        "Commercialisé",
-        "Non disponible"
+        "Entierement Commercialisé"
       ]
     },
     "nombre_lots": {
