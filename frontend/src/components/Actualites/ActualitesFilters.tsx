@@ -49,6 +49,7 @@ export default function ActualitesFilters({
 }: ActualitesFiltersProps) {
   const [selectedCategorie, setSelectedCategorie] =
     useState(initialCategorie);
+  const [index, setIndex] = useState(0);
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -63,175 +64,298 @@ export default function ActualitesFilters({
     }, 100);
   }, [initialCategorie]);
 
+  // reset the slider when the category changes
+  useEffect(() => {
+    setIndex(0);
+  }, [selectedCategorie]);
+
   const filteredArticles = articles.filter((article) => {
     if (!selectedCategorie) return true;
     return article.categorie === selectedCategorie;
   });
 
-  const featuredArticle =
-    filteredArticles.find((art) => art.featured) || filteredArticles[0];
+  const total = filteredArticles.length;
 
-  const remainingArticles = featuredArticle
-    ? filteredArticles.filter((art) => art.id !== featuredArticle.id)
+  // wrap-around index so navigation never gets stuck at the ends
+  const safeIndex = total === 0 ? 0 : ((index % total) + total) % total;
+
+  const currentArticle = total > 0 ? filteredArticles[safeIndex] : null;
+
+  const remainingArticles = currentArticle
+    ? filteredArticles.filter((art) => art.id !== currentArticle.id)
     : filteredArticles;
+
+  const TABS = ["", ...CATEGORIES];
+
+  const goPrev = () => setIndex((i) => (i - 1 + total) % total);
+  const goNext = () => setIndex((i) => (i + 1) % total);
+
+  // keyboard navigation (← / →, mirrored in RTL)
+  useEffect(() => {
+    if (total < 2) return;
+
+    function onKeyDown(e: KeyboardEvent) {
+      const rtl = locale === "ar";
+      if (e.key === (rtl ? "ArrowLeft" : "ArrowRight")) goNext();
+      if (e.key === (rtl ? "ArrowRight" : "ArrowLeft")) goPrev();
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [total, locale]);
 
   function resetFilters() {
     setSelectedCategorie("");
   }
 
+  const prevIcon =
+    locale === "ar" ? "M8.25 4.5l7.5 7.5-7.5 7.5" : "M15.75 19.5L8.25 12l7.5-7.5";
+  const nextIcon =
+    locale === "ar" ? "M15.75 19.5L8.25 12l7.5-7.5" : "M8.25 4.5l7.5 7.5-7.5 7.5";
+
   return (
     <section
       ref={resultsRef}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className="bg-white px-6 py-16 md:px-10 lg:px-16"
+      className="relative overflow-hidden bg-[#F3EEE7] px-6 py-20 md:px-10 md:py-24 lg:px-16"
     >
-      <div className="mx-auto max-w-7xl">
-        {/* Category Pills */}
-        <div className="mb-12">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-[#094734]/60">
-              {locale === "ar" ? "الفئات" : "Catégories"}
-            </h3>
+      {/* gentle fade when switching articles */}
+      <style>{`@keyframes articleFade{from{opacity:0}to{opacity:1}}.article-fade{animation:articleFade .45s ease both}`}</style>
 
-            {selectedCategorie && (
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="text-xs font-medium uppercase tracking-wide text-[#094734]/60 transition hover:text-[#094734]"
-              >
-                ↻ {locale === "ar" ? "إعادة ضبط" : "Réinitialiser"}
-              </button>
-            )}
-          </div>
+      {/* ghost section number, as in the design */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-8 start-2 select-none font-serif text-[160px] font-medium italic leading-none text-[#094734]/10 md:text-[220px]"
+      >
+        02
+      </span>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {CATEGORIES.map((categorie) => {
-              const active = selectedCategorie === categorie;
+      {/* decorative "+" marks */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute end-24 top-16 select-none text-2xl font-light text-[#094734]/25"
+      >
+        +
+      </span>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-10 end-10 select-none text-2xl font-light text-[#094734]/25"
+      >
+        +
+      </span>
 
-              return (
-                <button
-                  key={categorie}
-                  type="button"
-                  onClick={() =>
-                    setSelectedCategorie(active ? "" : categorie)
-                  }
-                  className={`group rounded-full border px-5 py-3 text-left transition ${
-                    active
-                      ? "border-[#094734] bg-[#094734] text-white"
-                      : "border-[#094734]/15 bg-[#F4F6F3] text-[#094734] hover:border-[#094734]/40"
-                  }`}
-                >
-                  <span className="text-xs font-medium uppercase tracking-wider">
-                    {categorie}
-                  </span>
-                </button>
-              );
-            })}
+      <div className="relative mx-auto max-w-7xl">
+        {/* ————— Tabs ————— */}
+        <div className="mb-14 border-b border-[#094734]/15 md:mb-20">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+            <p className="pb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#094734]/70">
+              {locale === "ar" ? "استكشف المجلة" : "Explorer le journal"}
+            </p>
+
+            <nav className="-mb-px flex flex-wrap">
+              {TABS.map((categorie) => {
+                const active = selectedCategorie === categorie;
+
+                return (
+                  <button
+                    key={categorie || "all"}
+                    type="button"
+                    onClick={() => setSelectedCategorie(categorie)}
+                    className={`-mb-px border-b-2 px-5 pb-4 pt-1 text-sm transition ${
+                      active
+                        ? "border-[#094734] font-semibold text-[#094734]"
+                        : "border-transparent font-medium text-[#094734]/45 hover:text-[#094734]"
+                    }`}
+                  >
+                    {categorie === ""
+                      ? locale === "ar"
+                        ? "الكل"
+                        : "Tout"
+                      : categorie}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
         </div>
 
-        {filteredArticles.length > 0 ? (
-          <>
-            {/* Featured Article Section */}
-            {featuredArticle && (
-              <div className="mb-16">
-                <h2 className="mb-6 font-serif text-2xl font-bold text-[#094734] md:text-3xl">
-                  {locale === "ar" ? "في الواجهة" : "À la une"}
-                </h2>
+        {/* ————— Section heading ————— */}
+        <div className="mb-12 flex flex-wrap items-end justify-between gap-6 md:mb-16">
+          <h2 className="max-w-2xl font-serif text-4xl font-medium leading-[1.05] text-[#094734] md:text-6xl">
+            {locale === "ar" ? "مفاتيح للمضي قدماً" : "Les clés pour avancer."}
+          </h2>
 
-                <div className="grid grid-cols-1 overflow-hidden rounded-2xl bg-[#EEF2EF] lg:grid-cols-12">
-                  {/* Image Column */}
-                  <div className="relative min-h-[360px] bg-[#094734]/10 lg:col-span-8 lg:min-h-[460px]">
-                    {buildImageUrl(featuredArticle.image?.url) ? (
-                      <img
-                        src={buildImageUrl(featuredArticle.image?.url)!}
-                        alt={
-                          featuredArticle.image?.alternativeText ||
-                          featuredArticle.titre
-                        }
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-[#094734]/10" />
+          {selectedCategorie && (
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="pb-2 text-xs font-medium uppercase tracking-wide text-[#094734]/50 transition hover:text-[#094734]"
+            >
+              ↻ {locale === "ar" ? "إعادة ضبط" : "Réinitialiser"}
+            </button>
+          )}
+        </div>
+
+        {total > 0 ? (
+          <>
+            {/* ————— Big navigator — cycles through ALL filtered articles ————— */}
+            {currentArticle && (
+              <div
+                key={currentArticle.id}
+                className="article-fade mb-20 grid md:mb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]"
+              >
+                {/* text panel */}
+                <div className="flex flex-col justify-between border-[#094734]/10 py-10 lg:border-s lg:ps-12 lg:pe-8 lg:py-14">
+                  <div>
+                    {(currentArticle.categorie || currentArticle.Date) && (
+                      <p className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#094734]/55">
+                        {currentArticle.categorie && (
+                          <span>{currentArticle.categorie}</span>
+                        )}
+                        {currentArticle.categorie && currentArticle.Date && (
+                          <span className="h-px w-6 bg-[#094734]/25" />
+                        )}
+                        {currentArticle.Date && <span>{currentArticle.Date}</span>}
+                      </p>
+                    )}
+
+                    <h3 className="mt-6 max-w-lg font-serif text-3xl font-medium leading-[1.1] text-[#094734] md:text-4xl">
+                      {currentArticle.titre}
+                    </h3>
+
+                    {currentArticle.introduction && (
+                      <p className="mt-5 max-w-md text-sm leading-relaxed text-[#094734]/65">
+                        {currentArticle.introduction}
+                      </p>
                     )}
                   </div>
 
-                  {/* Content Column */}
-                  <div className="flex flex-col justify-between p-8 lg:col-span-4 lg:p-10">
-                    <div>
-                      {featuredArticle.categorie && (
-                        <span className="inline-block rounded-full bg-[#094734] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
-                          {featuredArticle.categorie}
+                  {/* actions: read link + navigation arrows */}
+                  <div className="mt-10 flex flex-wrap items-center justify-between gap-6">
+                    <a
+                      href={`/${locale}/actualites/${currentArticle.slug}`}
+                      className="group inline-flex items-center gap-5 text-sm font-medium text-[#094734]"
+                    >
+                      <span className="flex h-13 w-13 items-center justify-center rounded-full border border-[#094734]/35 p-3.5 transition-colors duration-300 group-hover:border-[#094734] group-hover:bg-[#094734] group-hover:text-[#F3EEE7]">
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d={
+                              locale === "ar"
+                                ? "M10.5 4.5L3 12m0 0l7.5 7.5M3 12h18"
+                                : "M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                            }
+                          />
+                        </svg>
+                      </span>
+
+                      <span>
+                        {locale === "ar" ? "اقرأ الدليل" : "Lire le guide"}
+                      </span>
+                    </a>
+
+                    {total > 1 && (
+                      <div className="flex items-center gap-6">
+                        {/* counter */}
+                        <span className="text-xs font-medium tracking-[0.2em] text-[#094734]/50">
+                          {String(safeIndex + 1).padStart(2, "0")}
+                          <span className="mx-1.5 text-[#094734]/30">/</span>
+                          {String(total).padStart(2, "0")}
                         </span>
-                      )}
 
-                      {featuredArticle.Date && (
-                        <p className="mt-4 text-xs font-medium text-[#094734]/60">
-                          {featuredArticle.Date}
-                        </p>
-                      )}
+                        {/* arrows */}
+                        <div className="flex gap-3">
+                          <button
+                            type="button"
+                            onClick={goPrev}
+                            aria-label={
+                              locale === "ar"
+                                ? "المقال السابق"
+                                : "Article précédent"
+                            }
+                            className="flex h-12 w-12 items-center justify-center rounded-full border border-[#094734]/30 text-[#094734] transition-colors duration-300 hover:border-[#094734] hover:bg-[#094734] hover:text-[#F3EEE7]"
+                          >
+                            <svg
+                              className="h-5 w-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d={prevIcon}
+                              />
+                            </svg>
+                          </button>
 
-                      <h3 className="mt-3 font-serif text-2xl font-bold leading-tight text-[#094734] md:text-3xl">
-                        {featuredArticle.titre}
-                      </h3>
-
-                      {featuredArticle.introduction && (
-                        <p className="mt-4 text-sm leading-relaxed text-[#094734]/70">
-                          {featuredArticle.introduction}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="mt-8">
-                      <a
-                        href={`/${locale}/actualites/${featuredArticle.slug}`}
-                        className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#094734] hover:underline"
-                      >
-                        {locale === "ar" ? "اقرأ المقال" : "Lire l'article"}
-                        <span>{locale === "ar" ? "←" : "→"}</span>
-                      </a>
-                    </div>
+                          <button
+                            type="button"
+                            onClick={goNext}
+                            aria-label={
+                              locale === "ar"
+                                ? "المقال التالي"
+                                : "Article suivant"
+                            }
+                            className="flex h-12 w-12 items-center justify-center rounded-full border border-[#094734]/30 text-[#094734] transition-colors duration-300 hover:border-[#094734] hover:bg-[#094734] hover:text-[#F3EEE7]"
+                          >
+                            <svg
+                              className="h-5 w-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d={nextIcon}
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Remaining Articles Grid */}
-            {remainingArticles.length > 0 && (
-              <div>
-                <div className="mb-8 flex items-center justify-between">
-                  <h2 className="font-serif text-2xl font-bold text-[#094734] md:text-3xl">
-                    {locale === "ar"
-                      ? "آخر الأخبار"
-                      : "Dernières actualités"}
-                  </h2>
-                  <p className="text-xs font-semibold text-[#094734]/60">
-                    {remainingArticles.length}{" "}
-                    {remainingArticles.length === 1
-                      ? "article"
-                      : "articles"}
-                  </p>
-                </div>
-
-                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                  {remainingArticles.map((article) => (
-                    <ArticleCard
-                      key={article.id}
-                      title={article.titre}
-                      excerpt={article.introduction ?? ""}
-                      slug={article.slug}
-                      categorie={article.categorie ?? ""}
-                      date={article.Date ?? ""}
-                      locale={locale}
-                      imageUrl={buildImageUrl(article.image?.url) ?? undefined}
+                {/* image panel */}
+                <div className="relative min-h-[320px] bg-[#094734]/10 md:min-h-[460px] lg:min-h-[520px]">
+                  {buildImageUrl(currentArticle.image?.url) ? (
+                    <img
+                      src={buildImageUrl(currentArticle.image?.url)!}
+                      alt={
+                        currentArticle.image?.alternativeText ||
+                        currentArticle.titre
+                      }
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
-                  ))}
+                  ) : (
+                    <div className="absolute inset-0 bg-[#094734]/10" />
+                  )}
+
+                  {currentArticle.categorie && (
+                    <div className="absolute end-6 top-6 bg-[#EBE2DC] px-5 py-3 md:end-8 md:top-8">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#094734]">
+                        {currentArticle.categorie}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </>
         ) : (
-          <div className="rounded-xl bg-[#EEF2EF] px-6 py-16 text-center">
+          <div className="rounded-xl bg-[#094734]/5 px-6 py-16 text-center">
             <p className="text-base text-[#094734]/70">
               {locale === "ar"
                 ? "لا توجد أخبار في هذه الفئة."

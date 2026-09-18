@@ -29,14 +29,19 @@ export default function ProjectCard({
   const isArabic = locale === "ar";
   const projectUrl = `/${locale}/projects/${slug}`;
 
+  const isUpcoming =
+    statut === "À venir" ||
+    statut === "En cours d'autorisation" ||
+    statut === "En cours de commercialisation";
+
   return (
     <Link
       href={projectUrl}
       dir={isArabic ? "rtl" : "ltr"}
-      className="group block overflow-hidden rounded-2xl bg-[#EBE2DC]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      className="group block overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
     >
       {imageUrl && (
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
           <Image
             src={imageUrl}
             alt={title}
@@ -47,8 +52,12 @@ export default function ProjectCard({
 
           {statut && (
             <span
-              className={`absolute top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[#094734] backdrop-blur-sm ${
-                isArabic ? "right-4" : "left-4"
+              className={`absolute top-3 rounded-full px-3 py-1.5 text-xs font-semibold ${
+                isArabic ? "right-3" : "left-3"
+              } ${
+                isUpcoming
+                  ? "bg-[#0B7A4B] text-white"
+                  : "border border-[#094734]/15 bg-white/95 text-[#094734]"
               }`}
             >
               {statut}
@@ -57,42 +66,24 @@ export default function ProjectCard({
         </div>
       )}
 
-      <div className="p-6">
+      <div className="p-5">
         {typologie && (
-          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-[#00674F]">
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#094734]/50">
             {typologie}
           </p>
         )}
 
-        <h2 className="text-2xl font-semibold text-[#094734]">
+        <h3 className="text-base font-bold leading-snug text-[#094734]">
           {title}
-        </h2>
+        </h3>
 
-        {reference && (
-          <p className="mt-2 text-xs text-[#094734]/50">
-            {isArabic ? `المرجع: ${reference}` : `Réf. ${reference}`}
+        {description && (
+          <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-[#094734]/60">
+            {description}
           </p>
         )}
 
-        <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#094734]/70">
-          {description}
-        </p>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          {typeOperation && (
-            <span className="rounded-full bg-[#094734]/10 px-3 py-1 text-xs text-[#094734]">
-              {typeOperation}
-            </span>
-          )}
-
-          {publicCible && (
-            <span className="rounded-full bg-[#094734]/10 px-3 py-1 text-xs text-[#094734]">
-              {publicCible}
-            </span>
-          )}
-        </div>
-
-        <div className="mt-6 inline-flex items-center gap-3 text-sm font-semibold text-[#00674F]">
+        <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-[#0B7A4B]">
           <span>
             {isArabic ? "اكتشف المشروع" : "Voir le projet"}
           </span>

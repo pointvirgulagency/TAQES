@@ -24,7 +24,6 @@ async function fetchStrapi(
 /* =========================================================
    PROJECTS
 ========================================================= */
-
 export async function getProjects(locale: Locale) {
   const query = new URLSearchParams({
     locale,
@@ -36,6 +35,7 @@ export async function getProjects(locale: Locale) {
     "populate[documents][populate]": "*",
     "populate[Plan][populate]": "*",
     "populate[type][populate]": "*",
+    "populate[territoire][populate]": "*",
     "populate[location][populate]": "*",
     "populate[actualite][populate]": "*",
   });
@@ -45,6 +45,7 @@ export async function getProjects(locale: Locale) {
     "Failed to fetch projects"
   );
 }
+
 
 /* =========================================================
    PROJECT BY SLUG
@@ -99,28 +100,20 @@ export async function getProjectBySlug(
 /* =========================================================
    PROJECTS PAGE
 ========================================================= */
-
 export async function getProjetsPage(locale: Locale) {
-  const query = new URLSearchParams({
-    locale,
-
-    "populate[HeroProjet][populate][projet][populate][FeaturedImage][populate]": "*",
-    "populate[HeroProjet][populate][projet][populate][gallery][populate]":"*",
-    "populate[HeroProjet][populate][projet][populate][videos][populate]":"*",
-    "populate[HeroProjet][populate][projet][populate][brochure][populate]":"*",
-    "populate[HeroProjet][populate][projet][populate][documents][populate]":"*",
-    "populate[HeroProjet][populate][projet][populate][Plan][populate]":"*",
-    "populate[HeroProjet][populate][projet][populate][type][populate]":"*",
-    "populate[HeroProjet][populate][projet][populate][territoire][populate]":"*",
-    "populate[HeroProjet][populate][projet][populate][actualite][populate]": "*",
-  });
+  const url =
+    `${STRAPI_URL}/api/page-projet?locale=${locale}` +
+    `&populate[HeroProjet][populate][background][populate]=*` +
+    `&populate[HeroProjet][populate][projects][populate]=*` +
+    `&populate[hero][populate]=*` +
+    `&populate[last_section][populate][background][populate]=*` +
+    `&populate[ProjectFilters][populate][FilterOptions]=*`;
 
   return fetchStrapi(
-    `${STRAPI_URL}/api/page-projet?${query.toString()}`,
+    url,
     "Failed to fetch projets page"
   );
 }
-
 
 /* =========================================================
    ACCUEIL
@@ -180,6 +173,7 @@ export async function getContactPage(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/contact?locale=${locale}` +
     `&populate[Hero][populate]=*` +
+    `&populate[last_section][populate][pillars][populate]=*` +
     `&populate[Selection][populate]=*` +
     `&populate[demandes][populate]=*`;
 
@@ -188,7 +182,6 @@ export async function getContactPage(locale: Locale) {
     "Failed to fetch contact page"
   );
 }
-
 /* =========================================================
    SUBMIT DEMANDE
 ========================================================= */
@@ -208,13 +201,17 @@ export async function submitDemande(payload: {
       | "shared.demande-partenariat"
       | "shared.demande-foncier"
       | "shared.demande-reclamation"
-      | "shared.demande-recrutement";
+      | "shared.demande-recrutement"
+      | "shared.demande-presse";
 
     project?: number;
     zone?: string;
+    zone_recherchee?: string;
     type_bien?: string;
     surface_recherchee?: string;
     delai_souhaite?: string;
+    horizon_acquisition?: string;
+    budget_indicatif?: string;
 
     organisation?: string;
     fonction?: string;
@@ -229,6 +226,11 @@ export async function submitDemande(payload: {
     reference_dossier?: string;
     objet?: string;
     piece_jointe?: number[];
+
+    media_organisation?: string;
+    nature_demande?: string;
+    sujet_demande?: string;
+    date_echeance?: string;
 
     cv?: number;
   };
@@ -250,22 +252,30 @@ export async function submitDemande(payload: {
     data.demande_detail = [payload.demande_detail];
   }
 
-  const res = await fetch(`${url}?locale=${payload.locale}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      data,
-    }),
-  });
+  const res = await fetch(
+    `${url}?locale=${payload.locale}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data,
+      }),
+    }
+  );
 
   if (!res.ok) {
     const error = await res.text();
 
-    console.error("Failed to submit demande:", error);
+    console.error(
+      "Failed to submit demande:",
+      error
+    );
 
-    throw new Error("Failed to submit demande");
+    throw new Error(
+      "Failed to submit demande"
+    );
   }
 
   return res.json();
@@ -273,12 +283,14 @@ export async function submitDemande(payload: {
 /* =========================================================
    ACTUALITES PAGE
 ========================================================= */
-
 export async function getActualitesPage(locale: Locale) {
   const url =
     `${STRAPI_URL}/api/page-actu?locale=${locale}` +
-    `&populate[hero][populate]=*` +
+    `&populate[hero][populate][0]=imagedesktop` +
+    `&populate[hero][populate][1]=imagemobile` +
+    `&populate[hero][populate][2]=article.image` +
     `&populate[actualites][populate]=*` +
+    `&populate[last_section][populate]=*`;
     `&populate[SEO][populate]=*`;
 
   return fetchStrapi(

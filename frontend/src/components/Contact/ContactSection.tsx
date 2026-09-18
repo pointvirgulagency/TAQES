@@ -36,6 +36,7 @@ export default function ContactSection({
         <div className="flex w-full flex-col gap-6">
           <ContactTabs
             active={activeType}
+            locale={locale}
             onChange={setActiveType}
           />
 
@@ -51,7 +52,6 @@ export default function ContactSection({
                 <span className="block text-xs font-semibold uppercase tracking-wider text-[#094734]/50">
                   Téléphone
                 </span>
-
                 <a
                   href={`tel:${safeCoords.telephone}`}
                   className="mt-1 block break-words text-[15px] text-[#094734] hover:underline"
@@ -64,7 +64,6 @@ export default function ContactSection({
                 <span className="block text-xs font-semibold uppercase tracking-wider text-[#094734]/50">
                   Email
                 </span>
-
                 <a
                   href={`mailto:${safeCoords.email}`}
                   className="mt-1 block break-words text-[15px] text-[#094734] hover:underline"

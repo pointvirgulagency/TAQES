@@ -107,7 +107,7 @@ export default async function Home({
       )}
 
       <TypologiesSection
-        typologies={accueil.data?.typologie ?? []}
+        typologies={(accueil.data?.typologie ?? []).slice(0, 6)}
         locale={locale}
       />
 

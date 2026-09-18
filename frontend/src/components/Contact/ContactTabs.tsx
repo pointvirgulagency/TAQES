@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export type DemandeType =
   | "contact"
@@ -52,14 +53,14 @@ export const TYPE_CONFIG: Record<DemandeType, TypeConfigEntry> = {
     block: "recrutement",
   },
   projet: {
-    label: "Demande de projet",
+    label: "Recherche de bien",
     strapiType: "Projet",
     icon: "/taqes-projet-immobilier.png",
     block: "projet",
   },
   foncier: {
-    label: "Demande foncière",
-    strapiType: "Foncier",
+    label: "Presse & Médias",
+    strapiType: "Presse & Médias",
     icon: "/taqes-proposer-foncier.png",
     block: "foncier",
   },
@@ -76,13 +77,17 @@ const VISIBLE_TABS: DemandeType[] = [
 
 interface ContactTabsProps {
   active: DemandeType;
+  locale: "fr" | "ar";
   onChange: (type: DemandeType) => void;
 }
 
 export default function ContactTabs({
   active,
+  locale,
   onChange,
 }: ContactTabsProps) {
+  const router = useRouter();
+
   return (
     <div className="grid w-full grid-cols-2 overflow-hidden rounded-2xl border border-[#094734]/10 bg-white lg:block">
       {VISIBLE_TABS.map((key, index) => {
@@ -93,7 +98,14 @@ export default function ContactTabs({
           <button
             key={key}
             type="button"
-            onClick={() => onChange(key)}
+            onClick={() => {
+              if (key === "partenariat") {
+                router.push(`/${locale}/opportunites-partenariats`);
+                return;
+              }
+
+              onChange(key);
+            }}
             className={[
               "group flex min-h-[110px] w-full items-center gap-3 px-4 py-5 text-left transition-colors lg:min-h-0 lg:px-5 lg:py-4",
               isActive
