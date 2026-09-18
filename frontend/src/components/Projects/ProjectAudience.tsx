@@ -9,6 +9,7 @@ export default function ProjectAudience({
   locale = "fr",
 }: ProjectAudienceProps) {
   const contactHref = `/${locale}/contact`;
+  const opporHref = `/${locale}/opportunites-partenariats`;
 
   return (
     <section className="w-full">
@@ -122,7 +123,7 @@ export default function ProjectAudience({
           </div>
 
           <a
-            href={contactHref}
+            href={opporHref}
             className="mt-8 inline-flex items-center gap-2 bg-white px-6 py-2.5 text-[11px] font-bold tracking-[0.15em] text-[#043325] transition-colors hover:bg-gray-50"
           >
             OPPORTUNITÉS & PARTENARIATS <span className="text-xs">→</span>
