@@ -29,6 +29,9 @@
     },
     "eyebrow": {
       "type": "string"
+    },
+    "cible": {
+      "type": "string"
     }
   },
   "config": {}

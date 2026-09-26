@@ -17,7 +17,7 @@ export default function ArticleHero({
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#F8F6F0] text-[#094734]"
+      className="relative w-full overflow-hidden text-[#094734]"
       dir={isArabic ? "rtl" : "ltr"}
     >
       <div className="mx-auto flex min-h-[580px] w-full max-w-[1500px] flex-col lg:flex-row">

@@ -6,29 +6,22 @@ import { translations } from "@/i18n";
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "";
 
-const PROFILS = [
-  "Particulier",
-  "Investisseur",
-];
-
-const NATURES = [
-  "Lotissement foncier",
-  "Promotion immobilière",
+const TYPES_BIEN = [
+  "Lots de terrain",
+  "Appartements & Commerces",
 ];
 
 const STATUTS = [
   "À venir",
-  "En cours d'autorisation",
   "En cours de commercialisation",
-  "Entièrement commercialisé",
   "Livré",
 ];
 
 interface ProjectType {
   id?: number;
   titre?: string;
-  client?: string;
   description?: string;
+  client?: string;
 }
 
 interface ProjectTerritoire {
@@ -98,14 +91,14 @@ export default function ProjectFilters({
 }: ProjectFiltersProps) {
   const t = translations[locale];
 
-  const [profil, setProfil] = useState("");
   const [selectedTypology, setSelectedTypology] =
     useState(initialTypologie);
-  const [territoire, setTerritoire] =
-    useState(initialLocation);
-  const [nature, setNature] = useState("");
-  const [status, setStatus] =
-    useState(initialStatut);
+
+  const [ville, setVille] = useState(initialLocation);
+
+  const [typeBien, setTypeBien] = useState("");
+
+  const [status, setStatus] = useState(initialStatut);
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -146,19 +139,6 @@ export default function ProjectFilters({
   ]);
 
   const filteredProjects = projects.filter((project) => {
-    const projectProfiles = Array.isArray(project.profile)
-      ? project.profile
-      : project.profile
-        ? [project.profile]
-        : [];
-
-    const matchesProfil =
-      !profil ||
-      projectProfiles.some(
-        (value) =>
-          normalize(value) === normalize(profil)
-      );
-
     const matchesTypology =
       !selectedTypology ||
       project.type?.some(
@@ -167,15 +147,15 @@ export default function ProjectFilters({
           normalize(selectedTypology)
       );
 
-    const matchesTerritoire =
-      !territoire ||
+    const matchesVille =
+      !ville ||
       normalize(project.territoire?.nom) ===
-        normalize(territoire);
+        normalize(ville);
 
-    const matchesNature =
-      !nature ||
+    const matchesTypeBien =
+      !typeBien ||
       normalize(project.type_operation) ===
-        normalize(nature);
+        normalize(typeBien);
 
     const matchesStatus =
       !status ||
@@ -185,19 +165,28 @@ export default function ProjectFilters({
         normalize(status);
 
     return (
-      matchesProfil &&
       matchesTypology &&
-      matchesTerritoire &&
-      matchesNature &&
+      matchesVille &&
+      matchesTypeBien &&
       matchesStatus
     );
   });
 
+  const villes = Array.from(
+    new Set(
+      territoires
+        .map((item) => item.nom)
+        .filter(
+          (value): value is string =>
+            Boolean(value)
+        )
+    )
+  );
+
   function resetFilters() {
-    setProfil("");
     setSelectedTypology("");
-    setTerritoire("");
-    setNature("");
+    setVille("");
+    setTypeBien("");
     setStatus("");
   }
 
@@ -217,15 +206,15 @@ export default function ProjectFilters({
           </h2>
 
           <p className="hidden text-right text-[10px] font-semibold uppercase tracking-[0.2em] text-[#094734]/40 md:block">
-            {locale === "ar"
-              ? "مشاريع لكل إقليم"
-              : (
-                <>
-                  Des projets
-                  <br />
-                  pour chaque territoire
-                </>
-              )}
+            {locale === "ar" ? (
+              "مشاريع لكل إقليم"
+            ) : (
+              <>
+                Des projets
+                <br />
+                pour chaque territoire
+              </>
+            )}
           </p>
         </div>
 
@@ -290,45 +279,55 @@ export default function ProjectFilters({
         )}
 
         {/* ===== Filter bar ===== */}
-        <div className="mt-10 grid items-end gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-10 grid items-end gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <FilterSelect
-            label="Profil"
-            value={profil}
-            onChange={setProfil}
-            options={PROFILS}
-            placeholder="Tous"
+            label={
+              locale === "ar"
+                ? "المدينة"
+                : "Ville"
+            }
+            value={ville}
+            onChange={setVille}
+            options={villes}
+            placeholder={
+              locale === "ar"
+                ? "جميع المدن"
+                : "Toutes"
+            }
             locale={locale}
           />
 
           <FilterSelect
-            label="Territoire"
-            value={territoire}
-            onChange={setTerritoire}
-            options={territoires
-              .map((item) => item.nom)
-              .filter(
-                (value): value is string =>
-                  Boolean(value)
-              )}
-            placeholder="Toutes"
+            label={
+              locale === "ar"
+                ? "نوع العقار"
+                : "Type de bien"
+            }
+            value={typeBien}
+            onChange={setTypeBien}
+            options={TYPES_BIEN}
+            placeholder={
+              locale === "ar"
+                ? "جميع الأنواع"
+                : "Tous"
+            }
             locale={locale}
           />
 
           <FilterSelect
-            label="Nature"
-            value={nature}
-            onChange={setNature}
-            options={NATURES}
-            placeholder="Toutes"
-            locale={locale}
-          />
-
-          <FilterSelect
-            label="Statut"
+            label={
+              locale === "ar"
+                ? "حالة المشروع"
+                : "Statut du projet"
+            }
             value={status}
             onChange={setStatus}
             options={STATUTS}
-            placeholder="Tous"
+            placeholder={
+              locale === "ar"
+                ? "جميع الحالات"
+                : "Tous"
+            }
             locale={locale}
           />
 
@@ -340,6 +339,7 @@ export default function ProjectFilters({
             <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#094734]/20 text-sm">
               ↻
             </span>
+
             {t.projects.filters.reset}
           </button>
         </div>
@@ -358,15 +358,15 @@ export default function ProjectFilters({
             </div>
 
             <p className="hidden text-right text-[10px] font-semibold uppercase tracking-[0.2em] text-[#094734]/40 md:block">
-              {locale === "ar"
-                ? "أماكن، روابط، آفاق"
-                : (
-                  <>
-                    Des lieux, des liens,
-                    <br />
-                    des horizons
-                  </>
-                )}
+              {locale === "ar" ? (
+                "أماكن، روابط، آفاق"
+              ) : (
+                <>
+                  Des lieux, des liens,
+                  <br />
+                  des horizons
+                </>
+              )}
             </p>
           </div>
 

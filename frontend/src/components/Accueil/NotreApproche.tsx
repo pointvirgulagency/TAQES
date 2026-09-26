@@ -28,7 +28,7 @@ interface NotreApprocheProps {
 export default function NotreApproche({
   eyebrow = "VOTRE PARCOURS",
   titre = "Comment pouvons-nous\nvous accompagner ?",
-  soustitre = "Un accès direct au bon parcours, selon votre besoin et votre profil.",
+  soustitre = "Acheter, investir, ou vendre: avançons ensemble.",
   data,
   strapiUrl,
   locale,
@@ -36,7 +36,6 @@ export default function NotreApproche({
   const [activeTab, setActiveTab] = useState<string>("Particuliers");
 
   const baseUrl = strapiUrl?.replace(/\/$/, "") ?? "";
-  const tabs = ["Particuliers", "Professionnels", "Investisseurs"];
 
   return (
     <section className="bg-[#052E23] px-6 py-14 md:px-10 lg:px-14 lg:py-16">
@@ -56,43 +55,12 @@ export default function NotreApproche({
             </h2>
 
             {/* Subtitle */}
-            <p className="mt-5 max-w-[260px] text-[13px] leading-relaxed text-[#A3B8B0]">
+            <p className="mt-5 max-w-[290px] text-[15px] leading-relaxed text-[#A3B8B0]">
               {soustitre}
             </p>
-
-            {/* Entrance Filter Tabs */}
-            <div className="mt-12 border-t border-white/10 pt-6">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffdc96]">
-                SÉLECTIONNEZ UNE ENTRÉE
-              </p>
-
-              <div className="mt-4 flex flex-wrap gap-6 text-[13px]">
-                {tabs.map((tab) => {
-                  const isActive = activeTab === tab;
-                  return (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`transition-colors duration-200 ${
-                        isActive
-                          ? "font-semibold text-[#ffdc96] underline underline-offset-8 decoration-[#ffdc96] decoration-2"
-                          : "text-[#869E94] hover:text-white"
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
           </div>
 
-          {/* Footnote */}
-          <div className="mt-12 lg:mt-0">
-            <p className="max-w-[260px] text-[11px] leading-relaxed text-[#869E94]/70">
-              Chaque parcours renvoie vers une page ou un formulaire réellement pertinent.
-            </p>
-          </div>
+
         </div>
 
         {/* Right Column: Cards */}

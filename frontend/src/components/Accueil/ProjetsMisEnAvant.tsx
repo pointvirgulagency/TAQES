@@ -144,7 +144,7 @@ export default function ProjetsMisEnAvant({
       <div className="absolute inset-0 bg-gradient-to-r from-[#062c20] via-[#062c20]/85 via-50% to-transparent" />
 
       {/* Main Container */}
-      <div className="relative flex min-h-[85vh] flex-col justify-between px-8 pb-10 pt-28 md:px-16 lg:px-24">
+      <div className="relative flex min-h-[85vh] flex-col justify-between px-8 pb-8 pt-28 md:px-16 lg:px-24">
         {/* Content Section */}
         <div className="max-w-2xl text-white">
           {/* Subtitle Badge */}
@@ -164,7 +164,7 @@ export default function ProjetsMisEnAvant({
           </div>
 
           {/* Main Title */}
-          <h1 className="mt-6 font-serif text-5xl font-normal leading-[1.1] text-white md:text-6xl lg:text-7xl">
+          <h1 className="mt-5 font-serif text-5xl font-normal leading-[1.1] text-white md:text-6xl lg:text-7xl">
             {current.title}
           </h1>
 
@@ -175,20 +175,22 @@ export default function ProjetsMisEnAvant({
             </p>
           )}
 
-          {/* Bulleted Tags */}
+          {/* Inline Tags, bullet-separated */}
           {tags.length > 0 && (
-            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-medium text-white/90 md:text-base">
+            <div className="mt-5 flex flex-wrap items-center text-sm font-medium text-white/80 md:text-base">
               {tags.map((tag, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <span className="h-2 w-2 rounded-full bg-[#d6be96]" />
+                <span key={i} className="flex items-center">
+                  {i > 0 && (
+                    <span className="mx-3 text-[#d6be96]">•</span>
+                  )}
                   <span>{tag}</span>
-                </div>
+                </span>
               ))}
             </div>
           )}
 
           {/* Action Buttons */}
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href={projectDetailUrl}
               className="inline-flex items-center gap-3 rounded-sm bg-[#d6be96] px-8 py-4 text-sm font-semibold tracking-wider text-[#062c20] transition-colors hover:bg-[#c4ab83]"
@@ -216,32 +218,32 @@ export default function ProjetsMisEnAvant({
         </div>
 
         {/* Bottom Bar Navigation */}
-        <div className="mt-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div className="flex flex-col gap-3">
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-white/70">
-              {isArabic ? "تصفح المشاريع" : "PARCOURIR LES PROJETS"}
-            </span>
+        <div className="mt-12 flex flex-col gap-3">
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-white/70">
+                {isArabic ? "تصفح المشاريع" : "PARCOURIR LES PROJETS"}
+              </span>
 
-            {total > 1 && (
-              <div className="flex items-center gap-2">
-                {projects.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setIndex(i)}
-                    aria-label={`Slide ${i + 1}`}
-                    className={`h-[2px] transition-all duration-300 ${
-                      i === index
-                        ? "w-20 bg-white"
-                        : "w-10 bg-white/30 hover:bg-white/60"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+              {total > 1 && (
+                <div className="flex items-center gap-2">
+                  {projects.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setIndex(i)}
+                      aria-label={`Slide ${i + 1}`}
+                      className={`h-[2px] transition-all duration-300 ${
+                        i === index
+                          ? "w-20 bg-white"
+                          : "w-10 bg-white/30 hover:bg-white/60"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
 
-          <div className="flex flex-col items-start gap-3 md:items-end">
             {total > 1 && (
               <div className="flex items-center gap-3">
                 <button
@@ -253,10 +255,10 @@ export default function ProjetsMisEnAvant({
                     )
                   }
                   aria-label="Previous"
-                  className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 text-white transition hover:bg-white/10"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[#d6be96] text-[#062c20] transition hover:bg-[#c4ab83]"
                 >
                   <ChevronLeft
-                    className={`h-5 w-5 ${
+                    className={`h-4 w-4 ${
                       isArabic ? "rotate-180" : ""
                     }`}
                   />
@@ -271,22 +273,22 @@ export default function ProjetsMisEnAvant({
                     )
                   }
                   aria-label="Next"
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-[#d6be96] text-[#062c20] transition hover:bg-[#c4ab83]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[#d6be96] text-[#062c20] transition hover:bg-[#c4ab83]"
                 >
                   <ChevronRight
-                    className={`h-5 w-5 ${
+                    className={`h-4 w-4 ${
                       isArabic ? "rotate-180" : ""
                     }`}
                   />
                 </button>
               </div>
             )}
-
-            <p className="text-xs tracking-wide text-white/50">
-              {mention ||
-                "Visualisation conceptuelle non contractuelle"}
-            </p>
           </div>
+          {/* Mention / Disclaimer - full width bottom line */}
+          <p className="text-xs tracking-wide text-white/50">
+            {mention ||
+              "Les informations présentées sont indicatives et peuvent être complétées ou précisées selon les données disponibles sur le projet."}
+          </p>
         </div>
       </div>
     </section>

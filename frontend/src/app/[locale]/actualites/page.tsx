@@ -110,7 +110,6 @@ export default async function ActualitesPage({
               className="absolute inset-0 h-full w-full object-cover"
               loading="eager"
             />
-            <div className="absolute inset-0 bg-[#094734]/80" />
           </>
         ) : (
           <HeroGeometricPattern className="pointer-events-none absolute -top-16 ltr:right-0 rtl:left-0 h-[115%] w-auto" />
@@ -137,8 +136,6 @@ export default async function ActualitesPage({
             )}
 
             <div className="mt-12 flex items-center gap-4 text-[#EBE2DC]">
-              <span className="font-serif text-lg italic">01</span>
-              <span className="h-px w-12 bg-[#EBE2DC]/40" />
               <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#EBE2DC]/80">
                 {locale === "ar" ? "الأخبار" : "Actualités"}
               </span>
@@ -309,7 +306,6 @@ export default async function ActualitesPage({
                 )}
               </div>
 
-              {/* Right 2 columns empty to balance grid spacing against background design */}
               <div className="hidden lg:col-span-2 lg:block" />
 
             </div>

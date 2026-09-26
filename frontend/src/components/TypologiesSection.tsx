@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { useState } from "react";
 
 interface Typology {
   titre: string;
@@ -24,10 +23,6 @@ export default function TypologiesSection({
 }) {
   const router = useRouter();
 
-  const [selectedClient, setSelectedClient] = useState<string | null>(
-    null
-  );
-
   const isArabic = locale === "ar";
 
   function getImageUrl(typology: Typology) {
@@ -45,18 +40,11 @@ export default function TypologiesSection({
     router.push(`/${locale}/projects`);
   }
 
-  const visibleTypologies =
-    selectedClient === null
-      ? typologies
-      : typologies.filter(
-          (typology) => typology.client === selectedClient
-        );
-
   const orderedTypologies =
-    visibleTypologies.length > 0
+    typologies.length > 0
       ? [
-          visibleTypologies[visibleTypologies.length - 1],
-          ...visibleTypologies.slice(0, -1),
+          typologies[typologies.length - 1],
+          ...typologies.slice(0, -1),
         ]
       : [];
 
@@ -74,20 +62,8 @@ export default function TypologiesSection({
       : "Que recherchez-vous ?",
 
     description: isArabic
-      ? "استكشف جميع تصنيفات TAQES، ثم اختر ملفك الشخصي للعثور على المشاريع التي تناسبك."
-      : "Explorez toutes les typologies TAQES, puis sélectionnez votre profil pour affiner les projets qui vous correspondent.",
-
-    filterTitle: isArabic
-      ? "التصفية حسب الملف الشخصي"
-      : "AFFINER PAR PROFIL",
-
-    particuliers: isArabic
-      ? "الأفراد"
-      : "Particulier",
-
-    professionnels: isArabic
-      ? "المهنيون والمستثمرون"
-      : "Professionnel ou investisseur",
+      ? "استكشف مشاريع TAQES واعثر على المشروع الذي يلبي توقعاتك."
+      : "Explorez les projets TAQÈS et trouvez celui qui répond à vos attentes.",
 
     discover: isArabic
       ? "اكتشف"
@@ -96,10 +72,6 @@ export default function TypologiesSection({
     allProjects: isArabic
       ? "عرض جميع المشاريع"
       : "Voir tous les projets",
-
-    typologiesCount: isArabic
-      ? `${visibleTypologies.length} تصنيفات معروضة حاليًا`
-      : `${visibleTypologies.length} typologies actuellement affichées`,
   };
 
   if (orderedTypologies.length === 0) {
@@ -109,7 +81,7 @@ export default function TypologiesSection({
         className="w-full bg-[#F3EEE7]"
       >
         <div className="mx-auto max-w-[1600px] px-6 py-10 lg:px-10">
-          <p className="text-[#094734] text-sm">
+          <p className="text-sm text-[#094734]">
             {isArabic
               ? "لا توجد تصنيفات متاحة."
               : "Aucune typologie disponible."}
@@ -152,83 +124,11 @@ export default function TypologiesSection({
               {labels.description}
             </p>
 
-            {/* FILTER TITLE */}
-            <p className="mt-5 text-[10px] font-semibold tracking-[0.16em] text-[#52756B]">
-              {labels.filterTitle}
-            </p>
-
-            {/* FILTER BUTTONS */}
-            <div className="mt-3 flex max-w-[280px] flex-col gap-2">
-
-              {/* PARTICULIERS */}
-              <button
-                type="button"
-                onClick={() =>
-                  setSelectedClient(
-                    selectedClient === "Particuliers"
-                      ? null
-                      : "Particuliers"
-                  )
-                }
-                className={`flex w-full items-center justify-between rounded-full border px-4 py-2.5 text-start transition-all duration-300 ${
-                  selectedClient === "Particuliers"
-                    ? "border-[#094734] bg-[#094734] text-[#F3EEE7]"
-                    : "border-[#AABAB3] bg-transparent text-[#094734] hover:border-[#094734] hover:bg-[#094734] hover:text-[#F3EEE7]"
-                }`}
-              >
-                <span className="text-[13px] font-semibold">
-                  {labels.particuliers}
-                </span>
-
-                <ArrowRight
-                  className={`h-3.5 w-3.5 transition-transform ${
-                    isArabic ? "rotate-180" : ""
-                  }`}
-                  strokeWidth={1.8}
-                />
-              </button>
-
-              {/* PROFESSIONNELS */}
-              <button
-                type="button"
-                onClick={() =>
-                  setSelectedClient(
-                    selectedClient ===
-                      "Professionnels & investisseurs"
-                      ? null
-                      : "Professionnels & investisseurs"
-                  )
-                }
-                className={`flex w-full items-center justify-between rounded-full border px-4 py-2.5 text-start transition-all duration-300 ${
-                  selectedClient ===
-                  "Professionnels & investisseurs"
-                    ? "border-[#094734] bg-[#094734] text-[#F3EEE7]"
-                    : "border-[#AABAB3] bg-transparent text-[#094734] hover:border-[#094734] hover:bg-[#094734] hover:text-[#F3EEE7]"
-                }`}
-              >
-                <span className="text-[13px] font-semibold">
-                  {labels.professionnels}
-                </span>
-
-                <ArrowRight
-                  className={`h-3.5 w-3.5 transition-transform ${
-                    isArabic ? "rotate-180" : ""
-                  }`}
-                  strokeWidth={1.8}
-                />
-              </button>
-            </div>
-
-            {/* COUNT */}
-            <p className="mt-3 text-[12px] text-[#6B8880]">
-              {labels.typologiesCount}
-            </p>
-
             {/* ALL PROJECTS */}
             <button
               type="button"
               onClick={() => router.push(`/${locale}/projects`)}
-              className="mt-4 inline-flex w-fit items-center gap-1 border-b border-[#094734]/30 pb-0.5 text-[13px] font-semibold text-[#094734] transition hover:border-[#094734]"
+              className="mt-6 inline-flex w-fit items-center gap-1 border-b border-[#094734]/30 pb-0.5 text-[13px] font-semibold text-[#094734] transition hover:border-[#094734]"
             >
               {labels.allProjects}
 
@@ -275,10 +175,8 @@ export default function TypologiesSection({
                     />
                   )}
 
-                  {/* DARK GRADIENT */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
-                  {/* CONTENT */}
                   <div className="absolute bottom-0 start-0 w-full p-4 xl:p-5">
                     <h3 className="font-serif text-[20px] leading-[1.1] text-white xl:text-[22px]">
                       {featured.titre}
@@ -310,10 +208,7 @@ export default function TypologiesSection({
 
               <div className="grid h-full min-w-0 grid-rows-2 gap-2">
 
-                {/* ---------------------------------------------- */}
-                {/* TOP ROW - 2 CARDS                              */}
-                {/* ---------------------------------------------- */}
-
+                {/* TOP ROW */}
                 {topTypologies.length > 0 && (
                   <div className="grid min-h-0 grid-cols-2 gap-2">
                     {topTypologies.map((typology, index) => (
@@ -332,10 +227,7 @@ export default function TypologiesSection({
                   </div>
                 )}
 
-                {/* ---------------------------------------------- */}
-                {/* BOTTOM + ADDITIONAL ROWS                       */}
-                {/* ---------------------------------------------- */}
-
+                {/* BOTTOM ROW */}
                 {remainingTypologies.length > 0 && (
                   <div className="grid min-h-0 grid-cols-3 gap-2">
                     {remainingTypologies.map((typology, index) => (
@@ -434,12 +326,6 @@ export default function TypologiesSection({
   );
 }
 
-/*
- * ============================================================
- * REUSABLE TYPOLOGY CARD
- * ============================================================
- */
-
 function TypologyCard({
   typology,
   locale,
@@ -473,7 +359,6 @@ function TypologyCard({
       onClick={onClick}
       className={`group relative block w-full overflow-hidden rounded-[14px] text-start ${sizeClasses[size]}`}
     >
-      {/* IMAGE */}
       {imageUrl && (
         <Image
           src={imageUrl}
@@ -492,17 +377,13 @@ function TypologyCard({
         />
       )}
 
-      {/* GRADIENT */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
-      {/* CONTENT */}
       <div className="absolute bottom-0 start-0 w-full p-3">
         <h3
           className={`font-serif leading-tight text-white ${
             size === "top"
               ? "text-[16px]"
-              : size === "mobile"
-              ? "text-[14px]"
               : "text-[14px]"
           }`}
         >

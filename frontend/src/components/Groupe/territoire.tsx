@@ -76,9 +76,23 @@ export default function Territoire({
           )}
 
           {data.territoire_description && (
-            <p className="mt-5 max-w-[320px] text-[11px] font-normal leading-[1.45] text-[#12281c]/75 md:text-[12px]">
+            <p className="mt-5 max-w-[320px] text-[11px] font-normal leading-[1.45] text-[#12281c]/75 md:text-[16px]">
               {data.territoire_description}
             </p>
+          )}
+
+          {data.territoire_button && (
+            <div className="mt-6">
+              <a
+                href="#"
+                className="inline-flex items-center gap-4 rounded-full border-2 border-[#b98650] bg-[#12281c] px-6 py-2.5 text-[10px] font-medium uppercase tracking-[0.15em] text-white transition-colors duration-300 hover:bg-[#12281c] hover:text-white"
+              >
+                <span>{data.territoire_button}</span>
+                <span aria-hidden="true" className="text-base leading-none">
+                  →
+                </span>
+              </a>
+            </div>
           )}
         </div>
 
@@ -120,19 +134,6 @@ export default function Territoire({
           })}
         </div>
 
-        {data.territoire_button && (
-          <div className="absolute bottom-0 right-12 z-0 flex translate-y-10 flex-col items-end">
-            <a
-              href="#"
-              className="inline-flex items-center gap-4 rounded-full border-2 border-[#b98650] bg-[#12281c] px-6 py-2.5 text-[10px] font-medium uppercase tracking-[0.15em] text-white transition-colors duration-300 hover:bg-[#12281c] hover:text-white"
-            >
-              <span>{data.territoire_button}</span>
-              <span aria-hidden="true" className="text-base leading-none">
-                →
-              </span>
-            </a>
-          </div>
-        )}
       </div>
     </section>
   );

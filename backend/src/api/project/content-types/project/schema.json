@@ -46,8 +46,6 @@
       },
       "enum": [
         "À venir",
-        "Entièrement commercialisé",
-        "En cours d’autorisation",
         "En cours de commercialisation",
         "Livré"
       ]
@@ -60,8 +58,8 @@
         }
       },
       "enum": [
-        "Lotissement Foncier",
-        "Promotion Immobilière"
+        "Lots de terrain",
+        "Appartements & Commerces"
       ]
     },
     "profile": {

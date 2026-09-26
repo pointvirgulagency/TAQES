@@ -1301,13 +1301,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       }>;
     slug: Schema.Attribute.UID<'title'>;
     statut: Schema.Attribute.Enumeration<
-      [
-        '\u00C0 venir',
-        'Enti\u00E8rement commercialis\u00E9',
-        'En cours d\u2019autorisation',
-        'En cours de commercialisation',
-        'Livr\u00E9',
-      ]
+      ['\u00C0 venir', 'En cours de commercialisation', 'Livr\u00E9']
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1345,7 +1339,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
         };
       }>;
     type_operation: Schema.Attribute.Enumeration<
-      ['Lotissement Foncier', 'Promotion Immobili\u00E8re']
+      ['Lots de terrain', 'Appartements & Commerces']
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

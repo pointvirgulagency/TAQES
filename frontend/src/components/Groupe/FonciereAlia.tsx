@@ -88,8 +88,8 @@ export default function FonciereAlia({
 
             {data.eyebrow && (
               <div className="mt-6">
-                <div className="mb-2 h-[1px] w-8 bg-[#c2825d]" />
-                <p className="font-serif italic text-base text-[#c2825d] md:text-lg">
+
+                <p className="font-serif italic text-base text-[#c2825d] md:text-7xl">
                   {data.eyebrow}
                 </p>
               </div>

@@ -298,6 +298,7 @@ export interface SectionsNotreApproche extends Struct.ComponentSchema {
   };
   attributes: {
     boutton: Schema.Attribute.String;
+    cible: Schema.Attribute.String;
     description: Schema.Attribute.String;
     eyebrow: Schema.Attribute.String;
     Icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
