@@ -18,14 +18,38 @@ const copy = {
     ],
     projetsLinks: [
       { id: "tous", label: "Tous les projets", href: "/projects" },
-      { id: "fonciers", label: "Projets fonciers", href: "/projects?type=foncier" },
-      { id: "promotion", label: "Promotion immobilière", href: "/projects?type=promotion" },
-      { id: "commercialisation", label: "En commercialisation", href: "/projects?type=commercialisation" },
+      {
+        id: "fonciers",
+        label: "Projets fonciers",
+        href: "/projects?type=foncier",
+      },
+      {
+        id: "promotion",
+        label: "Promotion immobilière",
+        href: "/projects?type=promotion",
+      },
+      {
+        id: "commercialisation",
+        label: "En commercialisation",
+        href: "/projects?type=commercialisation",
+      },
     ],
     liensUtilesLinks: [
-      { id: "opportunites", label: "Opportunités & Partenariats", href: "/contact" },
-      { id: "reclamation", label: "E-Réclamation", href: "/contact" },
-      { id: "recrutement", label: "Recrutement", href: "/contact" },
+      {
+        id: "opportunites",
+        label: "Opportunités & Partenariats",
+        href: "/contact",
+      },
+      {
+        id: "reclamation",
+        label: "E-Réclamation",
+        href: "/contact",
+      },
+      {
+        id: "recrutement",
+        label: "Recrutement",
+        href: "/contact",
+      },
     ],
     addressLine1: "Avenue Mellouza, Villa N°41",
     addressLine2: "Nahda 2, Rabat — Maroc",
@@ -48,16 +72,48 @@ const copy = {
     ],
     projetsLinks: [
       { id: "tous", label: "جميع المشاريع", href: "/projects" },
-      { id: "fonciers", label: "مشاريع عقارية", href: "/projects?type=foncier" },
-      { id: "promotion", label: "التطوير العقاري", href: "/projects?type=promotion" },
-      { id: "commercialisation", label: "قيد التسويق", href: "/projects?type=commercialisation" },
+      {
+        id: "fonciers",
+        label: "مشاريع عقارية",
+        href: "/projects?type=foncier",
+      },
+      {
+        id: "promotion",
+        label: "التطوير العقاري",
+        href: "/projects?type=promotion",
+      },
+      {
+        id: "commercialisation",
+        label: "قيد التسويق",
+        href: "/projects?type=commercialisation",
+      },
     ],
     liensUtilesLinks: [
-      { id: "opportunites", label: "فرص وشراكات", href: "/opportunites" },
-      { id: "reclamation", label: "الشكايات الإلكترونية", href: "/e-reclam" },
-      { id: "recrutement", label: "التوظيف", href: "/recrutement" },
-      { id: "mentions", label: "الإشعار القانوني", href: "/mentions-legales" },
-      { id: "politique", label: "سياسة الخصوصية", href: "/politique-confidentialite" },
+      {
+        id: "opportunites",
+        label: "فرص وشراكات",
+        href: "/opportunites",
+      },
+      {
+        id: "reclamation",
+        label: "الشكايات الإلكترونية",
+        href: "/e-reclam",
+      },
+      {
+        id: "recrutement",
+        label: "التوظيف",
+        href: "/recrutement",
+      },
+      {
+        id: "mentions",
+        label: "الإشعار القانوني",
+        href: "/mentions-legales",
+      },
+      {
+        id: "politique",
+        label: "سياسة الخصوصية",
+        href: "/politique-confidentialite",
+      },
     ],
     addressLine1: "شارع ملوية، فيلا رقم 41",
     addressLine2: "النهضة 2، الرباط — المغرب",
@@ -67,25 +123,6 @@ const copy = {
     credits: "تم تصميم وتطوير الموقع بواسطة Point Virgul ↗",
   },
 } as const;
-
-function ChevronUpIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-    >
-      <path
-        d="M5 12L10 7L15 12"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -125,7 +162,9 @@ function FooterColumn({
       <h3 className="text-s font-semibold uppercase tracking-wider text-[#EBE2DC]">
         {title}
       </h3>
+
       <div className="mb-3 mt-2 h-[2px] w-5 bg-[#C4A484]/80" />
+
       <nav className="flex flex-col gap-1.5">
         {items.map((item) => (
           <Link
@@ -147,30 +186,14 @@ export default function Footer() {
   const c = copy[locale];
   const year = new Date().getFullYear();
 
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  const mapsUrl =
+    "https://www.google.com/maps/search/?api=1&query=Avenue+Mellouza+Villa+41+Nahda+2+Rabat+Morocco";
 
   return (
     <footer
       dir={locale === "ar" ? "rtl" : "ltr"}
       className="relative overflow-hidden bg-[#004233] text-[#EBE2DC]"
     >
-      <svg
-        className="pointer-events-none absolute left-0 top-0 w-full"
-        viewBox="0 0 1440 120"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M-100 20 C 300 120, 700 -20, 1100 80 C 1300 130, 1500 50, 1600 30"
-          stroke="#C4A484"
-          strokeWidth="1.5"
-          strokeOpacity="0.6"
-          fill="none"
-        />
-      </svg>
-
       <div className="relative mx-auto max-w-[1600px] px-6 pb-4 pt-12 md:px-10 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10">
           <div className="flex flex-col justify-between">
@@ -193,6 +216,7 @@ export default function Footer() {
                 href="https://www.linkedin.com"
                 target="_blank"
                 rel="noreferrer"
+                aria-label="LinkedIn"
                 className="flex h-7 w-7 items-center justify-center rounded border border-[#EBE2DC]/30 transition-colors hover:border-[#EBE2DC] hover:text-white"
               >
                 <LinkedInIcon className="h-3.5 w-3.5" />
@@ -202,6 +226,7 @@ export default function Footer() {
                 href="https://www.instagram.com"
                 target="_blank"
                 rel="noreferrer"
+                aria-label="Instagram"
                 className="flex h-7 w-7 items-center justify-center rounded border border-[#EBE2DC]/30 transition-colors hover:border-[#EBE2DC] hover:text-white"
               >
                 <InstagramIcon className="h-3.5 w-3.5" />
@@ -235,15 +260,32 @@ export default function Footer() {
             <div className="mb-3 mt-2 h-[2px] w-5 bg-[#C4A484]/80" />
 
             <div className="flex flex-col gap-1.5 text-s font-light text-[#EBE2DC]/70">
-              <p>{c.addressLine1}</p>
-              <p>{c.addressLine2}</p>
-              <p
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-[#EBE2DC]"
+              >
+                <span className="block">{c.addressLine1}</span>
+                <span className="block">{c.addressLine2}</span>
+              </a>
+
+              <a
+                href="tel:+212661704378"
                 dir="ltr"
-                className={`mt-1 ${locale === "ar" ? "text-right" : ""}`}
+                className={`mt-1 transition-colors hover:text-[#EBE2DC] ${
+                  locale === "ar" ? "text-right" : ""
+                }`}
               >
                 {c.phone}
-              </p>
-              <p>{c.email}</p>
+              </a>
+
+              <a
+                href={`mailto:${c.email}`}
+                className="transition-colors hover:text-[#EBE2DC]"
+              >
+                {c.email}
+              </a>
             </div>
           </div>
         </div>
@@ -290,17 +332,6 @@ export default function Footer() {
                 AR
               </Link>
             </div>
-
-            <button
-              type="button"
-              onClick={scrollToTop}
-              aria-label={
-                locale === "ar" ? "العودة إلى الأعلى" : "Revenir en haut"
-              }
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#EBE2DC]/40 text-[#EBE2DC] transition-colors hover:border-[#EBE2DC] hover:bg-white/10"
-            >
-              <ChevronUpIcon className="h-4 w-4" />
-            </button>
           </div>
         </div>
       </div>

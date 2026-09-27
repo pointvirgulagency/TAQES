@@ -7,7 +7,6 @@ interface ArticleImage {
   url: string;
   alternativeText?: string | null;
 }
-
 interface Article {
   id: number;
   titre: string;
@@ -18,13 +17,11 @@ interface Article {
   image?: ArticleImage | null;
   featured?: boolean;
 }
-
 interface ActualitesFiltersProps {
   articles: Article[];
   locale: "fr" | "ar";
   initialCategorie?: string;
 }
-
 const CATEGORIES = [
   "Projets & Chantiers",
   "Guide",
@@ -32,16 +29,13 @@ const CATEGORIES = [
   "Territoire",
   "Événement",
 ];
-
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "";
-
 // Returns null instead of empty string "" to prevent browser re-fetches
 function buildImageUrl(url?: string | null): string | null {
   if (!url) return null;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   return `${STRAPI_URL}${url}`;
 }
-
 export default function ActualitesFilters({
   articles = [],
   locale,
@@ -50,12 +44,9 @@ export default function ActualitesFilters({
   const [selectedCategorie, setSelectedCategorie] =
     useState(initialCategorie);
   const [index, setIndex] = useState(0);
-
   const resultsRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!initialCategorie) return;
-
     setTimeout(() => {
       resultsRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -63,57 +54,43 @@ export default function ActualitesFilters({
       });
     }, 100);
   }, [initialCategorie]);
-
   // reset the slider when the category changes
   useEffect(() => {
     setIndex(0);
   }, [selectedCategorie]);
-
   const filteredArticles = articles.filter((article) => {
     if (!selectedCategorie) return true;
     return article.categorie === selectedCategorie;
   });
-
   const total = filteredArticles.length;
-
   // wrap-around index so navigation never gets stuck at the ends
   const safeIndex = total === 0 ? 0 : ((index % total) + total) % total;
-
   const currentArticle = total > 0 ? filteredArticles[safeIndex] : null;
-
   const remainingArticles = currentArticle
     ? filteredArticles.filter((art) => art.id !== currentArticle.id)
     : filteredArticles;
-
   const TABS = ["", ...CATEGORIES];
-
   const goPrev = () => setIndex((i) => (i - 1 + total) % total);
   const goNext = () => setIndex((i) => (i + 1) % total);
-
   // keyboard navigation (← / →, mirrored in RTL)
   useEffect(() => {
     if (total < 2) return;
-
     function onKeyDown(e: KeyboardEvent) {
       const rtl = locale === "ar";
       if (e.key === (rtl ? "ArrowLeft" : "ArrowRight")) goNext();
       if (e.key === (rtl ? "ArrowRight" : "ArrowLeft")) goPrev();
     }
-
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [total, locale]);
-
   function resetFilters() {
     setSelectedCategorie("");
   }
-
   const prevIcon =
     locale === "ar" ? "M8.25 4.5l7.5 7.5-7.5 7.5" : "M15.75 19.5L8.25 12l7.5-7.5";
   const nextIcon =
     locale === "ar" ? "M15.75 19.5L8.25 12l7.5-7.5" : "M8.25 4.5l7.5 7.5-7.5 7.5";
-
   return (
     <section
       ref={resultsRef}
@@ -122,7 +99,6 @@ export default function ActualitesFilters({
     >
       {/* gentle fade when switching articles */}
       <style>{`@keyframes articleFade{from{opacity:0}to{opacity:1}}.article-fade{animation:articleFade .45s ease both}`}</style>
-
       {/* ghost section number, as in the design */}
       <span
         aria-hidden="true"
@@ -130,7 +106,6 @@ export default function ActualitesFilters({
       >
         02
       </span>
-
       {/* decorative "+" marks */}
       <span
         aria-hidden="true"
@@ -144,7 +119,6 @@ export default function ActualitesFilters({
       >
         +
       </span>
-
       <div className="relative mx-auto max-w-7xl">
         {/* ————— Tabs ————— */}
         <div className="mb-14 border-b border-[#094734]/15 md:mb-20">
@@ -152,11 +126,9 @@ export default function ActualitesFilters({
             <p className="pb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#094734]/70">
               {locale === "ar" ? "استكشف المجلة" : "Explorer le journal"}
             </p>
-
             <nav className="-mb-px flex flex-wrap">
               {TABS.map((categorie) => {
                 const active = selectedCategorie === categorie;
-
                 return (
                   <button
                     key={categorie || "all"}
@@ -179,13 +151,11 @@ export default function ActualitesFilters({
             </nav>
           </div>
         </div>
-
         {/* ————— Section heading ————— */}
         <div className="mb-12 flex flex-wrap items-end justify-between gap-6 md:mb-16">
           <h2 className="max-w-2xl font-serif text-4xl font-medium leading-[1.05] text-[#094734] md:text-6xl">
             {locale === "ar" ? "مفاتيح للمضي قدماً" : "Les clés pour avancer."}
           </h2>
-
           {selectedCategorie && (
             <button
               type="button"
@@ -196,7 +166,6 @@ export default function ActualitesFilters({
             </button>
           )}
         </div>
-
         {total > 0 ? (
           <>
             {/* ————— Big navigator — cycles through ALL filtered articles ————— */}
@@ -219,18 +188,15 @@ export default function ActualitesFilters({
                         {currentArticle.Date && <span>{currentArticle.Date}</span>}
                       </p>
                     )}
-
                     <h3 className="mt-6 max-w-lg font-serif text-3xl font-medium leading-[1.1] text-[#094734] md:text-4xl">
                       {currentArticle.titre}
                     </h3>
-
                     {currentArticle.introduction && (
                       <p className="mt-5 max-w-md text-sm leading-relaxed text-[#094734]/65">
                         {currentArticle.introduction}
                       </p>
                     )}
                   </div>
-
                   {/* actions: read link + navigation arrows */}
                   <div className="mt-10 flex flex-wrap items-center justify-between gap-6">
                     <a
@@ -256,12 +222,10 @@ export default function ActualitesFilters({
                           />
                         </svg>
                       </span>
-
                       <span>
                         {locale === "ar" ? "اقرأ الدليل" : "Lire le guide"}
                       </span>
                     </a>
-
                     {total > 1 && (
                       <div className="flex items-center gap-6">
                         {/* counter */}
@@ -270,7 +234,6 @@ export default function ActualitesFilters({
                           <span className="mx-1.5 text-[#094734]/30">/</span>
                           {String(total).padStart(2, "0")}
                         </span>
-
                         {/* arrows */}
                         <div className="flex gap-3">
                           <button
@@ -297,7 +260,6 @@ export default function ActualitesFilters({
                               />
                             </svg>
                           </button>
-
                           <button
                             type="button"
                             onClick={goNext}
@@ -327,7 +289,6 @@ export default function ActualitesFilters({
                     )}
                   </div>
                 </div>
-
                 {/* image panel */}
                 <div className="relative min-h-[320px] bg-[#094734]/10 md:min-h-[460px] lg:min-h-[520px]">
                   {buildImageUrl(currentArticle.image?.url) ? (
@@ -342,7 +303,6 @@ export default function ActualitesFilters({
                   ) : (
                     <div className="absolute inset-0 bg-[#094734]/10" />
                   )}
-
                   {currentArticle.categorie && (
                     <div className="absolute end-6 top-6 bg-[#EBE2DC] px-5 py-3 md:end-8 md:top-8">
                       <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#094734]">

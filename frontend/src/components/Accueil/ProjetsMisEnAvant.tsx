@@ -109,20 +109,9 @@ export default function ProjetsMisEnAvant({
     ? stripMarkdown(current.description_courte)
     : "";
 
-  const typologie =
-    current.type?.find((item) => item.titre)?.titre || "";
-
-  const territoireName = current.territoire?.nom || "";
   const mention = getMention(current.mention);
 
   const projectDetailUrl = `/${locale}/projects/${current.slug}`;
-
-  const tags = [
-    territoireName,
-    current.type_operation,
-    typologie,
-    current.statut,
-  ].filter(Boolean);
 
   return (
     <section
@@ -154,14 +143,16 @@ export default function ProjetsMisEnAvant({
               {data.titre ||
                 (isArabic ? "مشروع مميز" : "PROJET À LA UNE")}
             </span>
-
-            {total > 1 && (
-              <span className="font-light text-white/50">
-                {String(index + 1).padStart(2, "0")}/
-                {String(total).padStart(2, "0")}
-              </span>
-            )}
           </div>
+
+          {/* Statut Pill - only tag kept, shown above the title */}
+          {current.statut && (
+            <div className="mt-4">
+              <span className="inline-flex items-center rounded-full border border-white/40 px-4 py-1.5 text-xs font-medium text-white">
+                {current.statut}
+              </span>
+            </div>
+          )}
 
           {/* Main Title */}
           <h1 className="mt-5 font-serif text-5xl font-normal leading-[1.1] text-white md:text-6xl lg:text-7xl">
@@ -173,20 +164,6 @@ export default function ProjetsMisEnAvant({
             <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-white/90 md:text-lg">
               {description}
             </p>
-          )}
-
-          {/* Inline Tags, bullet-separated */}
-          {tags.length > 0 && (
-            <div className="mt-5 flex flex-wrap items-center text-sm font-medium text-white/80 md:text-base">
-              {tags.map((tag, i) => (
-                <span key={i} className="flex items-center">
-                  {i > 0 && (
-                    <span className="mx-3 text-[#d6be96]">•</span>
-                  )}
-                  <span>{tag}</span>
-                </span>
-              ))}
-            </div>
           )}
 
           {/* Action Buttons */}

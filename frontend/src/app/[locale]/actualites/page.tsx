@@ -99,18 +99,16 @@ export default async function ActualitesPage({
     >
       <section className="relative overflow-hidden bg-[#094734] pb-36 pt-28 md:pb-48 md:pt-36 lg:pb-56 lg:pt-40">
         {heroImageUrl ? (
-          <>
-            <img
-              src={heroImageUrl}
-              alt={
-                hero?.imagedesktop?.alternativeText ||
-                hero?.titre ||
-                "Actualités"
-              }
-              className="absolute inset-0 h-full w-full object-cover"
-              loading="eager"
-            />
-          </>
+          <img
+            src={heroImageUrl}
+            alt={
+              hero?.imagedesktop?.alternativeText ||
+              hero?.titre ||
+              "Actualités"
+            }
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="eager"
+          />
         ) : (
           <HeroGeometricPattern className="pointer-events-none absolute -top-16 ltr:right-0 rtl:left-0 h-[115%] w-auto" />
         )}
@@ -242,77 +240,67 @@ export default async function ActualitesPage({
       </div>
 
       {lastSection && (
-        <section className="relative overflow-hidden py-14 md:py-18 lg:py-22">
-          {/* Background Image (No dark overlay) */}
-          {lastSectionImageUrl && (
-            <img
-              src={lastSectionImageUrl}
-              alt={
-                lastSection.background?.alternativeText ||
-                lastSection.titre ||
-                ""
-              }
-              className="absolute inset-0 h-full w-full object-cover object-center"
-            />
-          )}
+        <section className="relative overflow-visible bg-[#004233]">
+          <div className="relative overflow-hidden py-14 md:py-18 lg:py-22">
+            {lastSectionImageUrl && (
+              <img
+                src={lastSectionImageUrl}
+                alt={
+                  lastSection.background?.alternativeText ||
+                  lastSection.titre ||
+                  ""
+                }
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
+            )}
 
-          <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-12">
-            <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
-
-              {/* Far Left: Title forced onto 2 lines */}
-              {lastSection.titre && (
-                <div className="lg:col-span-5">
-                  <h2 className="max-w-[280px] font-serif text-5xl font-medium leading-[0.95] tracking-tight text-white md:max-w-xs md:text-6xl lg:text-[76px]">
-                    {lastSection.titre}
-                  </h2>
-                </div>
-              )}
-
-              {/* Center: Eyebrow + Nude Button aligned in the middle of the section */}
-              <div className="flex flex-col items-start gap-5 justify-self-center lg:col-span-5 lg:ps-8">
-                {lastSection.eyebrow && (
-                  <div className="flex items-center gap-3 text-white/90">
-                    <span aria-hidden="true" className="h-px w-6 bg-white/60" />
-                    <p className="text-sm font-normal leading-snug">
-                      {lastSection.eyebrow}
-                    </p>
+            <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-12">
+              <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
+                {lastSection.titre && (
+                  <div className="lg:col-span-5">
+                    <h2 className="max-w-[280px] font-serif text-5xl font-medium leading-[0.95] tracking-tight text-white md:max-w-xs md:text-6xl lg:text-[76px]">
+                      {lastSection.titre}
+                    </h2>
                   </div>
                 )}
 
-                {lastSection.libelle_bouton && (
-                  <a
-                    href={`/${locale}/projects`}
-                    className="inline-flex items-center gap-4 bg-[#EBE2DC] px-7 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#094734] transition-all duration-300 hover:bg-white"
-                  >
-                    <span>{lastSection.libelle_bouton}</span>
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                <div className="flex flex-col items-start justify-self-center gap-5 lg:col-span-5 lg:ps-8">
+                  {lastSection.libelle_bouton && (
+                    <a
+                      href={`/${locale}/projects`}
+                      className="inline-flex items-center gap-4 bg-[#EBE2DC] px-7 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#094734] transition-all duration-300 hover:bg-white"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d={
-                          locale === "ar"
-                            ? "M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-                            : "M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                        }
-                      />
-                    </svg>
-                  </a>
-                )}
+                      <span>{lastSection.libelle_bouton}</span>
+
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d={
+                            locale === "ar"
+                              ? "M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                              : "M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                          }
+                        />
+                      </svg>
+                    </a>
+                  )}
+                </div>
+
+                <div className="hidden lg:col-span-2 lg:block" />
               </div>
-
-              <div className="hidden lg:col-span-2 lg:block" />
-
             </div>
+
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-48 bg-gradient-to-b from-transparent via-[#004233]/80 to-[#004233] md:h-64 lg:h-30" />
           </div>
         </section>
       )}
     </main>
   );
 }
-

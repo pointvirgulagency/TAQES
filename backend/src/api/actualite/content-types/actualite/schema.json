@@ -58,7 +58,7 @@
       ]
     },
     "Date": {
-      "type": "datetime",
+      "type": "date",
       "pluginOptions": {
         "i18n": {
           "localized": true

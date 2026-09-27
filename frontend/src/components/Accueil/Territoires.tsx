@@ -100,22 +100,21 @@ export default function Territoires({
             <div className="mb-5 flex items-center gap-3">
               <span className="h-px w-10 bg-[#00674F]" />
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#00674F]">
-                Notre ancrage territorial
+                NOS PROJETS SUR LA CARTE
               </p>
             </div>
 
             <h2 className="text-4xl font-medium leading-[1.05] tracking-[-0.035em] text-[#094734] md:text-5xl">
-              {titre || "Nos territoires d'intervention"}
+              {titre}
             </h2>
 
             <p className="mt-6 max-w-sm text-base leading-7 text-[#094734]/65">
-              {descriptionTerritoires ||
-                "Explorez les territoires où nous imaginons, développons et valorisons nos projets fonciers et immobiliers."}
+              {descriptionTerritoires}
             </p>
 
             <p className="mt-4 max-w-sm text-sm leading-6 text-[#094734]/45">
-              Sélectionnez une ville sur la carte pour découvrir les projets
-              associés.
+              Sélectionnez une localisation sur la carte pour explorer les projets
+              correspondants.
             </p>
 
             <Link
@@ -130,7 +129,7 @@ export default function Territoires({
               <div className="mt-12 border-t border-[#094734]/15 pt-6">
                 <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[#00674F]/25 bg-[#00674F]/[0.06] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#00674F]">
                   <MapPin className="h-3 w-3" />
-                  Ville sélectionnée
+                  Localisation sélectionnée
                 </div>
 
                 <h3 className="text-2xl font-medium tracking-[-0.02em] text-[#094734]">

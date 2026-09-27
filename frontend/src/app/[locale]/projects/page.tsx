@@ -352,8 +352,6 @@ export default async function ProjectsPage({
                 ) : (
                   <div className="absolute inset-0 bg-[#094734]" />
                 )}
-
-
               </div>
 
               <div className="flex min-h-[460px] flex-col justify-between md:min-h-[580px] lg:min-h-[620px]">
@@ -641,6 +639,8 @@ export default async function ProjectsPage({
               )}
             </div>
           </div>
+
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 bg-gradient-to-b from-transparent to-[#004233] md:h-40 lg:h-20" />
         </section>
       )}
     </main>
