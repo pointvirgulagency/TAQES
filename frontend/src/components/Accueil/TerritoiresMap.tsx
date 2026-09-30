@@ -3,20 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MapPin, X } from "lucide-react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Polyline,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import type { CSSProperties, ComponentType, ReactNode } from "react";
-import type {
-  LatLngExpression,
-  MapOptions,
-  MarkerOptions,
-  TileLayerOptions,
-} from "leaflet";
+import type { LatLngExpression, MapOptions, MarkerOptions, TileLayerOptions } from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -62,14 +51,9 @@ interface TypedMarkerProps extends MarkerOptions {
   };
 }
 
-const TypedMapContainer =
-  MapContainer as unknown as ComponentType<TypedMapContainerProps>;
-
-const TypedTileLayer =
-  TileLayer as unknown as ComponentType<TypedTileLayerProps>;
-
-const TypedMarker =
-  Marker as unknown as ComponentType<TypedMarkerProps>;
+const TypedMapContainer = MapContainer as unknown as ComponentType<TypedMapContainerProps>;
+const TypedTileLayer = TileLayer as unknown as ComponentType<TypedTileLayerProps>;
+const TypedMarker = Marker as unknown as ComponentType<TypedMarkerProps>;
 
 const MAP_CENTER: [number, number] = [33.85, -6.9];
 
@@ -87,19 +71,13 @@ function toCoord(value: unknown): number | null {
 
   if (typeof value === "string" && value.trim()) {
     const parsed = Number(value);
-
     return Number.isNaN(parsed) ? null : parsed;
   }
 
   return null;
 }
 
-function haversineDistanceKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-) {
+function haversineDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371;
 
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -122,10 +100,7 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function buildMarkerIcon(
-  nom: string | undefined,
-  selected: boolean
-) {
+function buildMarkerIcon(nom: string | undefined, selected: boolean) {
   const size = selected ? 16 : 11;
   const safeNom = nom ? escapeHtml(nom) : "";
 
@@ -134,11 +109,7 @@ function buildMarkerIcon(
     : "background:#F4F0E8;border:2px solid #00674F;box-shadow:0 2px 6px rgba(0,70,55,0.18);";
 
   const label = safeNom
-    ? `<span style="background:${
-        selected ? "#094734" : "#F8F5EF"
-      };color:${selected ? "#F4F0E8" : "#094734"};border:1px solid ${
-        selected ? "#094734" : "#E6E0D6"
-      };border-radius:9999px;padding:3px 10px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 2px 6px rgba(30,50,40,0.10);">${safeNom}</span>`
+    ? `<span style="background:${selected ? "#094734" : "#F8F5EF"};color:${selected ? "#F4F0E8" : "#094734"};border:1px solid ${selected ? "#094734" : "#E6E0D6"};border-radius:9999px;padding:3px 10px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 2px 6px rgba(30,50,40,0.10);">${safeNom}</span>`
     : "";
 
   return L.divIcon({
@@ -149,11 +120,7 @@ function buildMarkerIcon(
   });
 }
 
-function MapController({
-  selectedTerritoire,
-}: {
-  selectedTerritoire: Territoire | null;
-}) {
+function MapController({ selectedTerritoire }: { selectedTerritoire: Territoire | null }) {
   const map = useMap();
 
   useEffect(() => {
@@ -192,38 +159,15 @@ export default function TerritoiresMap({
       const longitude = toCoord(territoire.longitude);
 
       return latitude !== null && longitude !== null
-        ? {
-            ...territoire,
-            latitude,
-            longitude,
-          }
+        ? { ...territoire, latitude, longitude }
         : null;
     })
     .filter(
-      (
-        territoire
-      ): territoire is Territoire & {
-        latitude: number;
-        longitude: number;
-      } => territoire !== null
+      (territoire): territoire is Territoire & { latitude: number; longitude: number } =>
+        territoire !== null
     );
 
-  const sortedByLat = [...validTerritoires].sort(
-    (a, b) => b.latitude - a.latitude
-  );
-
-  const routePositions: [number, number][] =
-    sortedByLat.map((territoire) => [
-      territoire.latitude,
-      territoire.longitude,
-    ]);
-
-  const axisFrom = sortedByLat[0]?.nom;
-  const axisTo = sortedByLat[sortedByLat.length - 1]?.nom;
-
-  const selectedProjectCount = Array.isArray(
-    selectedTerritoire?.projects
-  )
+  const selectedProjectCount = Array.isArray(selectedTerritoire?.projects)
     ? selectedTerritoire.projects.length
     : null;
 
@@ -281,16 +225,6 @@ export default function TerritoiresMap({
         }
       `}</style>
 
-      {axisFrom && axisTo && axisFrom !== axisTo && (
-        <div className="absolute left-4 top-4 z-[400] flex items-center gap-1.5 rounded-full bg-[#094734] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#F4F0E8] shadow-[0_4px_14px_rgba(9,71,52,0.28)]">
-          <MapPin className="h-3 w-3 shrink-0" />
-
-          <span className="truncate">
-            Axe {axisFrom} – {axisTo}
-          </span>
-        </div>
-      )}
-
       {mapReady && (
         <TypedMapContainer
           center={MAP_CENTER}
@@ -304,54 +238,24 @@ export default function TerritoiresMap({
           touchZoom
           zoomControl={false}
           attributionControl
-          style={{
-            height: "100%",
-            width: "100%",
-          }}
+          style={{ height: "100%", width: "100%" }}
           className="absolute inset-0 z-0 h-full w-full"
         >
           <TypedTileLayer
-            url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+            url={`https://maps.geoapify.com/v1/tile/osm-bright-smooth/{z}/{x}/{y}.png?apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}`}
             maxZoom={20}
-            attribution={`&copy; <a href="https://stadiamaps.com/attribution/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>`}
+            attribution='&copy; OpenStreetMap contributors &copy; Geoapify'
           />
 
-          <MapController
-            selectedTerritoire={selectedTerritoire}
-          />
-
-          {routePositions.length > 1 && (
-            <Polyline
-              positions={routePositions}
-              pathOptions={{
-                color: "#C08552",
-                weight: 2,
-                opacity: 0.65,
-                dashArray: "4 8",
-                lineCap: "round",
-              }}
-            />
-          )}
+          <MapController selectedTerritoire={selectedTerritoire} />
 
           {validTerritoires.map((territoire) => (
             <TypedMarker
-              key={
-                territoire.id ??
-                territoire.documentId ??
-                territoire.slug ??
-                territoire.nom
-              }
-              position={[
-                territoire.latitude,
-                territoire.longitude,
-              ]}
-              icon={buildMarkerIcon(
-                territoire.nom,
-                selectedTerritoire?.id === territoire.id
-              )}
+              key={territoire.id ?? territoire.documentId ?? territoire.slug ?? territoire.nom}
+              position={[territoire.latitude, territoire.longitude]}
+              icon={buildMarkerIcon(territoire.nom, selectedTerritoire?.id === territoire.id)}
               eventHandlers={{
-                click: () =>
-                  onSelectTerritoire?.(territoire),
+                click: () => onSelectTerritoire?.(territoire),
               }}
             />
           ))}
@@ -367,9 +271,7 @@ export default function TerritoiresMap({
           <div className="relative overflow-hidden rounded-xl border border-white/80 bg-[#F8F5EF] shadow-[0_8px_30px_rgba(38,65,56,0.14)]">
             <button
               type="button"
-              onClick={() =>
-                onSelectTerritoire?.(null)
-              }
+              onClick={() => onSelectTerritoire?.(null)}
               className="absolute right-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#E6E0D6]/60 text-[#094734] transition hover:bg-[#E6E0D6]"
               aria-label="Fermer"
             >
@@ -390,9 +292,7 @@ export default function TerritoiresMap({
               <div className="min-w-0 pt-0.5">
                 <div className="mb-1 flex items-center gap-2">
                   <span className="rounded-full bg-[#E5EEE9] px-2 py-0.5 text-[7px] font-semibold uppercase tracking-[0.08em] text-[#00674F]">
-                    {selectedDistanceKm !== null
-                      ? `À ${selectedDistanceKm} KM`
-                      : "TERRITOIRE"}
+                    {selectedDistanceKm !== null ? `À ${selectedDistanceKm} KM` : "TERRITOIRE"}
                   </span>
                 </div>
 
@@ -402,24 +302,12 @@ export default function TerritoiresMap({
 
                 <p className="mt-1 line-clamp-2 text-[9px] leading-[1.4] text-[#78847F]">
                   {selectedProjectCount !== null
-                    ? `${selectedProjectCount} projet${
-                        selectedProjectCount > 1
-                          ? "s"
-                          : ""
-                      } associé${
-                        selectedProjectCount > 1
-                          ? "s"
-                          : ""
-                      }`
+                    ? `${selectedProjectCount} projet${selectedProjectCount > 1 ? "s" : ""} associé${selectedProjectCount > 1 ? "s" : ""}`
                     : "Découvrez ce territoire et les projets associés."}
                 </p>
 
                 <Link
-                  href={
-                    selectedTerritoire.slug
-                      ? `/territoires/${selectedTerritoire.slug}`
-                      : "#"
-                  }
+                  href={selectedTerritoire.slug ? `/territoires/${selectedTerritoire.slug}` : "#"}
                   className="mt-2 block text-[7px] font-semibold uppercase tracking-[0.08em] text-[#00674F] transition hover:text-[#094734]"
                 >
                   DÉCOUVRIR LE PROJET →
@@ -432,4 +320,3 @@ export default function TerritoiresMap({
     </div>
   );
 }
-
