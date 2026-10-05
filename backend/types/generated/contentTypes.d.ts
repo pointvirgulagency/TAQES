@@ -621,6 +621,12 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     featured: Schema.Attribute.Boolean &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -633,7 +639,13 @@ export interface ApiActualiteActualite extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    introduction: Schema.Attribute.String &
+    intro_eyebrow: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    introduction: Schema.Attribute.Text &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

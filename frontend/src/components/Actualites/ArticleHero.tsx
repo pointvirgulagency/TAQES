@@ -38,9 +38,9 @@ export default function ArticleHero({
               {article.titre}
             </h1>
 
-            {article.introduction && (
+            {article.description && (
               <p className="mt-6 text-base leading-relaxed text-[#094734]/90 sm:text-lg">
-                {article.introduction}
+                {article.description}
               </p>
             )}
 

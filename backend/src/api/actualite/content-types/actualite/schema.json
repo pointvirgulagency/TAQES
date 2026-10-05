@@ -74,7 +74,7 @@
       }
     },
     "introduction": {
-      "type": "string",
+      "type": "text",
       "pluginOptions": {
         "i18n": {
           "localized": true
@@ -147,6 +147,22 @@
       "relation": "oneToMany",
       "target": "api::actualite.actualite",
       "mappedBy": "actualite"
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "intro_eyebrow": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     }
   }
 }

@@ -192,6 +192,7 @@ export interface SectionsInformationsCles extends Struct.ComponentSchema {
   };
   attributes: {
     informations: Schema.Attribute.Component<'sections.information-cle', true>;
+    note: Schema.Attribute.String;
     titre: Schema.Attribute.String;
   };
 }

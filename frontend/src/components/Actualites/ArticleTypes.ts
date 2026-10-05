@@ -76,6 +76,7 @@ export interface InformationsClesSection {
   id?: number;
   titre?: string | null;
   informations?: InformationCle[] | null;
+  note?: string | null;
 }
 
 export interface ListeNumeroteeSection {
@@ -125,6 +126,8 @@ export interface Article {
   id: number;
   documentId?: string;
   titre: string;
+  description: string;
+  intro_eyebrow: string;
   slug: string;
   categorie?: string;
   Date?: string;
