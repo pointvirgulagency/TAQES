@@ -120,14 +120,21 @@ export default function ProjectHero({
 
             {/* Action Buttons */}
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <button className="inline-flex items-center justify-center gap-3 rounded bg-white px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#094734] transition-opacity hover:opacity-90">
+              <Link
+                href={`/${locale}/contact`}
+                className="inline-flex items-center justify-center gap-3 rounded bg-white px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#094734] transition-opacity hover:opacity-90"
+              >
                 <span>Être informé du lancement</span>
                 <ArrowRight size={16} />
-              </button>
-              <button className="inline-flex items-center justify-center gap-2 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-80">
+              </Link>
+
+              <Link
+                href={`/${locale}/opportunites-partenariats`}
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-80"
+              >
                 <span>Opportunités & Partenariats</span>
                 <ArrowRight size={16} />
-              </button>
+              </Link>
             </div>
           </div>
 

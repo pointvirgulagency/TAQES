@@ -32,10 +32,20 @@ export default async function OpportunitesPartenariatsPage({
 
   return (
     <main className="min-h-screen bg-[#F5F2EC]">
-      <section className="relative overflow-hidden bg-[#094734] py-24 text-white">
+      <section className="relative overflow-hidden py-24 text-white">
+        <Image
+          src="/img_1.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+
+        <div className="absolute inset-0 bg-[#094734]/50" />
         <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] opacity-10 [background-size:16px_16px]" />
 
-        <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-10 px-6 pt-12 md:flex-row md:items-center md:px-10 lg:px-16">
+        <div className="relative z-10 mx-auto flex max-w-7xl flex-col justify-between gap-10 px-6 pt-12 md:flex-row md:items-center md:px-10 lg:px-16">
           <div className="max-w-xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-6 bg-white/40" />
@@ -65,18 +75,6 @@ export default async function OpportunitesPartenariatsPage({
               <span>PROJETS</span>
               <span>•</span>
               <span>TERRITOIRES DE DEMAIN</span>
-            </div>
-          </div>
-
-          <div className="hidden flex-col items-end justify-between self-stretch text-right md:flex">
-            <div className="relative flex h-36 w-36 items-center justify-center rounded-full border border-white/20">
-              <div className="h-24 w-24 rounded-bl-full border-b-2 border-l-2 border-white/40" />
-            </div>
-
-            <div className="text-[10px] tracking-widest text-white/40">
-              33.5731° N
-              <br />
-              7.5898° W
             </div>
           </div>
         </div>
@@ -125,9 +123,7 @@ export default async function OpportunitesPartenariatsPage({
                                   ? pillar.icon.url
                                   : `${process.env.NEXT_PUBLIC_STRAPI_URL}${pillar.icon.url}`
                               }
-                              alt={
-                                pillar.icon.alternativeText || ""
-                              }
+                              alt={pillar.icon.alternativeText || ""}
                               fill
                               sizes="40px"
                               className="object-contain"

@@ -67,6 +67,14 @@
       "relation": "oneToMany",
       "target": "api::project.project",
       "mappedBy": "territoire"
+    },
+    "slug": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     }
   }
 }

@@ -117,11 +117,11 @@ export default async function GroupePage({
     <main>
       {/* HERO */}
       {hero && (
-        <div className="[&>section>picture>img]:scale-[1.055]">
+        <div className="[&>section>picture>img]:scale-[1.055] ">
           <Hero
             data={hero}
             strapiUrl={STRAPI_URL}
-            showOverlay={false}
+            showOverlay={true}
           />
         </div>
       )}

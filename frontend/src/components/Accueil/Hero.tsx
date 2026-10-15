@@ -50,9 +50,7 @@ export default function Hero({
   const baseStrapiUrl = strapiUrl.replace(/\/$/, "");
 
   const localize = (href?: string) => {
-    if (!href) {
-      return "#";
-    }
+    if (!href) return "#";
 
     if (
       /^(https?:)?\/\//.test(href) ||
@@ -85,18 +83,12 @@ export default function Hero({
   return (
     <section className="relative isolate min-h-screen overflow-hidden">
       <picture className="absolute inset-0">
-        <source
-          media="(max-width:768px)"
-          srcSet={mobileImage}
-        />
+        <source media="(max-width:768px)" srcSet={mobileImage} />
 
         {desktopImage && (
           <img
             src={desktopImage}
-            alt={
-              data.imagedesktop?.alternativeText ??
-              "TAQÈS"
-            }
+            alt={data.imagedesktop?.alternativeText ?? "TAQÈS"}
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
         )}
@@ -111,10 +103,7 @@ export default function Hero({
           playsInline
           poster={videoPoster}
         >
-          <source
-            src={video}
-            type="video/mp4"
-          />
+          <source src={video} type="video/mp4" />
         </video>
       )}
 

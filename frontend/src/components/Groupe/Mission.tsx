@@ -58,7 +58,7 @@ export default function Mission({
             CE QUI NOUS GUIDE
           </p>
           <h2 className="font-serif text-3xl font-normal leading-tight text-white md:text-5xl">
-            Une vision portée par la parole
+            Une vision guidée par nos valeurs
           </h2>
         </div>
 

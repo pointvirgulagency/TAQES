@@ -2,10 +2,25 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { MapPin, X } from "lucide-react";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import type { CSSProperties, ComponentType, ReactNode } from "react";
-import type { LatLngExpression, MapOptions, MarkerOptions, TileLayerOptions } from "leaflet";
+import { useParams } from "next/navigation";
+import { X } from "lucide-react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMap,
+} from "react-leaflet";
+import type {
+  CSSProperties,
+  ComponentType,
+  ReactNode,
+} from "react";
+import type {
+  LatLngExpression,
+  MapOptions,
+  MarkerOptions,
+  TileLayerOptions,
+} from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -51,9 +66,14 @@ interface TypedMarkerProps extends MarkerOptions {
   };
 }
 
-const TypedMapContainer = MapContainer as unknown as ComponentType<TypedMapContainerProps>;
-const TypedTileLayer = TileLayer as unknown as ComponentType<TypedTileLayerProps>;
-const TypedMarker = Marker as unknown as ComponentType<TypedMarkerProps>;
+const TypedMapContainer =
+  MapContainer as unknown as ComponentType<TypedMapContainerProps>;
+
+const TypedTileLayer =
+  TileLayer as unknown as ComponentType<TypedTileLayerProps>;
+
+const TypedMarker =
+  Marker as unknown as ComponentType<TypedMarkerProps>;
 
 const MAP_CENTER: [number, number] = [33.85, -6.9];
 
@@ -65,21 +85,25 @@ const REGION_BOUNDS: L.LatLngBoundsExpression = [
 const FIXED_ZOOM = 9.5;
 
 function toCoord(value: unknown): number | null {
-  if (typeof value === "number" && !Number.isNaN(value)) {
+  if (typeof value === "number" && Number.isFinite(value)) {
     return value;
   }
 
   if (typeof value === "string" && value.trim()) {
     const parsed = Number(value);
-    return Number.isNaN(parsed) ? null : parsed;
+    return Number.isFinite(parsed) ? parsed : null;
   }
 
   return null;
 }
 
-function haversineDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+function haversineDistanceKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) {
   const R = 6371;
-
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
 
@@ -100,7 +124,10 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function buildMarkerIcon(nom: string | undefined, selected: boolean) {
+function buildMarkerIcon(
+  nom: string | undefined,
+  selected: boolean
+) {
   const size = selected ? 16 : 11;
   const safeNom = nom ? escapeHtml(nom) : "";
 
@@ -120,16 +147,18 @@ function buildMarkerIcon(nom: string | undefined, selected: boolean) {
   });
 }
 
-function MapController({ selectedTerritoire }: { selectedTerritoire: Territoire | null }) {
+function MapController({
+  selectedTerritoire,
+}: {
+  selectedTerritoire: Territoire | null;
+}) {
   const map = useMap();
 
   useEffect(() => {
     const lat = toCoord(selectedTerritoire?.latitude);
     const lng = toCoord(selectedTerritoire?.longitude);
 
-    if (lat === null || lng === null) {
-      return;
-    }
+    if (lat === null || lng === null) return;
 
     map.panTo([lat, lng], {
       animate: true,
@@ -146,53 +175,102 @@ export default function TerritoiresMap({
   onSelectTerritoire,
 }: TerritoiresMapProps) {
   const [mapReady, setMapReady] = useState(false);
+  const params = useParams<{ locale?: string }>();
+
+  const locale = params.locale === "ar" ? "ar" : "fr";
+  const isArabic = locale === "ar";
+
+  const strapiUrl = (
+    process.env.NEXT_PUBLIC_STRAPI_URL ?? ""
+  ).replace(/\/$/, "");
 
   useEffect(() => {
     setMapReady(true);
   }, []);
-
-  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL ?? "";
 
   const validTerritoires = territoires
     .map((territoire) => {
       const latitude = toCoord(territoire.latitude);
       const longitude = toCoord(territoire.longitude);
 
-      return latitude !== null && longitude !== null
-        ? { ...territoire, latitude, longitude }
-        : null;
+      if (latitude === null || longitude === null) {
+        return null;
+      }
+
+      return {
+        ...territoire,
+        latitude,
+        longitude,
+      };
     })
     .filter(
-      (territoire): territoire is Territoire & { latitude: number; longitude: number } =>
-        territoire !== null
+      (
+        territoire
+      ): territoire is Territoire & {
+        latitude: number;
+        longitude: number;
+      } => territoire !== null
     );
 
-  const selectedProjectCount = Array.isArray(selectedTerritoire?.projects)
+  const selectedProjectCount = Array.isArray(
+    selectedTerritoire?.projects
+  )
     ? selectedTerritoire.projects.length
     : null;
 
+  const selectedLat = toCoord(selectedTerritoire?.latitude);
+  const selectedLng = toCoord(selectedTerritoire?.longitude);
+
   const selectedDistanceKm =
-    selectedTerritoire &&
-    typeof selectedTerritoire.latitude === "number" &&
-    typeof selectedTerritoire.longitude === "number"
+    selectedLat !== null && selectedLng !== null
       ? Math.round(
           haversineDistanceKm(
             MAP_CENTER[0],
             MAP_CENTER[1],
-            selectedTerritoire.latitude,
-            selectedTerritoire.longitude
+            selectedLat,
+            selectedLng
           )
         )
       : null;
 
-  const imageUrl = selectedTerritoire?.image?.formats?.thumbnail?.url
-    ? `${strapiUrl}${selectedTerritoire.image.formats.thumbnail.url}`
-    : selectedTerritoire?.image?.url
-      ? `${strapiUrl}${selectedTerritoire.image.url}`
-      : null;
+  const imagePath =
+    selectedTerritoire?.image?.formats?.thumbnail?.url ??
+    selectedTerritoire?.image?.url;
+
+  const imageUrl = imagePath
+    ? imagePath.startsWith("http")
+      ? imagePath
+      : `${strapiUrl}${imagePath}`
+    : null;
+
+  const selectedCityUrl = selectedTerritoire?.nom
+    ? `/${locale}/projects?city=${encodeURIComponent(
+        selectedTerritoire.nom
+      )}`
+    : `/${locale}/projects`;
+
+  const labels = {
+    territory: isArabic ? "المنطقة" : "TERRITOIRE",
+    projects: isArabic
+      ? "مشروع مرتبط"
+      : "projet associé",
+    projectsPlural: isArabic
+      ? "مشاريع مرتبطة"
+      : "projets associés",
+    discover: isArabic
+      ? "اكتشف المشاريع"
+      : "DÉCOUVRIR LES PROJETS",
+    close: isArabic ? "إغلاق" : "Fermer",
+    description: isArabic
+      ? "اكتشف هذه المنطقة والمشاريع المرتبطة بها."
+      : "Découvrez ce territoire et les projets associés.",
+  };
 
   return (
-    <div className="territoires-map relative z-0 isolate h-[600px] w-full overflow-hidden rounded-[2rem] bg-[#E2DCD0]">
+    <div
+      dir={isArabic ? "rtl" : "ltr"}
+      className="territoires-map relative z-0 isolate h-[600px] w-full overflow-hidden rounded-[2rem] bg-[#E2DCD0]"
+    >
       <style jsx global>{`
         .territoires-map .leaflet-control-attribution {
           background: rgba(248, 245, 239, 0.82) !important;
@@ -244,36 +322,48 @@ export default function TerritoiresMap({
           <TypedTileLayer
             url={`https://maps.geoapify.com/v1/tile/osm-bright-smooth/{z}/{x}/{y}.png?apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}`}
             maxZoom={20}
-            attribution='&copy; OpenStreetMap contributors &copy; Geoapify'
+            attribution="&copy; OpenStreetMap contributors &copy; Geoapify"
           />
 
-          <MapController selectedTerritoire={selectedTerritoire} />
+          <MapController
+            selectedTerritoire={selectedTerritoire}
+          />
 
           {validTerritoires.map((territoire) => (
             <TypedMarker
-              key={territoire.id ?? territoire.documentId ?? territoire.slug ?? territoire.nom}
-              position={[territoire.latitude, territoire.longitude]}
-              icon={buildMarkerIcon(territoire.nom, selectedTerritoire?.id === territoire.id)}
+              key={
+                territoire.id ??
+                territoire.documentId ??
+                territoire.slug ??
+                territoire.nom
+              }
+              position={[
+                territoire.latitude,
+                territoire.longitude,
+              ]}
+              icon={buildMarkerIcon(
+                territoire.nom,
+                selectedTerritoire?.id === territoire.id &&
+                  selectedTerritoire?.documentId ===
+                    territoire.documentId
+              )}
               eventHandlers={{
-                click: () => onSelectTerritoire?.(territoire),
+                click: () =>
+                  onSelectTerritoire?.(territoire),
               }}
             />
           ))}
         </TypedMapContainer>
       )}
 
-      <div className="pointer-events-none absolute bottom-3 left-4 z-[400] text-[8px] font-semibold uppercase tracking-[0.16em] text-[#5d746b]/70">
-        S1 — Axe Atlantique
-      </div>
-
       {selectedTerritoire && (
-        <div className="absolute left-6 top-1/2 z-[500] w-[285px] -translate-y-1/2 animate-in fade-in slide-in-from-left-4 duration-300">
+        <div className="absolute start-6 top-1/2 z-[500] w-[285px] -translate-y-1/2 animate-in fade-in slide-in-from-left-4 duration-300">
           <div className="relative overflow-hidden rounded-xl border border-white/80 bg-[#F8F5EF] shadow-[0_8px_30px_rgba(38,65,56,0.14)]">
             <button
               type="button"
               onClick={() => onSelectTerritoire?.(null)}
-              className="absolute right-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#E6E0D6]/60 text-[#094734] transition hover:bg-[#E6E0D6]"
-              aria-label="Fermer"
+              className="absolute end-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#E6E0D6]/60 text-[#094734] transition hover:bg-[#E6E0D6]"
+              aria-label={labels.close}
             >
               <X className="h-3 w-3" />
             </button>
@@ -289,10 +379,14 @@ export default function TerritoiresMap({
                 )}
               </div>
 
-              <div className="min-w-0 pt-0.5">
+              <div className="min-w-0 flex-1 pt-0.5">
                 <div className="mb-1 flex items-center gap-2">
                   <span className="rounded-full bg-[#E5EEE9] px-2 py-0.5 text-[7px] font-semibold uppercase tracking-[0.08em] text-[#00674F]">
-                    {selectedDistanceKm !== null ? `À ${selectedDistanceKm} KM` : "TERRITOIRE"}
+                    {selectedDistanceKm !== null
+                      ? isArabic
+                        ? `${selectedDistanceKm} كم`
+                        : `À ${selectedDistanceKm} KM`
+                      : labels.territory}
                   </span>
                 </div>
 
@@ -302,15 +396,24 @@ export default function TerritoiresMap({
 
                 <p className="mt-1 line-clamp-2 text-[9px] leading-[1.4] text-[#78847F]">
                   {selectedProjectCount !== null
-                    ? `${selectedProjectCount} projet${selectedProjectCount > 1 ? "s" : ""} associé${selectedProjectCount > 1 ? "s" : ""}`
-                    : "Découvrez ce territoire et les projets associés."}
+                    ? isArabic
+                      ? `${selectedProjectCount} ${labels.projects}`
+                      : `${selectedProjectCount} ${
+                          selectedProjectCount > 1
+                            ? labels.projectsPlural
+                            : labels.projects
+                        }`
+                    : labels.description}
                 </p>
 
                 <Link
-                  href={selectedTerritoire.slug ? `/territoires/${selectedTerritoire.slug}` : "#"}
-                  className="mt-2 block text-[7px] font-semibold uppercase tracking-[0.08em] text-[#00674F] transition hover:text-[#094734]"
+                  href={selectedCityUrl}
+                  className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00674F] underline decoration-[#00674F]/30 underline-offset-4 transition hover:text-[#094734] hover:decoration-[#094734]/40"
                 >
-                  DÉCOUVRIR LE PROJET →
+                  {labels.discover}
+                  <span aria-hidden="true">
+                    {isArabic ? "←" : "→"}
+                  </span>
                 </Link>
               </div>
             </div>

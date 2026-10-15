@@ -237,10 +237,10 @@ export default async function ProjectsPage({
             />
           )}
 
-          <div className="relative z-10 mx-auto flex h-full min-h-[580px] max-w-7xl items-center px-6 py-16 md:min-h-[680px] md:px-12 lg:min-h-[760px] lg:px-16">
+          <div className="relative z-10 mx-auto flex h-full min-h-[580px] max-w-7xl items-center px-6 py-17 md:min-h-[690px] md:px-12 lg:min-h-[780px] lg:px-16">
             <div className="w-full max-w-xl text-[#094734] md:-ml-12 lg:-ml-24">
               {hero.surtitre && (
-                <div className="mb-6 flex items-center gap-3">
+                <div className="mb-6 flex items-center gap-6">
                   <p className="text-s font-semibold uppercase tracking-[0.22em] text-[#094734]/70">
                     {hero.surtitre}
                   </p>
@@ -254,7 +254,12 @@ export default async function ProjectsPage({
 
               {hero.titre && (
                 <h1 className="font-serif text-4xl font-medium leading-[1.05] tracking-tight md:text-5xl lg:text-[80px]">
-                  {hero.titre}
+                  {hero.titre.split(/(?<=\.)\s*/).map((part, index, parts) => (
+                    <span key={index} className="whitespace-nowrap">
+                      {part.trim()}
+                      {index < parts.length - 1 && <br />}
+                    </span>
+                  ))}
                 </h1>
               )}
 

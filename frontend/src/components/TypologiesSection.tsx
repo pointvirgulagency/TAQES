@@ -188,7 +188,7 @@ export default function TypologiesSection({
                       </p>
                     )}
 
-                    <span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.14em] text-white">
+                    <span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.14em] text-white group-hover:text-yellow-400">
                       {labels.discover}
 
                       <ArrowRight
@@ -291,7 +291,7 @@ export default function TypologiesSection({
                     </p>
                   )}
 
-                  <span className="mt-2.5 inline-flex items-center gap-1.5 text-[9px] font-bold tracking-[0.14em] text-white">
+                  <span className="mt-2.5 inline-flex items-center gap-1.5 text-[9px] font-bold tracking-[0.14em] text-white group-hover:text-yellow-400">
                     {labels.discover}
 
                     <ArrowRight
@@ -396,7 +396,7 @@ function TypologyCard({
           </p>
         )}
 
-        <span className="mt-2 inline-flex items-center gap-1.5 text-[9px] font-bold tracking-[0.14em] text-white">
+        <span className="mt-2 inline-flex items-center gap-1.5 text-[9px] font-bold tracking-[0.14em] text-white group-hover:text-yellow-400">
           {discoverLabel}
 
           <ArrowRight

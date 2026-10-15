@@ -81,10 +81,16 @@ export default function FonciereAlia({
 
           <div className="flex flex-col justify-center">
             {data.titresecond && (
-              <h3 className="font-serif text-4xl font-normal leading-[1.05] text-[#0b3121] md:text-5xl">
-                {data.titresecond}
-              </h3>
-            )}
+                <h3 className="font-serif text-4xl font-normal leading-[1.05] text-[#0b3121] md:text-5xl">
+                  {data.titresecond.split(".").map((part, index, arr) => (
+                    <span key={index}>
+                      {part.trim()}
+                      {index < arr.length - 1 && "."}
+                      {index < arr.length - 1 && <br />}
+                    </span>
+                  ))}
+                </h3>
+              )}
 
             {data.eyebrow && (
               <div className="mt-6">
