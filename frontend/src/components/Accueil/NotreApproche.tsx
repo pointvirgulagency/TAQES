@@ -28,7 +28,7 @@ interface NotreApprocheProps {
 export default function NotreApproche({
   eyebrow = "VOTRE PARCOURS",
   titre = "Comment pouvons-nous\nvous accompagner ?",
-  soustitre = "Acheter, investir, ou vendre: avançons ensemble.",
+  soustitre = "Acheter, investir, ou vendre : avançons ensemble.",
   data,
   strapiUrl,
   locale,
@@ -55,7 +55,7 @@ export default function NotreApproche({
             </h2>
 
             {/* Subtitle */}
-            <p className="mt-5 max-w-[290px] text-[15px] leading-relaxed text-[#A3B8B0]">
+            <p className="mt-5 max-w-[290px] text-[20px] leading-relaxed text-[#A3B8B0]">
               {soustitre}
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function NotreApproche({
                     {pilier.titre}
                   </h3>
 
-                  <p className="mt-2 text-[11.5px] leading-relaxed text-white/70 line-clamp-2">
+                  <p className="mt-2 text-[14px] leading-relaxed text-white/70 line-clamp-2">
                     {pilier.description}
                   </p>
 

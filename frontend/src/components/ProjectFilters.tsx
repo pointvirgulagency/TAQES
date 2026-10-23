@@ -138,39 +138,49 @@ export default function ProjectFilters({
     initialLocation,
   ]);
 
-  const filteredProjects = projects.filter((project) => {
-    const matchesTypology =
-      !selectedTypology ||
-      project.type?.some(
-        (item) =>
-          normalize(item?.titre) ===
-          normalize(selectedTypology)
-      );
+    const isAVenir = (project: Project) =>
+      normalize(project.statut) === normalize("À venir") ||
+      normalize(project.disponibilite) === normalize("À venir");
 
-    const matchesVille =
-      !ville ||
-      normalize(project.territoire?.nom) ===
-        normalize(ville);
+    const filteredProjects = projects
+      .filter((project) => {
+        const matchesTypology =
+          !selectedTypology ||
+          project.type?.some(
+            (item) =>
+              normalize(item?.titre) ===
+              normalize(selectedTypology)
+          );
 
-    const matchesTypeBien =
-      !typeBien ||
-      normalize(project.type_operation) ===
-        normalize(typeBien);
+        const matchesVille =
+          !ville ||
+          normalize(project.territoire?.nom) ===
+            normalize(ville);
 
-    const matchesStatus =
-      !status ||
-      normalize(project.statut) ===
-        normalize(status) ||
-      normalize(project.disponibilite) ===
-        normalize(status);
+        const matchesTypeBien =
+          !typeBien ||
+          normalize(project.type_operation) ===
+            normalize(typeBien);
 
-    return (
-      matchesTypology &&
-      matchesVille &&
-      matchesTypeBien &&
-      matchesStatus
-    );
-  });
+        const matchesStatus =
+          !status ||
+          normalize(project.statut) ===
+            normalize(status) ||
+          normalize(project.disponibilite) ===
+            normalize(status);
+
+        return (
+          matchesTypology &&
+          matchesVille &&
+          matchesTypeBien &&
+          matchesStatus
+        );
+      })
+      .sort((a, b) => {
+        const aFirst = isAVenir(a) ? 0 : 1;
+        const bFirst = isAVenir(b) ? 0 : 1;
+        return aFirst - bFirst;
+      });
 
   const villes = Array.from(
     new Set(

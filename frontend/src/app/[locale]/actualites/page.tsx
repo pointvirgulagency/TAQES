@@ -116,7 +116,7 @@ export default async function ActualitesPage({
         <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 md:px-8 lg:px-12">
           <div className="max-w-4xl text-white">
             {hero?.surtitre && (
-              <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#EBE2DC]/70">
+              <p className="text-[13px] font-medium uppercase tracking-[0.28em] text-[#EBE2DC]/70">
                 {hero.surtitre}
               </p>
             )}
@@ -134,7 +134,7 @@ export default async function ActualitesPage({
             )}
 
             <div className="mt-12 flex items-center gap-4 text-[#EBE2DC]">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#EBE2DC]/80">
+              <span className="text-[13px] font-semibold uppercase tracking-[0.28em] text-[#EBE2DC]/80">
                 {locale === "ar" ? "الأخبار" : "Actualités"}
               </span>
             </div>

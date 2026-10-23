@@ -112,6 +112,7 @@ export default function ProjetsMisEnAvant({
   const mention = getMention(current.mention);
 
   const projectDetailUrl = `/${locale}/projects/${current.slug}`;
+  const LancementUrl = `/${locale}/contact`;
 
   return (
     <section
@@ -180,8 +181,8 @@ export default function ProjetsMisEnAvant({
               <span className="text-base">→</span>
             </Link>
 
-            <button
-              type="button"
+            <Link
+              href={LancementUrl}
               className="inline-flex items-center gap-3 rounded-sm border border-white/50 bg-transparent px-8 py-4 text-sm font-semibold tracking-wider text-white backdrop-blur-xs transition-colors hover:bg-white/10"
             >
               <span>
@@ -190,7 +191,7 @@ export default function ProjetsMisEnAvant({
                   : "Être informé du lancement"}
               </span>
               <span className="text-base">→</span>
-            </button>
+            </Link>
           </div>
         </div>
 
