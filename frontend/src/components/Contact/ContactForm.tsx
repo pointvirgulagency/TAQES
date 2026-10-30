@@ -1,8 +1,16 @@
+
 "use client";
 
 import { useState } from "react";
-import { submitDemande, uploadFile, uploadFiles } from "@/lib/strapi";
-import { TYPE_CONFIG, type DemandeType } from "./ContactTabs";
+import {
+  submitDemande,
+  uploadFile,
+  uploadFiles,
+} from "@/lib/strapi";
+import {
+  TYPE_CONFIG,
+  type DemandeType,
+} from "./ContactTabs";
 
 interface ContactFormProps {
   locale: "fr" | "ar";
@@ -53,6 +61,228 @@ const emptyForm = () => ({
 
 type FormState = ReturnType<typeof emptyForm>;
 
+const translations = {
+  fr: {
+    search: "Recherche de bien",
+    press: "Presse & Médias",
+    request: "Votre demande",
+    projectTitle: "Parlez-nous de votre projet immobilier",
+    pressTitle: "Votre demande presse",
+    requestTitle: "Envoyez-nous votre demande",
+    projectDescription:
+      "Indiquez-nous vos critères afin que notre équipe puisse vous orienter vers le projet ou le bien qui correspond à votre recherche.",
+    pressDescription:
+      "Vous êtes journaliste, média ou professionnel de la communication ? Adressez votre demande à notre équipe.",
+    requestDescription:
+      "Complétez le formulaire ci-dessous afin que notre équipe puisse traiter votre demande dans les meilleures conditions.",
+
+    contactDetails: "Vos coordonnées",
+    fullName: "Nom complet",
+    fullNamePlaceholder: "Votre nom complet",
+    professionalEmail: "E-mail professionnel",
+    email: "Email",
+    emailPlaceholder: "votreemail@example.com",
+    phone: "Téléphone",
+    phonePlaceholder: "06 12 34 56 78",
+    city: "Ville",
+    cityPlaceholder: "Votre ville",
+    contactPreference: "Préférence de contact",
+    select: "Sélectionner",
+    emailOption: "Email",
+    phoneOption: "Téléphone",
+    detailedMessage: "Message détaillé",
+    yourMessage: "Votre message",
+    pressMessagePlaceholder: "Décrivez votre demande en détail...",
+    messagePlaceholder: "Décrivez votre demande en quelques lignes...",
+    consent:
+      "J'accepte que mes données soient utilisées afin de traiter ma demande.",
+    submitting: "Envoi en cours...",
+    contactAgain: "Être recontacté",
+    sendPress: "Envoyer la demande presse",
+    send: "Envoyer la demande",
+    success:
+      "Votre demande a bien été envoyée. Nous vous répondrons rapidement.",
+    error:
+      "Une erreur est survenue. Merci de réessayer.",
+
+    searchDetails: "Votre recherche",
+    pressDetails: "Votre demande presse",
+    landDetails: "Votre demande foncière",
+    partnershipDetails: "Votre demande de partenariat",
+    complaintDetails: "Votre réclamation",
+    recruitmentDetails: "Votre candidature",
+
+    concernedProject: "Projet concerné",
+    dontKnow: "Je ne sais pas encore",
+    noProject: "Aucun projet en particulier",
+    searchArea: "Ville ou zone recherchée",
+    searchAreaPlaceholder: "Ville, quartier ou zone",
+    propertyType: "Type de bien",
+    apartment: "Appartement",
+    villa: "Villa",
+    land: "Lot de terrain",
+    commercial: "Local commercial",
+    other: "Autre",
+    surface: "Surface recherchée",
+    surfacePlaceholder: "Ex. 80 à 120 m²",
+    acquisition: "Horizon d'acquisition",
+    immediately: "Immédiatement",
+    lessThan3: "Moins de 3 mois",
+    threeToSix: "3 à 6 mois",
+    sixToTwelve: "6 à 12 mois",
+    information: "Simple prise d'information",
+    budget: "Budget indicatif",
+    budgetPlaceholder: "Ex. 1 500 000 DH",
+
+    media: "Média ou organisation",
+    mediaPlaceholder: "Nom du média ou de l'organisation",
+    position: "Fonction",
+    positionPlaceholder: "Votre fonction",
+    requestNature: "Nature de la demande",
+    interview: "Demande d'interview",
+    institutional: "Informations institutionnelles",
+    pressRelease: "Communiqué ou dossier de presse",
+    visuals: "Visuels et éléments de marque",
+    filming: "Reportage ou tournage",
+    event: "Invitation ou événement",
+    subject: "Sujet de la demande",
+    subjectPlaceholder: "Sujet de votre demande",
+    deadline: "Date ou échéance souhaitée",
+    attachment: "Pièce jointe",
+    attachments: "Pièces jointes",
+
+    location: "Localisation",
+    area: "Superficie",
+    proposal: "Nature de la proposition",
+    landDocument: "Document foncier",
+
+    organization: "Organisation",
+    requestType: "Type de demande",
+
+    project: "Projet",
+    reference: "Référence dossier",
+    object: "Objet",
+
+    cv: "CV",
+  },
+
+  ar: {
+    search: "البحث عن عقار",
+    press: "الصحافة والإعلام",
+    request: "طلبكم",
+    projectTitle: "أخبرونا عن مشروعكم العقاري",
+    pressTitle: "طلبكم الصحفي",
+    requestTitle: "أرسلوا لنا طلبكم",
+    projectDescription:
+      "يرجى تحديد معايير البحث الخاصة بكم حتى يتمكن فريقنا من توجيهكم نحو المشروع أو العقار المناسب لاحتياجاتكم.",
+    pressDescription:
+      "هل أنتم صحفيون أو ممثلو وسائل إعلام أو متخصصون في التواصل؟ يمكنكم إرسال طلبكم إلى فريقنا.",
+    requestDescription:
+      "يرجى ملء النموذج أدناه حتى يتمكن فريقنا من معالجة طلبكم في أفضل الظروف.",
+
+    contactDetails: "معلومات الاتصال",
+    fullName: "الاسم الكامل",
+    fullNamePlaceholder: "أدخلوا اسمكم الكامل",
+    professionalEmail: "البريد الإلكتروني المهني",
+    email: "البريد الإلكتروني",
+    emailPlaceholder: "example@email.com",
+    phone: "رقم الهاتف",
+    phonePlaceholder: "06 12 34 56 78",
+    city: "المدينة",
+    cityPlaceholder: "أدخلوا مدينتكم",
+    contactPreference: "طريقة التواصل المفضلة",
+    select: "اختاروا",
+    emailOption: "البريد الإلكتروني",
+    phoneOption: "الهاتف",
+    detailedMessage: "رسالة مفصلة",
+    yourMessage: "رسالتكم",
+    pressMessagePlaceholder: "يرجى وصف طلبكم بالتفصيل...",
+    messagePlaceholder: "يرجى وصف طلبكم في بضعة أسطر...",
+    consent:
+      "أوافق على استخدام بياناتي الشخصية من أجل معالجة طلبي.",
+    submitting: "جارٍ الإرسال...",
+    contactAgain: "اتصلوا بي",
+    sendPress: "إرسال الطلب الصحفي",
+    send: "إرسال الطلب",
+    success:
+      "تم إرسال طلبكم بنجاح. سنقوم بالرد عليكم في أقرب وقت.",
+    error:
+      "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
+
+    searchDetails: "تفاصيل البحث",
+    pressDetails: "طلبكم الصحفي",
+    landDetails: "طلبكم العقاري",
+    partnershipDetails: "طلب الشراكة",
+    complaintDetails: "الشكاية الخاصة بكم",
+    recruitmentDetails: "طلب الترشيح",
+
+    concernedProject: "المشروع المعني",
+    dontKnow: "لم أحدد المشروع بعد",
+    noProject: "لا يوجد مشروع محدد",
+    searchArea: "المدينة أو المنطقة المطلوبة",
+    searchAreaPlaceholder: "المدينة أو الحي أو المنطقة",
+    propertyType: "نوع العقار",
+    apartment: "شقة",
+    villa: "فيلا",
+    land: "قطعة أرضية",
+    commercial: "محل تجاري",
+    other: "أخرى",
+    surface: "المساحة المطلوبة",
+    surfacePlaceholder: "مثال: من 80 إلى 120 متر مربع",
+    acquisition: "موعد الاقتناء المتوقع",
+    immediately: "فوراً",
+    lessThan3: "أقل من 3 أشهر",
+    threeToSix: "من 3 إلى 6 أشهر",
+    sixToTwelve: "من 6 إلى 12 شهراً",
+    information: "مجرد طلب معلومات",
+    budget: "الميزانية التقديرية",
+    budgetPlaceholder: "مثال: 1 500 000 درهم",
+
+    media: "وسيلة الإعلام أو المؤسسة",
+    mediaPlaceholder: "اسم المؤسسة أو وسيلة الإعلام",
+    position: "الصفة المهنية",
+    positionPlaceholder: "أدخلوا صفتكم المهنية",
+    requestNature: "طبيعة الطلب",
+    interview: "طلب إجراء مقابلة",
+    institutional: "معلومات مؤسساتية",
+    pressRelease: "بلاغ أو ملف صحفي",
+    visuals: "صور وعناصر الهوية البصرية",
+    filming: "تغطية صحفية أو تصوير",
+    event: "دعوة أو فعالية",
+    subject: "موضوع الطلب",
+    subjectPlaceholder: "موضوع طلبكم",
+    deadline: "التاريخ أو الموعد المطلوب",
+    attachment: "المرفق",
+    attachments: "المرفقات",
+
+    location: "الموقع",
+    area: "المساحة",
+    proposal: "طبيعة العرض",
+    landDocument: "الوثيقة العقارية",
+
+    organization: "المؤسسة",
+    requestType: "نوع الطلب",
+
+    project: "المشروع",
+    reference: "مرجع الملف",
+    object: "الموضوع",
+
+    cv: "السيرة الذاتية",
+  },
+} as const;
+
+type TranslationKey = keyof typeof translations.fr;
+
+interface DetailProps {
+  form: FormState;
+  updateField: <K extends keyof FormState>(
+    field: K,
+    value: FormState[K]
+  ) => void;
+  t: (key: TranslationKey) => string;
+  locale: "fr" | "ar";
+}
+
 export default function ContactForm({
   locale,
   type,
@@ -60,7 +290,10 @@ export default function ContactForm({
 }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [form, setForm] = useState<FormState>(emptyForm());
+
   const block = TYPE_CONFIG[type].block;
+  const isArabic = locale === "ar";
+  const t = (key: TranslationKey) => translations[locale][key];
 
   function updateField<K extends keyof FormState>(
     field: K,
@@ -72,7 +305,9 @@ export default function ContactForm({
     }));
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
     setStatus("submitting");
 
@@ -123,12 +358,10 @@ export default function ContactForm({
           media_organisation:
             form.media_organisation.trim() || undefined,
           fonction: form.fonction.trim() || undefined,
-          nature_demande:
-            form.nature_demande || undefined,
+          nature_demande: form.nature_demande || undefined,
           sujet_demande:
             form.sujet_demande.trim() || undefined,
-          date_echeance:
-            form.date_echeance || undefined,
+          date_echeance: form.date_echeance || undefined,
           piece_jointe: pressePieceJointe,
         } as Parameters<
           typeof submitDemande
@@ -191,33 +424,43 @@ export default function ContactForm({
   const isPresse = block === "foncier";
 
   return (
-    <div className="w-full rounded-2xl border border-[#094734]/10 bg-white p-6 sm:p-8 lg:p-10">
-      <form onSubmit={handleSubmit} className="space-y-9">
+    <div
+      dir={isArabic ? "rtl" : "ltr"}
+      lang={locale}
+      className={`w-full rounded-2xl border border-[#094734]/10 bg-white p-6 sm:p-8 lg:p-10 ${
+        isArabic ? "text-right" : "text-left"
+      }`}
+    >
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-9"
+        dir={isArabic ? "rtl" : "ltr"}
+      >
         <div className="border-b border-[#094734]/10 pb-7">
           <span className="block text-[11px] font-semibold uppercase tracking-[0.22em] text-[#094734]/50">
             {isRechercheBien
-              ? "Recherche de bien"
+              ? t("search")
               : isPresse
-                ? "Presse & Médias"
-                : "Votre demande"}
+                ? t("press")
+                : t("request")}
           </span>
 
           <h2 className="mt-3 font-serif text-3xl leading-tight text-[#094734] md:text-4xl">
             {isRechercheBien
-              ? "Parlez-nous de votre projet immobilier"
+              ? t("projectTitle")
               : isPresse
-                ? "Votre demande presse"
-                : "Envoyez-nous votre demande"}
+                ? t("pressTitle")
+                : t("requestTitle")}
           </h2>
 
           <span className="mt-4 block h-[3px] w-10 bg-[#dc9a4d]" />
 
           <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#094734]/60">
             {isRechercheBien
-              ? "Indiquez-nous vos critères afin que notre équipe puisse vous orienter vers le projet ou le bien qui correspond à votre recherche."
+              ? t("projectDescription")
               : isPresse
-                ? "Vous êtes journaliste, média ou professionnel de la communication ? Adressez votre demande à notre équipe."
-                : "Complétez le formulaire ci-dessous afin que notre équipe puisse traiter votre demande dans les meilleures conditions."}
+                ? t("pressDescription")
+                : t("requestDescription")}
           </p>
         </div>
 
@@ -228,6 +471,8 @@ export default function ContactForm({
                 form={form}
                 updateField={updateField}
                 projects={projects}
+                t={t}
+                locale={locale}
               />
             )}
 
@@ -235,6 +480,8 @@ export default function ContactForm({
               <DemandePresse
                 form={form}
                 updateField={updateField}
+                t={t}
+                locale={locale}
               />
             )}
 
@@ -242,6 +489,8 @@ export default function ContactForm({
               <DemandePartenariat
                 form={form}
                 updateField={updateField}
+                t={t}
+                locale={locale}
               />
             )}
 
@@ -250,6 +499,8 @@ export default function ContactForm({
                 form={form}
                 updateField={updateField}
                 projects={projects}
+                t={t}
+                locale={locale}
               />
             )}
 
@@ -257,101 +508,85 @@ export default function ContactForm({
               <DemandeRecrutement
                 form={form}
                 updateField={updateField}
+                t={t}
+                locale={locale}
               />
             )}
           </div>
         )}
 
         <div className="space-y-6">
-          <SectionEyebrow>Vos coordonnées</SectionEyebrow>
+          <SectionEyebrow>{t("contactDetails")}</SectionEyebrow>
 
           <div className="grid gap-5 sm:grid-cols-2">
             <Field
-              label="Nom complet"
+              label={t("fullName")}
               value={form.nomComplet}
-              onChange={(value) =>
-                updateField("nomComplet", value)
-              }
-              placeholder="Votre nom complet"
+              onChange={(value) => updateField("nomComplet", value)}
+              placeholder={t("fullNamePlaceholder")}
               required
+              locale={locale}
             />
 
             <Field
-              label={isPresse ? "E-mail professionnel" : "Email"}
+              label={isPresse ? t("professionalEmail") : t("email")}
               type="email"
               value={form.email}
-              onChange={(value) =>
-                updateField("email", value)
-              }
-              placeholder={
-                isPresse
-                  ? "votreemail@entreprise.com"
-                  : "votreemail@example.com"
-              }
+              onChange={(value) => updateField("email", value)}
+              placeholder={t("emailPlaceholder")}
               required
+              locale={locale}
+              ltr
             />
 
             <Field
-              label="Téléphone"
+              label={t("phone")}
               value={form.telephone}
-              onChange={(value) =>
-                updateField("telephone", value)
-              }
-              placeholder="06 12 34 56 78"
+              onChange={(value) => updateField("telephone", value)}
+              placeholder={t("phonePlaceholder")}
+              locale={locale}
+              ltr
             />
 
             <Field
-              label="Ville"
+              label={t("city")}
               value={form.ville}
-              onChange={(value) =>
-                updateField("ville", value)
-              }
-              placeholder="Votre ville"
+              onChange={(value) => updateField("ville", value)}
+              placeholder={t("cityPlaceholder")}
+              locale={locale}
             />
 
             <SelectField
-              label="Préférence de contact"
+              label={t("contactPreference")}
               value={form.preference_contact}
               onChange={(value) =>
-                updateField(
-                  "preference_contact",
-                  value
-                )
+                updateField("preference_contact", value)
               }
               options={[
-                {
-                  value: "email",
-                  label: "Email",
-                },
-                {
-                  value: "telephone",
-                  label: "Téléphone",
-                },
+                { value: "email", label: t("emailOption") },
+                { value: "telephone", label: t("phoneOption") },
               ]}
+              locale={locale}
             />
           </div>
 
           <div>
             <label className={labelClass}>
-              {isPresse
-                ? "Message détaillé"
-                : "Votre message"}
+              {isPresse ? t("detailedMessage") : t("yourMessage")}
             </label>
 
             <textarea
+              dir={isArabic ? "rtl" : "ltr"}
               value={form.message}
               onChange={(event) =>
-                updateField(
-                  "message",
-                  event.target.value
-                )
+                updateField("message", event.target.value)
               }
               required
               rows={5}
               placeholder={
                 isPresse
-                  ? "Décrivez votre demande en détail..."
-                  : "Décrivez votre demande en quelques lignes..."
+                  ? t("pressMessagePlaceholder")
+                  : t("messagePlaceholder")
               }
               className={`${fieldClass} resize-y`}
             />
@@ -364,19 +599,13 @@ export default function ContactForm({
               type="checkbox"
               checked={form.consentement}
               onChange={(event) =>
-                updateField(
-                  "consentement",
-                  event.target.checked
-                )
+                updateField("consentement", event.target.checked)
               }
               required
               className="mt-1 h-4 w-4 shrink-0 rounded border-[#094734]/30 text-[#094734] focus:ring-[#00674F]/40"
             />
 
-            <span>
-              J&apos;accepte que mes données soient utilisées afin de traiter
-              ma demande.
-            </span>
+            <span>{t("consent")}</span>
           </label>
         </div>
 
@@ -387,26 +616,33 @@ export default function ContactForm({
             className="inline-flex items-center gap-3 rounded-full bg-[#094734] px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#00674F] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {status === "submitting"
-              ? "Envoi en cours..."
+              ? t("submitting")
               : isRechercheBien
-                ? "Être recontacté"
+                ? t("contactAgain")
                 : isPresse
-                  ? "Envoyer la demande presse"
-                  : "Envoyer la demande"}
+                  ? t("sendPress")
+                  : t("send")}
 
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true">
+              {isArabic ? "←" : "→"}
+            </span>
           </button>
 
           {status === "success" && (
-            <p className="text-sm font-medium leading-5 text-[#00674F]">
-              Votre demande a bien été envoyée. Nous vous répondrons
-              rapidement.
+            <p
+              role="status"
+              className="text-sm font-medium leading-5 text-[#00674F]"
+            >
+              {t("success")}
             </p>
           )}
 
           {status === "error" && (
-            <p className="text-sm font-medium leading-5 text-red-600">
-              Une erreur est survenue. Merci de réessayer.
+            <p
+              role="alert"
+              className="text-sm font-medium leading-5 text-red-600"
+            >
+              {t("error")}
             </p>
           )}
         </div>
@@ -415,373 +651,311 @@ export default function ContactForm({
   );
 }
 
-interface DetailProps {
-  form: FormState;
-  updateField: <K extends keyof FormState>(
-    field: K,
-    value: FormState[K]
-  ) => void;
-}
+// --------------------------------------------------
+// PROJECT REQUEST
+// --------------------------------------------------
 
 function DemandeProjet({
   form,
   updateField,
   projects,
+  t,
+  locale,
 }: DetailProps & {
   projects: { id: number; title: string }[];
 }) {
   return (
     <div className="space-y-6">
-      <SectionEyebrow>Votre recherche</SectionEyebrow>
+      <SectionEyebrow>{t("searchDetails")}</SectionEyebrow>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <SelectField
-          label="Projet concerné"
+          label={t("concernedProject")}
           value={form.project}
-          onChange={(value) =>
-            updateField("project", value)
-          }
+          onChange={(value) => updateField("project", value)}
           options={[
-            {
-              value: "je-ne-sais-pas",
-              label: "Je ne sais pas encore",
-            },
-            {
-              value: "aucun-projet",
-              label: "Aucun projet en particulier",
-            },
+            { value: "je-ne-sais-pas", label: t("dontKnow") },
+            { value: "aucun-projet", label: t("noProject") },
             ...projects.map((project) => ({
               value: String(project.id),
               label: project.title,
             })),
           ]}
+          locale={locale}
         />
 
         <Field
-          label="Ville ou zone recherchée"
+          label={t("searchArea")}
           value={form.zone_recherchee}
           onChange={(value) =>
-            updateField(
-              "zone_recherchee",
-              value
-            )
+            updateField("zone_recherchee", value)
           }
-          placeholder="Ville, quartier ou zone"
+          placeholder={t("searchAreaPlaceholder")}
+          locale={locale}
         />
 
         <SelectField
-          label="Type de bien"
+          label={t("propertyType")}
           value={form.type_bien}
-          onChange={(value) =>
-            updateField("type_bien", value)
-          }
+          onChange={(value) => updateField("type_bien", value)}
           options={[
-            {
-              value: "Appartement",
-              label: "Appartement",
-            },
-            {
-              value: "Villa",
-              label: "Villa",
-            },
-            {
-              value: "Lot de terrain",
-              label: "Lot de terrain",
-            },
-            {
-              value: "Local commercial",
-              label: "Local commercial",
-            },
-            {
-              value: "Autre",
-              label: "Autre",
-            },
+            { value: "Appartement", label: t("apartment") },
+            { value: "Villa", label: t("villa") },
+            { value: "Lot de terrain", label: t("land") },
+            { value: "Local commercial", label: t("commercial") },
+            { value: "Autre", label: t("other") },
           ]}
+          locale={locale}
         />
 
         <Field
-          label="Surface recherchée"
+          label={t("surface")}
           value={form.surface_recherchee}
           onChange={(value) =>
-            updateField(
-              "surface_recherchee",
-              value
-            )
+            updateField("surface_recherchee", value)
           }
-          placeholder="Ex. 80 à 120 m²"
+          placeholder={t("surfacePlaceholder")}
+          locale={locale}
         />
 
         <SelectField
-          label="Horizon d’acquisition"
+          label={t("acquisition")}
           value={form.horizon_acquisition}
           onChange={(value) =>
-            updateField(
-              "horizon_acquisition",
-              value
-            )
+            updateField("horizon_acquisition", value)
           }
           options={[
-            {
-              value: "Immédiatement",
-              label: "Immédiatement",
-            },
-            {
-              value: "Moins de 3 mois",
-              label: "Moins de 3 mois",
-            },
-            {
-              value: "3 à 6 mois",
-              label: "3 à 6 mois",
-            },
-            {
-              value: "6 à 12 mois",
-              label: "6 à 12 mois",
-            },
+            { value: "Immédiatement", label: t("immediately") },
+            { value: "Moins de 3 mois", label: t("lessThan3") },
+            { value: "3 à 6 mois", label: t("threeToSix") },
+            { value: "6 à 12 mois", label: t("sixToTwelve") },
             {
               value: "Simple prise d’information",
-              label: "Simple prise d’information",
+              label: t("information"),
             },
           ]}
+          locale={locale}
         />
 
         <Field
-          label="Budget indicatif"
+          label={t("budget")}
           value={form.budget_indicatif}
           onChange={(value) =>
-            updateField(
-              "budget_indicatif",
-              value
-            )
+            updateField("budget_indicatif", value)
           }
-          placeholder="Ex. 1 500 000 DH"
+          placeholder={t("budgetPlaceholder")}
+          locale={locale}
         />
       </div>
     </div>
   );
 }
+
+// --------------------------------------------------
+// PRESS REQUEST
+// --------------------------------------------------
 
 function DemandePresse({
   form,
   updateField,
+  t,
+  locale,
 }: DetailProps) {
   return (
     <div className="space-y-6">
-      <SectionEyebrow>Votre demande presse</SectionEyebrow>
+      <SectionEyebrow>{t("pressDetails")}</SectionEyebrow>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
-          label="Média ou organisation"
+          label={t("media")}
           value={form.media_organisation}
           onChange={(value) =>
-            updateField(
-              "media_organisation",
-              value
-            )
+            updateField("media_organisation", value)
           }
-          placeholder="Nom du média ou de l’organisation"
+          placeholder={t("mediaPlaceholder")}
+          locale={locale}
         />
 
         <Field
-          label="Fonction"
+          label={t("position")}
           value={form.fonction}
-          onChange={(value) =>
-            updateField("fonction", value)
-          }
-          placeholder="Votre fonction"
+          onChange={(value) => updateField("fonction", value)}
+          placeholder={t("positionPlaceholder")}
+          locale={locale}
         />
 
         <SelectField
-          label="Nature de la demande"
+          label={t("requestNature")}
           value={form.nature_demande}
           onChange={(value) =>
-            updateField(
-              "nature_demande",
-              value
-            )
+            updateField("nature_demande", value)
           }
           options={[
             {
               value: "Demande d’interview",
-              label: "Demande d’interview",
+              label: t("interview"),
             },
             {
               value: "Informations institutionnelles",
-              label: "Informations institutionnelles",
+              label: t("institutional"),
             },
             {
               value: "Communiqué ou dossier de presse",
-              label: "Communiqué ou dossier de presse",
+              label: t("pressRelease"),
             },
             {
               value: "Visuels et éléments de marque",
-              label: "Visuels et éléments de marque",
+              label: t("visuals"),
             },
             {
               value: "Reportage ou tournage",
-              label: "Reportage ou tournage",
+              label: t("filming"),
             },
             {
               value: "Invitation ou événement",
-              label: "Invitation ou événement",
+              label: t("event"),
             },
-            {
-              value: "Autre",
-              label: "Autre",
-            },
+            { value: "Autre", label: t("other") },
           ]}
+          locale={locale}
         />
 
         <Field
-          label="Sujet de la demande"
+          label={t("subject")}
           value={form.sujet_demande}
           onChange={(value) =>
-            updateField(
-              "sujet_demande",
-              value
-            )
+            updateField("sujet_demande", value)
           }
-          placeholder="Sujet de votre demande"
+          placeholder={t("subjectPlaceholder")}
+          locale={locale}
         />
 
         <Field
-          label="Date ou échéance souhaitée"
+          label={t("deadline")}
           type="date"
           value={form.date_echeance}
           onChange={(value) =>
-            updateField(
-              "date_echeance",
-              value
-            )
+            updateField("date_echeance", value)
           }
+          locale={locale}
+          ltr
         />
 
         <FileField
-          label="Pièce jointe"
+          label={t("attachment")}
           onChange={(file) =>
-            updateField(
-              "presse_piece_jointe",
-              file
-            )
+            updateField("presse_piece_jointe", file)
           }
+          locale={locale}
         />
       </div>
     </div>
   );
 }
+
+// --------------------------------------------------
+// LAND REQUEST
+// --------------------------------------------------
 
 function DemandeFoncier({
   form,
   updateField,
+  t,
+  locale,
 }: DetailProps) {
   return (
     <div className="space-y-6">
-      <SectionEyebrow>Votre demande foncière</SectionEyebrow>
+      <SectionEyebrow>{t("landDetails")}</SectionEyebrow>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
-          label="Localisation"
+          label={t("location")}
           value={form.localisation}
-          onChange={(value) =>
-            updateField(
-              "localisation",
-              value
-            )
-          }
+          onChange={(value) => updateField("localisation", value)}
+          locale={locale}
         />
 
         <Field
-          label="Superficie"
+          label={t("area")}
           value={form.superficie}
-          onChange={(value) =>
-            updateField(
-              "superficie",
-              value
-            )
-          }
+          onChange={(value) => updateField("superficie", value)}
+          locale={locale}
         />
 
         <Field
-          label="Nature de la proposition"
+          label={t("proposal")}
           value={form.nature_proposition}
           onChange={(value) =>
-            updateField(
-              "nature_proposition",
-              value
-            )
+            updateField("nature_proposition", value)
           }
+          locale={locale}
         />
 
         <FileField
-          label="Document foncier"
+          label={t("landDocument")}
           onChange={(file) =>
-            updateField(
-              "document_foncier",
-              file
-            )
+            updateField("document_foncier", file)
           }
+          locale={locale}
         />
       </div>
     </div>
   );
 }
 
+// --------------------------------------------------
+// PARTNERSHIP REQUEST
+// --------------------------------------------------
+
 function DemandePartenariat({
   form,
   updateField,
+  t,
+  locale,
 }: DetailProps) {
   return (
     <div className="space-y-6">
       <SectionEyebrow>
-        Votre demande de partenariat
+        {t("partnershipDetails")}
       </SectionEyebrow>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
-          label="Organisation"
+          label={t("organization")}
           value={form.organisation}
           onChange={(value) =>
-            updateField(
-              "organisation",
-              value
-            )
+            updateField("organisation", value)
           }
+          locale={locale}
         />
 
         <Field
-          label="Fonction"
+          label={t("position")}
           value={form.fonction}
-          onChange={(value) =>
-            updateField(
-              "fonction",
-              value
-            )
-          }
+          onChange={(value) => updateField("fonction", value)}
+          locale={locale}
         />
 
         <Field
-          label="Type de demande"
+          label={t("requestType")}
           value={form.type_demande}
           onChange={(value) =>
-            updateField(
-              "type_demande",
-              value
-            )
+            updateField("type_demande", value)
           }
+          locale={locale}
         />
       </div>
 
       <div>
         <label className={labelClass}>
-          Message détaillé
+          {t("detailedMessage")}
         </label>
 
         <textarea
+          dir={locale === "ar" ? "rtl" : "ltr"}
           value={form.message_detail}
           onChange={(event) =>
-            updateField(
-              "message_detail",
-              event.target.value
-            )
+            updateField("message_detail", event.target.value)
           }
           rows={5}
           className={`${fieldClass} resize-y`}
@@ -791,83 +965,93 @@ function DemandePartenariat({
   );
 }
 
+// --------------------------------------------------
+// COMPLAINT REQUEST
+// --------------------------------------------------
+
 function DemandeReclamation({
   form,
   updateField,
   projects,
+  t,
+  locale,
 }: DetailProps & {
   projects: { id: number; title: string }[];
 }) {
   return (
     <div className="space-y-6">
-      <SectionEyebrow>Votre réclamation</SectionEyebrow>
+      <SectionEyebrow>
+        {t("complaintDetails")}
+      </SectionEyebrow>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <SelectField
-          label="Projet"
+          label={t("project")}
           value={form.project}
-          onChange={(value) =>
-            updateField("project", value)
-          }
+          onChange={(value) => updateField("project", value)}
           options={projects.map((project) => ({
             value: String(project.id),
             label: project.title,
           }))}
+          locale={locale}
         />
 
         <Field
-          label="Référence dossier"
+          label={t("reference")}
           value={form.reference_dossier}
           onChange={(value) =>
-            updateField(
-              "reference_dossier",
-              value
-            )
+            updateField("reference_dossier", value)
           }
+          locale={locale}
         />
 
         <Field
-          label="Objet"
+          label={t("object")}
           value={form.objet}
-          onChange={(value) =>
-            updateField(
-              "objet",
-              value
-            )
-          }
+          onChange={(value) => updateField("objet", value)}
+          locale={locale}
         />
 
         <FileFieldMultiple
-          label="Pièces jointes"
+          label={t("attachments")}
           onChange={(files) =>
-            updateField(
-              "piece_jointe",
-              files
-            )
+            updateField("piece_jointe", files)
           }
+          locale={locale}
         />
       </div>
     </div>
   );
 }
 
+// --------------------------------------------------
+// RECRUITMENT REQUEST
+// --------------------------------------------------
+
 function DemandeRecrutement({
   form,
   updateField,
+  t,
+  locale,
 }: DetailProps) {
   return (
     <div className="space-y-6">
-      <SectionEyebrow>Votre candidature</SectionEyebrow>
+      <SectionEyebrow>
+        {t("recruitmentDetails")}
+      </SectionEyebrow>
 
       <FileField
-        label="CV"
-        onChange={(file) =>
-          updateField("cv", file)
-        }
+        label={t("cv")}
+        onChange={(file) => updateField("cv", file)}
+        locale={locale}
       />
     </div>
   );
 }
+
+// --------------------------------------------------
+// SHARED FORM COMPONENTS
+// --------------------------------------------------
 
 const fieldClass =
   "w-full rounded-xl border border-[#094734]/10 bg-[#F5F2EC]/60 px-4 py-3 text-[15px] text-[#094734] outline-none transition-all placeholder:text-[#094734]/35 focus:border-[#00674F]/30 focus:bg-white focus:ring-2 focus:ring-[#00674F]/10";
@@ -898,6 +1082,8 @@ function Field({
   type = "text",
   required = false,
   placeholder,
+  locale,
+  ltr = false,
 }: {
   label: string;
   value: string;
@@ -905,17 +1091,21 @@ function Field({
   type?: string;
   required?: boolean;
   placeholder?: string;
+  locale: "fr" | "ar";
+  ltr?: boolean;
 }) {
   return (
     <div>
-      <label className={labelClass}>{label}</label>
+      <label className={labelClass}>
+        {label}
+      </label>
 
       <input
         type={type}
+        dir={ltr ? "ltr" : locale === "ar" ? "rtl" : "ltr"}
+        lang={locale}
         value={value}
-        onChange={(event) =>
-          onChange(event.target.value)
-        }
+        onChange={(event) => onChange(event.target.value)}
         required={required}
         placeholder={placeholder}
         className={fieldClass}
@@ -929,6 +1119,7 @@ function SelectField({
   value,
   onChange,
   options,
+  locale,
 }: {
   label: string;
   value: string;
@@ -937,19 +1128,24 @@ function SelectField({
     value: string;
     label: string;
   }[];
+  locale: "fr" | "ar";
 }) {
   return (
     <div>
-      <label className={labelClass}>{label}</label>
+      <label className={labelClass}>
+        {label}
+      </label>
 
       <select
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        lang={locale}
         value={value}
-        onChange={(event) =>
-          onChange(event.target.value)
-        }
+        onChange={(event) => onChange(event.target.value)}
         className={fieldClass}
       >
-        <option value="">Sélectionner</option>
+        <option value="">
+          {translations[locale].select}
+        </option>
 
         {options.map((option) => (
           <option
@@ -967,23 +1163,26 @@ function SelectField({
 function FileField({
   label,
   onChange,
+  locale,
 }: {
   label: string;
   onChange: (file: File | null) => void;
+  locale: "fr" | "ar";
 }) {
   return (
     <div>
-      <label className={labelClass}>{label}</label>
+      <label className={labelClass}>
+        {label}
+      </label>
 
       <input
         type="file"
+        dir={locale === "ar" ? "rtl" : "ltr"}
         accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
         onChange={(event) =>
-          onChange(
-            event.target.files?.[0] ?? null
-          )
+          onChange(event.target.files?.[0] ?? null)
         }
-        className="block w-full rounded-xl border border-dashed border-[#094734]/20 bg-[#F5F2EC]/50 px-4 py-3 text-sm text-[#094734] file:mr-4 file:rounded-full file:border-0 file:bg-[#094734] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-wide file:text-white"
+        className="block w-full rounded-xl border border-dashed border-[#094734]/20 bg-[#F5F2EC]/50 px-4 py-3 text-sm text-[#094734] file:me-4 file:rounded-full file:border-0 file:bg-[#094734] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-wide file:text-white"
       />
     </div>
   );
@@ -992,23 +1191,27 @@ function FileField({
 function FileFieldMultiple({
   label,
   onChange,
+  locale,
 }: {
   label: string;
   onChange: (files: File[]) => void;
+  locale: "fr" | "ar";
 }) {
   return (
     <div>
-      <label className={labelClass}>{label}</label>
+      <label className={labelClass}>
+        {label}
+      </label>
 
       <input
         type="file"
+        dir={locale === "ar" ? "rtl" : "ltr"}
         multiple
+        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
         onChange={(event) =>
-          onChange(
-            Array.from(event.target.files ?? [])
-          )
+          onChange(Array.from(event.target.files ?? []))
         }
-        className="block w-full rounded-xl border border-dashed border-[#094734]/20 bg-[#F5F2EC]/50 px-4 py-3 text-sm text-[#094734] file:mr-4 file:rounded-full file:border-0 file:bg-[#094734] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-wide file:text-white"
+        className="block w-full rounded-xl border border-dashed border-[#094734]/20 bg-[#F5F2EC]/50 px-4 py-3 text-sm text-[#094734] file:me-4 file:rounded-full file:border-0 file:bg-[#094734] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-wide file:text-white"
       />
     </div>
   );

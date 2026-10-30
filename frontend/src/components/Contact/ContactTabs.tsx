@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -75,6 +76,28 @@ const VISIBLE_TABS: DemandeType[] = [
   "foncier",
 ];
 
+const TAB_LABELS: Record<
+  "fr" | "ar",
+  Record<DemandeType, string>
+> = {
+  fr: {
+    contact: "Nous contacter",
+    reclamation: "E-Réclamation",
+    partenariat: "Opportunités & Partenariats",
+    recrutement: "Recrutement",
+    projet: "Recherche de bien",
+    foncier: "Presse & Médias",
+  },
+  ar: {
+    contact: "اتصلوا بنا",
+    reclamation: "الشكايات الإلكترونية",
+    partenariat: "الفرص والشراكات",
+    recrutement: "التوظيف",
+    projet: "البحث عن عقار",
+    foncier: "الصحافة والإعلام",
+  },
+};
+
 interface ContactTabsProps {
   active: DemandeType;
   locale: "fr" | "ar";
@@ -87,9 +110,16 @@ export default function ContactTabs({
   onChange,
 }: ContactTabsProps) {
   const router = useRouter();
+  const isArabic = locale === "ar";
 
   return (
-    <div className="grid w-full grid-cols-2 overflow-hidden rounded-2xl border border-[#094734]/10 bg-white lg:block">
+    <div
+      dir={isArabic ? "rtl" : "ltr"}
+      lang={locale}
+      role="group"
+      aria-label={isArabic ? "نوع الطلب" : "Type de demande"}
+      className="grid w-full grid-cols-2 overflow-hidden rounded-2xl border border-[#094734]/10 bg-white lg:block"
+    >
       {VISIBLE_TABS.map((key, index) => {
         const tab = TYPE_CONFIG[key];
         const isActive = key === active;
@@ -106,13 +136,15 @@ export default function ContactTabs({
 
               onChange(key);
             }}
+            aria-pressed={isActive}
             className={[
-              "group flex min-h-[110px] w-full items-center gap-3 px-4 py-5 text-left transition-colors lg:min-h-0 lg:px-5 lg:py-4",
+              "group flex min-h-[110px] w-full items-center gap-3 px-4 py-5 transition-colors lg:min-h-0 lg:px-5 lg:py-4",
+              "text-start",
               isActive
                 ? "bg-[#094734] text-white"
                 : "bg-white text-[#094734] hover:bg-[#EBE2DC]/40",
               index % 2 === 1
-                ? "border-l border-[#094734]/10 lg:border-l-0"
+                ? "border-s border-[#094734]/10 lg:border-s-0"
                 : "",
               index >= 2
                 ? "border-t border-[#094734]/10 lg:border-t-0"
@@ -135,12 +167,14 @@ export default function ContactTabs({
             </span>
 
             <span className="min-w-0 flex-1 text-[14px] font-medium leading-5 lg:text-[15px]">
-              {tab.label}
+              {TAB_LABELS[locale][key]}
             </span>
 
             <ChevronRight
+              aria-hidden="true"
               className={[
-                "h-4 w-4 shrink-0 transition-colors",
+                "h-4 w-4 shrink-0 transition-all",
+                isArabic ? "rotate-180" : "",
                 isActive
                   ? "text-white"
                   : "text-[#094734]/40 group-hover:text-[#094734]/70",
