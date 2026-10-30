@@ -1,3 +1,4 @@
+
 import RichText from "@/components/RichText";
 
 interface StrapiImage {
@@ -38,7 +39,7 @@ export default function ChiffresCles({
       ? `${strapiUrl.replace(/\/$/, "")}${rawImage.url}`
       : undefined;
 
-  // Position of each CHIFFRE
+  // Original desktop positions — unchanged
   const chiffrePositions = [
     { top: "73.3%", left: "15%" },
     { top: "52.5%", left: "33%" },
@@ -47,8 +48,7 @@ export default function ChiffresCles({
     { top: "52.7%", left: "96.5%" },
   ];
 
-  // Position of each LABEL
-  // Change these independently from chiffrePositions
+  // Original desktop label positions — unchanged
   const labelPositions = [
     { top: "92%", left: "15%" },
     { top: "69%", left: "34%" },
@@ -59,14 +59,14 @@ export default function ChiffresCles({
 
   return (
     <section
-      className="relative min-h-[720px] w-full bg-cover bg-no-repeat bg-[position:0%_%] px-6 py-10 md:px-14 lg:px-20"
+      className="relative min-h-[720px] w-full bg-cover bg-no-repeat bg-[position:0%_%] px-4 py-8 sm:px-6 sm:py-10 md:px-14 lg:px-20"
       style={{
         backgroundImage: backgroundImage
           ? `url("${backgroundImage}")`
           : undefined,
       }}
     >
-      <div className="mx-auto max-w-7xl relative min-h-[620px]">
+      <div className="relative mx-auto min-h-[620px] max-w-7xl">
         {/* Top-left: eyebrow + accent line + title */}
         <div className="max-w-md pt-2">
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#f4ede2]">
@@ -75,13 +75,36 @@ export default function ChiffresCles({
 
           <div className="mb-2 h-[2px] w-10 bg-[#c2825d]" />
 
-          <h2 className="font-serif text-3xl font-normal leading-[1.2] text-[#f4ede2] md:text-4xl lg:text-[2.6rem]">
+          <h2 className="font-serif text-2xl font-normal leading-[1.2] text-[#f4ede2] sm:text-3xl md:text-4xl lg:text-[2.6rem]">
             {chiffetitre || "Une expérience qui se mesure sur le terrain"}
           </h2>
         </div>
 
-        {/* Stat markers container */}
-        <div className="relative w-full h-[460px] -mt-2">
+        {/* Mobile statistics */}
+        <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:hidden">
+          {data?.map((chiffre) => (
+            <div
+              key={chiffre.id}
+              className="flex flex-col items-center text-center"
+            >
+              <strong className="font-serif text-4xl font-normal leading-none text-[#0b3121] sm:text-5xl">
+                {chiffre.valeur}
+              </strong>
+
+              <div className="mt-3 flex flex-col items-center">
+                <div className="h-4 w-px bg-[#c2825d]" />
+                <div className="h-1.5 w-1.5 rounded-full bg-[#c2825d]" />
+              </div>
+
+              <span className="mt-3 max-w-[150px] text-center text-[10px] font-semibold uppercase leading-tight tracking-[0.12em] text-[#0b3121] sm:text-[12px]">
+                {chiffre.libelle}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop statistics — original percentage layouts */}
+        <div className="relative -mt-2 hidden h-[460px] w-full lg:block">
           {data?.map((chiffre, index) => {
             const chiffrePosition =
               chiffrePositions[index] || {
@@ -97,9 +120,9 @@ export default function ChiffresCles({
 
             return (
               <div key={chiffre.id}>
-                {/* CHIFFRE — position completely independent */}
+                {/* CHIFFRE */}
                 <strong
-                  className="absolute -translate-x-1/2 -translate-y-1/2 font-serif text-5xl font-normal leading-none md:text-4xl lg:text-7xl whitespace-nowrap text-[#0b3121]"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-serif text-7xl font-normal leading-none text-[#0b3121]"
                   style={{
                     top: chiffrePosition.top,
                     left: chiffrePosition.left,
@@ -108,7 +131,7 @@ export default function ChiffresCles({
                   {chiffre.valeur}
                 </strong>
 
-                {/* LINE + DOT — kept with the chiffre */}
+                {/* LINE + DOT */}
                 <div
                   className="absolute flex flex-col items-center"
                   style={{
@@ -121,9 +144,9 @@ export default function ChiffresCles({
                   <div className="h-1.5 w-1.5 rounded-full bg-[#c2825d]" />
                 </div>
 
-                {/* LABEL — position completely independent */}
+                {/* LABEL */}
                 <span
-                  className="absolute -translate-x-1/2 -translate-y-1/2 w-[150px] text-center text-[12px] font-semibold uppercase leading-tight tracking-[0.12em] text-[#0b3121]"
+                  className="absolute w-[150px] -translate-x-1/2 -translate-y-1/2 text-center text-[12px] font-semibold uppercase leading-tight tracking-[0.12em] text-[#0b3121]"
                   style={{
                     top: labelPosition.top,
                     left: labelPosition.left,
@@ -136,8 +159,8 @@ export default function ChiffresCles({
           })}
         </div>
 
-        {/* Bottom-right: the long tagline */}
-        <div className="absolute bottom-4 right-25 max-w-[250px] text-left">
+        {/* Bottom-right: tagline */}
+        <div className="relative mt-10 ml-auto max-w-[250px] text-left lg:absolute lg:bottom-4 lg:right-25 lg:mt-0">
           {chiffreeyebrow && (
             <p className="font-serif text-s font-semibold italic leading-relaxed tracking-wide text-[#0b3121]">
               {chiffreeyebrow}

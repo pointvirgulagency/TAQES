@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -11,12 +12,10 @@ const copy = {
     description: (
       <>
         Découvrez les projets qui traduisent aujourd'hui
-        <br />
-         notre vision, notre exigence et notre parole.
+        <br className="hidden sm:block" />
+        notre vision, notre exigence et notre parole.
       </>
     ),
-
-
     primary: "Explorer nos projets",
     primaryHref: "/projects",
     secondary: "Échanger avec TAQÈS",
@@ -73,24 +72,24 @@ export default function BeforeFooter() {
         {c.vertical}
       </div>
 
-      <div className="relative z-10 flex min-h-[620px] items-center px-6 py-20 md:px-12 lg:px-20">
-        <div className="max-w-2xl">
-          <div className="mb-6">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.5em] text-[#EBE2DC]/70">
+      <div className="relative z-10 flex min-h-[620px] items-center px-5 py-16 sm:px-6 sm:py-20 md:px-12 lg:px-20">
+        <div className="w-full max-w-2xl">
+          <div className="mb-5 sm:mb-6">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#EBE2DC]/70 sm:text-[10px] sm:tracking-[0.5em]">
               {c.kicker}
             </p>
             <div className="mt-3 h-[2px] w-8 bg-[#b98650]" />
           </div>
 
-          <h2 className="max-w-2xl font-serif text-[38px] font-normal leading-[1.1] text-[#F4EFE9] md:text-[42px] lg:text-[50px]">
+          <h2 className="max-w-2xl font-serif text-[32px] font-normal leading-[1.12] text-[#F4EFE9] sm:text-[38px] md:text-[42px] lg:text-[50px] lg:leading-[1.1]">
             {c.title}
           </h2>
 
-          <p className="mt-6 max-w-lg text-sm leading-relaxed text-[#EBE2DC]/70 md:text-[15px]">
+          <p className="mt-5 max-w-lg text-[13px] leading-relaxed text-[#EBE2DC]/70 sm:mt-6 sm:text-sm md:text-[15px]">
             {c.description}
           </p>
 
-          <div className="relative mt-10 flex flex-wrap items-center gap-5">
+          <div className="relative mt-8 flex flex-col items-start gap-4 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
             <div
               aria-hidden="true"
               className="absolute left-[8%] right-[8%] top-1/2 hidden -translate-y-1/2 border-t border-dashed border-[#b98650]/50 sm:block"
@@ -98,10 +97,10 @@ export default function BeforeFooter() {
 
             <Link
               href={`/${locale}${c.primaryHref}`}
-              className="group relative z-10 inline-flex items-center gap-3 rounded-full border-2 border-[#b98650] bg-[#12281c] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-white transition-colors duration-300 hover:bg-[#EBE2DC] hover:text-[#12281c]"
+              className="group relative z-10 inline-flex w-full items-center justify-center gap-3 rounded-full border-2 border-[#b98650] bg-[#12281c] px-6 py-3.5 text-[11px] font-medium uppercase tracking-[0.08em] text-white transition-colors duration-300 hover:bg-[#EBE2DC] hover:text-[#12281c] sm:w-auto sm:px-7 sm:text-xs"
             >
               {c.primary}
-              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowIcon className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
 
             <span
@@ -111,10 +110,10 @@ export default function BeforeFooter() {
 
             <Link
               href={`/${locale}${c.secondaryHref}`}
-              className="group relative z-10 inline-flex items-center gap-3 rounded-full bg-[#EBE2DC] px-7 py-3.5 text-xs font-medium uppercase tracking-[0.08em] text-[#12281c] transition-colors duration-300 hover:bg-white"
+              className="group relative z-10 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#EBE2DC] px-6 py-3.5 text-[11px] font-medium uppercase tracking-[0.08em] text-[#12281c] transition-colors duration-300 hover:bg-white sm:w-auto sm:px-7 sm:text-xs"
             >
               {c.secondary}
-              <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowIcon className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
@@ -122,7 +121,7 @@ export default function BeforeFooter() {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-16 right-0 select-none font-serif text-[280px] leading-none text-[#EBE2DC]/[0.04] lg:text-[380px]"
+        className="pointer-events-none absolute -bottom-8 right-0 select-none font-serif text-[150px] leading-none text-[#EBE2DC]/[0.04] sm:-bottom-16 sm:text-[280px] lg:text-[380px]"
       >
         &
       </div>

@@ -1,3 +1,4 @@
+
 import RichText from "@/components/RichText";
 
 interface StrapiImage {
@@ -45,7 +46,14 @@ export default function Mission({
 
   return (
     <section
-      className="relative min-h-[720px] w-full bg-cover bg-center bg-no-repeat px-6 py-12 md:px-12 lg:px-20"
+      className="
+        relative min-h-[720px] w-full
+        bg-cover bg-center bg-no-repeat
+        px-5 py-10
+        sm:px-6 sm:py-12
+        md:px-12
+        lg:px-20
+      "
       style={{
         backgroundImage: backgroundImage
           ? `url("${backgroundImage}")`
@@ -53,26 +61,35 @@ export default function Mission({
       }}
     >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 max-w-xl pl-4 md:pl-8">
+
+        {/* HEADER */}
+        <div className="mb-10 max-w-xl pl-2 sm:mb-12 sm:pl-4 md:pl-8">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#c2825d]">
             CE QUI NOUS GUIDE
           </p>
-          <h2 className="font-serif text-3xl font-normal leading-tight text-white md:text-5xl">
+
+          <h2 className="font-serif text-3xl font-normal leading-tight text-white sm:text-4xl md:text-5xl">
             Une vision guidée par nos valeurs
           </h2>
         </div>
 
+        {/* CONTENT */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
-          <div className="flex flex-col pt-4 pl-6 md:pl-10">
+
+          {/* VISION */}
+          <div className="flex flex-col pt-2 pl-2 sm:pl-4 md:pt-4 md:pl-10">
             {vision && (
               <div className="max-w-xs">
                 <div className="mb-3 flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
+
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0b3121]">
                     {vision.titre}
                   </span>
                 </div>
+
                 <div className="mb-3 h-[2px] w-10 bg-[#c2825d]" />
+
                 <div className="text-xs leading-relaxed text-[#0b3121] md:text-sm">
                   <RichText content={vision.description} />
                 </div>
@@ -80,7 +97,8 @@ export default function Mission({
             )}
           </div>
 
-          <div className="flex flex-col items-center justify-center pt-8 text-center lg:pt-0">
+          {/* TRANSITION */}
+          <div className="flex flex-col items-center justify-center pt-2 text-center lg:pt-8 lg:pt-0">
             {transition && (
               <div className="max-w-xs">
                 {transition.titre && (
@@ -88,30 +106,40 @@ export default function Mission({
                     {transition.titre}
                   </h3>
                 )}
+
                 {transition.soustitre && (
                   <p className="mt-1 font-serif text-base italic text-[#c2825d] md:text-lg">
                     {transition.soustitre}
                   </p>
                 )}
+
                 {transition.description && (
-                  <p className="mt-4 text-xs leading-relaxed text-[#0b3121] md:text-sm">
-                    {transition.description}
-                  </p>
+                  <div className="mt-4 text-xs leading-relaxed text-[#0b3121] md:text-sm">
+                    {typeof transition.description === "string" ? (
+                      <p>{transition.description}</p>
+                    ) : (
+                      <RichText content={transition.description} />
+                    )}
+                  </div>
                 )}
               </div>
             )}
           </div>
 
-          <div className="flex flex-col pt-8 lg:pt-16 pl-4 md:pl-8">
+          {/* MISSION */}
+          <div className="flex flex-col pt-2 pl-2 sm:pl-4 md:pt-8 md:pl-8 lg:pt-16">
             {mission && (
               <div className="ml-auto max-w-xs">
                 <div className="mb-3 flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
+
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0b3121]">
                     {mission.titre || "MISSION"}
                   </span>
                 </div>
+
                 <div className="mb-3 h-[2px] w-10 bg-[#c2825d]" />
+
                 <div className="text-xs leading-relaxed text-[#0b3121] md:text-sm">
                   <RichText content={mission.description} />
                 </div>
@@ -120,8 +148,29 @@ export default function Mission({
           </div>
         </div>
 
+        {/* MOBILE VALUES */}
         {valeurs && valeurs.length > 0 && (
-          <div className="absolute inset-0 pointer-events-none">
+          <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-7 sm:grid-cols-3 lg:hidden">
+            {valeurs.map((valeur) => (
+              <div
+                key={valeur.id}
+                className="flex flex-col items-center text-center"
+              >
+                <span className="mb-2 h-2 w-2 rounded-full bg-[#0b3121] ring-2 ring-[#c2825d]" />
+
+                <p className="font-serif text-sm font-medium text-[#0b3121] sm:text-base">
+                  {valeur.titre}
+                </p>
+
+                <div className="mt-1 h-px w-6 bg-[#c2825d]" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* DESKTOP VALUES - ORIGINAL POSITIONING PRESERVED */}
+        {valeurs && valeurs.length > 0 && (
+          <div className="pointer-events-none absolute inset-0 hidden lg:block">
             {valeurs.map((valeur, index) => {
               const positions = [
                 { left: "22%", top: "72.2%" },
@@ -156,6 +205,7 @@ export default function Mission({
             })}
           </div>
         )}
+
       </div>
     </section>
   );

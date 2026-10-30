@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useRef, useState } from "react";
@@ -39,9 +40,7 @@ export default function Chronologie({
 
   useGSAP(
     () => {
-      if (!data?.length || !sectionRef.current) {
-        return;
-      }
+      if (!data?.length || !sectionRef.current) return;
 
       const steps = data.length;
 
@@ -67,22 +66,12 @@ export default function Chronologie({
           );
         },
 
-        onEnter: () => {
-          setActiveIndex(0);
-        },
-
-        onLeaveBack: () => {
-          setActiveIndex(0);
-        },
-
-        onLeave: () => {
-          setActiveIndex(steps - 1);
-        },
+        onEnter: () => setActiveIndex(0),
+        onLeaveBack: () => setActiveIndex(0),
+        onLeave: () => setActiveIndex(steps - 1),
       });
 
-      return () => {
-        trigger.kill();
-      };
+      return () => trigger.kill();
     },
     {
       scope: sectionRef,
@@ -91,47 +80,31 @@ export default function Chronologie({
     }
   );
 
-  if (!data?.length) {
-    return null;
-  }
+  if (!data?.length) return null;
 
   return (
     <section
       ref={sectionRef}
+      className="relative w-full bg-[#123D33]"
       style={{
-        position: "relative",
-        width: "100%",
         height: `${data.length * 100}vh`,
-        background: "#123D33",
+        height: `${data.length * 100}svh`,
       }}
     >
       <div
+        className="sticky top-0 h-screen h-[100svh] w-full overflow-hidden"
         style={{
-          position: "sticky",
-          top: 0,
-          width: "100%",
-          height: "100vh",
-          overflow: "hidden",
-          boxSizing: "border-box",
           fontFamily: "'Georgia', 'Times New Roman', serif",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 0,
-            overflow: "hidden",
-          }}
-        >
+        {/* Background images */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
           {data.map((etape, idx) => {
             const image = Array.isArray(etape.image)
               ? etape.image[0]
               : etape.image;
 
-            if (!image?.url) {
-              return null;
-            }
+            if (!image?.url) return null;
 
             const imageUrl = `${strapiUrl.replace(
               /\/$/,
@@ -143,12 +116,9 @@ export default function Chronologie({
             return (
               <div
                 key={etape.id ?? idx}
+                className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  position: "absolute",
-                  inset: 0,
                   backgroundImage: `url("${imageUrl}")`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
                   opacity: active ? 1 : 0,
                   transform: active
                     ? "scale(1)"
@@ -162,16 +132,18 @@ export default function Chronologie({
           })}
         </div>
 
+        {/* Information cards */}
         <div
-          style={{
-            position: "absolute",
-            right: 0,
-            bottom: 0,
-            width: "45vw",
-            maxWidth: "780px",
-            height: "78vh",
-            zIndex: 4,
-          }}
+          className="
+            absolute z-4
+            right-0 bottom-0
+            w-full
+            h-[65%]
+            sm:h-[60%]
+            md:right-0 md:bottom-0
+            md:w-[65%] md:h-[75%]
+            lg:w-[45vw] lg:max-w-[780px] lg:h-[78vh]
+          "
         >
           {data.map((etape, idx) => {
             const active = activeIndex === idx;
@@ -179,9 +151,8 @@ export default function Chronologie({
             return (
               <div
                 key={etape.id ?? idx}
+                className="absolute inset-0"
                 style={{
-                  position: "absolute",
-                  inset: 0,
                   opacity: active ? 1 : 0,
                   transform: active
                     ? "translateX(0)"
@@ -192,115 +163,60 @@ export default function Chronologie({
                 }}
               >
                 <div
+                  className="
+                    flex h-full w-full flex-col
+                    overflow-y-auto
+                    border-t border-l
+                    border-[#A87543]/25
+                    bg-[#F5F2EA]/90
+                    p-5
+                    backdrop-blur-[18px]
+                    sm:p-7
+                    md:p-9
+                    lg:p-[45px_60px_65px_55px]
+                  "
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    boxSizing: "border-box",
-                    padding: "45px 60px 65px 55px",
-                    background: "rgba(245,242,234,0.88)",
-                    backdropFilter: "blur(18px)",
-                    WebkitBackdropFilter: "blur(18px)",
-                    borderTop:
-                      "1px solid rgba(168,117,67,0.25)",
-                    borderLeft:
-                      "1px solid rgba(168,117,67,0.25)",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
                     boxShadow:
                       "-25px -10px 70px rgba(18,61,51,0.12)",
                   }}
                 >
-                  <div
-                    style={{
-                      marginBottom: "14px",
-                      fontFamily:
-                        "Arial, Helvetica, sans-serif",
-                      fontSize: "9px",
-                      fontWeight: 600,
-                      letterSpacing: "0.19em",
-                      textTransform: "uppercase",
-                      color: "#53645D",
-                    }}
-                  >
+                  <div className="mb-3 font-sans text-[9px] font-semibold uppercase tracking-[0.19em] text-[#53645D] sm:mb-4">
                     Chronologie
                   </div>
 
-                  <div
-                    style={{
-                      marginBottom: "12px",
-                      fontFamily:
-                        "'Georgia', 'Times New Roman', serif",
-                      fontSize: "15px",
-                      letterSpacing: "0.08em",
-                      color: "#A87543",
-                    }}
-                  >
+                  <div className="mb-2 font-serif text-sm tracking-[0.08em] text-[#A87543] sm:text-base">
                     {etape.annee}
                   </div>
 
                   <h3
-                    style={{
-                      margin: "0 0 24px",
-                      maxWidth: "600px",
-                      fontFamily:
-                        "'Georgia', 'Times New Roman', serif",
-                      fontSize: "clamp(32px, 3.2vw, 35px)",
-                      lineHeight: 1.03,
-                      fontWeight: 500,
-                      letterSpacing: "-0.035em",
-                      color: "#163F35",
-                    }}
+                    className="
+                      mb-5 max-w-[600px]
+                      font-serif font-medium
+                      text-[clamp(25px,5vw,35px)]
+                      leading-[1.08]
+                      tracking-[-0.035em]
+                      text-[#163F35]
+                      sm:mb-6
+                    "
                   >
                     {etape.titre || etape.annee}
                   </h3>
 
-                  <div
-                    style={{
-                      width: "45px",
-                      height: "1px",
-                      marginBottom: "24px",
-                      background: "#A87543",
-                    }}
-                  />
+                  <div className="mb-5 h-px w-[45px] shrink-0 bg-[#A87543] sm:mb-6" />
 
                   {etape.description && (
-                    <p
-                      style={{
-                        maxWidth: "550px",
-                        margin: 0,
-                        fontFamily:
-                          "Arial, Helvetica, sans-serif",
-                        fontSize: "14px",
-                        lineHeight: 1.75,
-                        color: "#53645D",
-                      }}
-                    >
+                    <p className="max-w-[550px] font-sans text-[13px] leading-[1.7] text-[#53645D] sm:text-sm sm:leading-[1.75]">
                       {etape.description}
                     </p>
                   )}
 
                   {etape.projects &&
                     etape.projects.length > 0 && (
-                      <div
-                        style={{
-                          marginTop: "30px",
-                          paddingTop: "18px",
-                          borderTop:
-                            "1px solid rgba(168,117,67,0.28)",
-                        }}
-                      >
+                      <div className="mt-6 border-t border-[#A87543]/30 pt-4 sm:mt-[30px] sm:pt-[18px]">
                         {etape.projects.map((project) => (
                           <p
                             key={project.id}
-                            style={{
-                              margin: "6px 0",
-                              fontFamily:
-                                "Arial, Helvetica, sans-serif",
-                              fontSize: "11px",
-                              lineHeight: 1.5,
-                              color: "#69736E",
-                            }}
+                            className="my-1.5 font-sans text-[11px] leading-relaxed text-[#69736E]"
                           >
                             {project.title}
                           </p>
@@ -313,32 +229,27 @@ export default function Chronologie({
           })}
         </div>
 
+        {/* Bottom gradient */}
         <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 5,
-            background:
-              "linear-gradient(to bottom, transparent 0%, transparent 75%, #123D33 95%, #123D33 100%)",
-            pointerEvents: "none",
-          }}
+          className="
+            pointer-events-none absolute inset-0 z-[5]
+            bg-gradient-to-b
+            from-transparent via-transparent
+            to-[#123D33]
+            opacity-80
+          "
         />
 
+        {/* Desktop vertical timeline */}
         <div
-          style={{
-            position: "absolute",
-            left: "7vw",
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 6,
-            display: "flex",
-            flexDirection: "column",
-            gap: "25px",
-            minWidth: "115px",
-            paddingLeft: "27px",
-            borderLeft:
-              "1px solid rgba(232,227,216,0.65)",
-          }}
+          className="
+            absolute left-[7vw] top-1/2 z-[6]
+            hidden -translate-y-1/2
+            flex-col gap-[25px]
+            border-l border-[#E8E3D8]/65
+            pl-[27px]
+            md:flex
+          "
         >
           {data.map((etape, idx) => {
             const active = activeIndex === idx;
@@ -346,20 +257,13 @@ export default function Chronologie({
             return (
               <div
                 key={etape.id ?? idx}
-                style={{
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                  minHeight: active ? "34px" : "24px",
-                }}
+                className="relative flex min-h-6 items-center"
               >
                 <span
+                  className="absolute -left-[32px] rounded-full transition-all duration-500"
                   style={{
-                    position: "absolute",
-                    left: "-32px",
                     width: active ? "9px" : "7px",
                     height: active ? "9px" : "7px",
-                    borderRadius: "50%",
                     background: active
                       ? "#A87543"
                       : "rgba(18,61,51,0.12)",
@@ -369,24 +273,17 @@ export default function Chronologie({
                     boxShadow: active
                       ? "0 0 0 3px rgba(168,117,67,0.18)"
                       : "none",
-                    transition: "all 0.45s ease",
                   }}
                 />
 
                 <span
+                  className="whitespace-nowrap font-serif leading-none transition-all duration-500"
                   style={{
-                    display: "block",
-                    fontFamily:
-                      "'Georgia', 'Times New Roman', serif",
                     fontSize: active ? "25px" : "15px",
-                    lineHeight: 1,
                     fontWeight: active ? 500 : 400,
                     color: active
                       ? "#A87543"
                       : "rgba(232,227,216,0.78)",
-                    transition:
-                      "font-size 0.45s ease, color 0.45s ease, font-weight 0.45s ease",
-                    whiteSpace: "nowrap",
                   }}
                 >
                   {etape.annee}
@@ -396,55 +293,70 @@ export default function Chronologie({
           })}
         </div>
 
+        {/* Mobile horizontal timeline */}
+        <div className="absolute left-0 right-0 top-5 z-[7] px-5 md:hidden">
+          <div className="flex items-center justify-center gap-3 overflow-x-auto pb-3">
+            {data.map((etape, idx) => {
+              const active = activeIndex === idx;
+
+              return (
+                <div
+                  key={etape.id ?? idx}
+                  className="flex shrink-0 items-center gap-1.5"
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full transition-all duration-300"
+                    style={{
+                      background: active
+                        ? "#A87543"
+                        : "rgba(232,227,216,0.6)",
+                      boxShadow: active
+                        ? "0 0 0 3px rgba(168,117,67,0.2)"
+                        : "none",
+                    }}
+                  />
+
+                  <span
+                    className="font-serif text-sm transition-all duration-300"
+                    style={{
+                      color: active
+                        ? "#D5A77C"
+                        : "rgba(232,227,216,0.8)",
+                      fontWeight: active ? 600 : 400,
+                    }}
+                  >
+                    {etape.annee}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Progress bar */}
         <div
-          style={{
-            position: "absolute",
-            right: "7vw",
-            bottom: "30px",
-            width: "130px",
-            zIndex: 7,
-          }}
+          className="
+            absolute bottom-5 right-5 z-[8]
+            w-[100px]
+            sm:right-8 sm:bottom-7
+            md:right-[7vw] md:bottom-[30px]
+            md:w-[130px]
+          "
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "8px",
-              fontFamily:
-                "Arial, Helvetica, sans-serif",
-              fontSize: "9px",
-              letterSpacing: "0.12em",
-              color: "#E8E3D8",
-            }}
-          >
+          <div className="mb-2 flex justify-between font-sans text-[9px] tracking-[0.12em] text-[#E8E3D8]">
             <span>0%</span>
             <span>100%</span>
           </div>
 
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              height: "1px",
-              background:
-                "rgba(232,227,216,0.35)",
-            }}
-          >
+          <div className="relative h-px w-full bg-[#E8E3D8]/35">
             <div
+              className="absolute left-0 top-0 h-0.5 bg-[#A87543] transition-all duration-300"
               style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
                 width: `${
                   data.length <= 1
                     ? 100
-                    : (activeIndex /
-                        (data.length - 1)) *
-                      100
+                    : (activeIndex / (data.length - 1)) * 100
                 }%`,
-                height: "2px",
-                background: "#A87543",
-                transition: "width 0.4s ease",
               }}
             />
           </div>
