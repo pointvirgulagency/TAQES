@@ -88,7 +88,7 @@ export default function Chronologie({
       className="relative w-full bg-[#123D33]"
       style={{
         height: `${data.length * 100}vh`,
-        height: `${data.length * 100}svh`,
+        minHeight: `${data.length * 100}svh`,
       }}
     >
       <div
